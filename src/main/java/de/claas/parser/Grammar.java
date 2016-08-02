@@ -34,7 +34,7 @@ public class Grammar {
 	 * represents the given pattern. Any intermediate nodes (and thus
 	 * non-essential nodes) are removed. If the given pattern is invalid, then a
 	 * {@link ParsingException} is thrown.
-	 * <p/>
+	 * <p>
 	 * Calling this method is equivalent <code>parse(data, false)</code> (see
 	 * {@link #parse(String, boolean)}).
 	 * 
@@ -91,7 +91,7 @@ public class Grammar {
 	 * Returns the tokens that make up the given pattern. The pattern needs to
 	 * be in accordance with the grammar described in above. Otherwise a
 	 * {@link ParsingException} is thrown.
-	 * <p/>
+	 * <p>
 	 * This function is sensitive to upper and lower case characters. Tokens may
 	 * be separated by white space, but do not need to be separated by it. Any
 	 * white space characters are removed during tokenization.

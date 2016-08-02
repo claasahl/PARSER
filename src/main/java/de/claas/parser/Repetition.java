@@ -5,7 +5,7 @@ package de.claas.parser;
  * The class {@link Repetition}. It is an implementation of the
  * {@link Decorator} class. It is intended to represent a repeatable rule within
  * a grammar.
- * <p/>
+ * <p>
  * This rule will successfully process a given state regardless of how often the
  * decorated rule can be processed. Making the decorated rule optional and
  * repeatable at the same time.

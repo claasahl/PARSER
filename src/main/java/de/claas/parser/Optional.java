@@ -4,7 +4,7 @@ package de.claas.parser;
  * 
  * The class {@link Optional}. It is an implementation of the {@link Decorator}
  * class. It is intended to represent an optional rule within a grammar.
- * <p/>
+ * <p>
  * This rule will successfully process a given state regardless of whether the
  * decorated rule can be successfully processed (or not). Making the decorated
  * rule optional.

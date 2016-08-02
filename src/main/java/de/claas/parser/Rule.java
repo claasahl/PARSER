@@ -10,7 +10,7 @@ import java.util.List;
  * to model rules that describe grammars. Implementations of this class are
  * utilized by {@link Grammar} instances to describe abstract concepts such as
  * words, phrases and sentences.
- * <p/>
+ * <p>
  * The hierarchy of this class resembles the <i>composite</i> design pattern.
  * This is due to the fact that {@link Grammar} instances can largely be
  * described by a tree of nested (grammar) rules.

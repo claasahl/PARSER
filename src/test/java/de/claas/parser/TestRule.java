@@ -5,7 +5,7 @@ package de.claas.parser;
  * The class {@link TestRule}. It is an implementation of the {@link Rule}
  * class. It successfully parses any token that equals this rule's name. It is
  * intended for testing purposes, only.
- * <p/>
+ * <p>
  * This rule will only successfully process a given state if the processed token
  * equals {@link #getName()}. successfully been processed.
  * 

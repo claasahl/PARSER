@@ -11,7 +11,7 @@ import java.util.List;
  * {@link Rule} class, implementations of this class do not describe abstract
  * concepts, such as words, phrases or sentences, but rather the concrete words,
  * phrases and sentences.
- * <p/>
+ * <p>
  * In other words, implementations of this class are a result of parsing
  * concrete sentences. While {@link Terminal} rules and {@link NonTerminal}
  * rules represent constraints on sentences, {@link TerminalNode} nodes and
@@ -20,7 +20,7 @@ import java.util.List;
  * a full (and concrete) sentence. Nodes at the very bottom of the tree (i.e.
  * leaf nodes) represent concrete tokens (or parts) of a sentence. Any non-leaf
  * nodes capture the context in which leaf nodes occurred.
- * <p/>
+ * <p>
  * The hierarchy of this class resembles the <i>composite</i> design pattern.
  * 
  * @author Claas Ahlrichs

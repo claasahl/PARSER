@@ -129,7 +129,7 @@ public class State {
 	 * current processing group, from the processed tokens back to the
 	 * (remaining) tokens. Thus reverting the state to the beginning of the
 	 * processing group.
-	 * <p/>
+	 * <p>
 	 * This method will not end a group. Use {@link #endGroup()} for closing /
 	 * ending groups.
 	 */

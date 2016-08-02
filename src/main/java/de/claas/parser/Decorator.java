@@ -7,7 +7,7 @@ import java.util.Iterator;
  * The class {@link Decorator}. It is an implementation of the {@link Rule}
  * class. It is intended to decorate (or wrap) an existing rule. In doing so,
  * new functionality can be dynamically added to existing rules.
- * <p/>
+ * <p>
  * This implementation resembles the <i>decorator</i> design pattern.
  *
  * @author Claas Ahlrichs
