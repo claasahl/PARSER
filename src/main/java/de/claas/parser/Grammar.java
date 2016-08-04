@@ -41,7 +41,7 @@ public class Grammar {
 	 * @param data
 	 *            the pattern
 	 * @return the tree of terminals and non-terminals that represents the given
-	 *         pattern.
+	 *         pattern
 	 * @throws ParsingException
 	 *             if the pattern is invalid (e.g. contains illegal tokens or
 	 *             the pattern is otherwise not in accordance with the grammar
@@ -55,16 +55,16 @@ public class Grammar {
 	 * Parses and returns the tree of terminals and non-terminals that
 	 * represents the given pattern. Optionally intermediate nodes (and thus
 	 * non-essential nodes) can be removed. If the given pattern is invalid,
-	 * then a {@link ParsingException} is thrown
+	 * then a {@link ParsingException} is thrown.
 	 * 
 	 * @param data
 	 *            the pattern
 	 * @param retainIntermediateNodes
 	 *            whether {@link IntermediateNode} instances should be retained.
 	 *            Set to <code>false</code> if only non-terminal and terminal
-	 *            nodes are desired.
+	 *            nodes are desired
 	 * @return the tree of terminals and non-terminals that represents the given
-	 *         pattern.
+	 *         pattern
 	 * @throws ParsingException
 	 *             if the pattern is invalid (e.g. contains illegal tokens or
 	 *             the pattern is otherwise not in accordance with the grammar

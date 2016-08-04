@@ -7,7 +7,7 @@ package de.claas.parser;
  * intended for testing purposes, only.
  * <p>
  * This rule will only successfully process a given state if the processed token
- * equals {@link #getName()}. successfully been processed.
+ * equals {@link #getName()}.
  * 
  * @author Claas Ahlrichs
  *

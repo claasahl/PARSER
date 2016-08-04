@@ -4,7 +4,7 @@ package de.claas.parser;
  * 
  * Superclass of all specialized exceptions in this package.
  * 
- * @author Claas Ahlrichs (claas.ahlrichs@nordforce.se)
+ * @author Claas Ahlrichs
  *
  */
 public class ParsingException extends Exception {
