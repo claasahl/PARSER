@@ -10,7 +10,9 @@ import java.util.Stack;
 /**
  * 
  * The class {@link Grammar}. It is intended to parse sentences of a given
- * grammar.
+ * grammar. This class takes a set of {@link NonTerminal} rules (i.e. named
+ * rules) and uses them to parse sentences. The result is returned as a tree of
+ * {@link Node} instances.
  * 
  * @author Claas Ahlrichs
  *
