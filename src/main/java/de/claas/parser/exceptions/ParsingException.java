@@ -1,4 +1,4 @@
-package de.claas.parser;
+package de.claas.parser.exceptions;
 
 /**
  * 

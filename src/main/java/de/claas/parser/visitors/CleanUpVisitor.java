@@ -1,7 +1,14 @@
-package de.claas.parser;
+package de.claas.parser.visitors;
 
 import java.util.ArrayList;
 import java.util.Stack;
+
+import de.claas.parser.Grammar;
+import de.claas.parser.Node;
+import de.claas.parser.NodeVisitor;
+import de.claas.parser.results.IntermediateNode;
+import de.claas.parser.results.NonTerminalNode;
+import de.claas.parser.results.TerminalNode;
 
 /**
  * 

@@ -1,6 +1,8 @@
-package de.claas.parser;
+package de.claas.parser.rules;
 
 import java.util.Iterator;
+
+import de.claas.parser.Rule;
 
 /**
  * 

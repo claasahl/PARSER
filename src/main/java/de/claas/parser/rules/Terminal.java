@@ -1,8 +1,14 @@
-package de.claas.parser;
+package de.claas.parser.rules;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+
+import de.claas.parser.Node;
+import de.claas.parser.Rule;
+import de.claas.parser.RuleVisitor;
+import de.claas.parser.State;
+import de.claas.parser.results.TerminalNode;
 
 /**
  * 

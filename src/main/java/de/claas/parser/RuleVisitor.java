@@ -1,5 +1,12 @@
 package de.claas.parser;
 
+import de.claas.parser.rules.Conjunction;
+import de.claas.parser.rules.Disjunction;
+import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.Optional;
+import de.claas.parser.rules.Repetition;
+import de.claas.parser.rules.Terminal;
+
 /**
  * 
  * Superclass of all rule-based visitors. This class is intended to model a

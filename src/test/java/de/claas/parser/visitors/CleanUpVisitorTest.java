@@ -1,4 +1,4 @@
-package de.claas.parser;
+package de.claas.parser.visitors;
 
 import static org.junit.Assert.*;
 
@@ -6,6 +6,12 @@ import java.util.Iterator;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import de.claas.parser.Node;
+import de.claas.parser.results.IntermediateNode;
+import de.claas.parser.results.NonTerminalNode;
+import de.claas.parser.results.TerminalNode;
+import de.claas.parser.visitors.CleanUpVisitor;
 
 /**
  * 

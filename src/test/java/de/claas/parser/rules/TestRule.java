@@ -1,4 +1,9 @@
-package de.claas.parser;
+package de.claas.parser.rules;
+
+import de.claas.parser.Node;
+import de.claas.parser.Rule;
+import de.claas.parser.RuleVisitor;
+import de.claas.parser.State;
 
 /**
  * 

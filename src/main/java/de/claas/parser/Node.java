@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import de.claas.parser.results.NonTerminalNode;
+import de.claas.parser.results.TerminalNode;
+import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.Terminal;
+
 /**
  * 
  * Superclass of all nodes within this package. This class is intended to model

@@ -1,4 +1,4 @@
-package de.claas.parser;
+package de.claas.parser.rules;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -10,6 +10,10 @@ import java.util.Iterator;
 import java.util.Stack;
 
 import org.junit.Test;
+
+import de.claas.parser.Node;
+import de.claas.parser.Rule;
+import de.claas.parser.State;
 
 /**
  * 

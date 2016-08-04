@@ -7,6 +7,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+import de.claas.parser.exceptions.ParsingException;
+import de.claas.parser.results.IntermediateNode;
+import de.claas.parser.rules.Conjunction;
+import de.claas.parser.rules.Disjunction;
+import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.Optional;
+import de.claas.parser.rules.Repetition;
+import de.claas.parser.rules.Terminal;
+import de.claas.parser.visitors.CleanUpVisitor;
+
 /**
  * 
  * The class {@link Grammar}. It is intended to parse sentences of a given

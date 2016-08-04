@@ -1,5 +1,9 @@
 package de.claas.parser;
 
+import de.claas.parser.results.IntermediateNode;
+import de.claas.parser.results.NonTerminalNode;
+import de.claas.parser.results.TerminalNode;
+
 /**
  * 
  * Superclass of all node-based visitors. This class is intended to model a

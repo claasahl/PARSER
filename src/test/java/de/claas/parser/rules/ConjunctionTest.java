@@ -1,8 +1,13 @@
-package de.claas.parser;
+package de.claas.parser.rules;
 
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
+
+import de.claas.parser.Rule;
+import de.claas.parser.State;
+import de.claas.parser.results.TerminalNode;
+import de.claas.parser.rules.Conjunction;
 
 /**
  * 

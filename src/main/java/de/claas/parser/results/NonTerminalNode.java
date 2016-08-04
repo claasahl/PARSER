@@ -1,4 +1,8 @@
-package de.claas.parser;
+package de.claas.parser.results;
+
+import de.claas.parser.Grammar;
+import de.claas.parser.Node;
+import de.claas.parser.NodeVisitor;
 
 /**
  * 
