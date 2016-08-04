@@ -1,5 +1,6 @@
 package de.claas.parser.rules;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +35,19 @@ public class Terminal extends Rule {
 	 */
 	public Terminal(String... terminals) {
 		this.terminals = Arrays.asList(terminals);
+	}
+	
+	/**
+	 * Creates an instances with the given parameters.
+	 * 
+	 * @param terminals
+	 *            the terminal symbols
+	 */
+	public Terminal(char... terminals) {
+		this.terminals = new ArrayList<>();
+		for(char c : terminals) {
+			this.terminals.add("" + c);
+		}
 	}
 
 	/**
