@@ -75,21 +75,21 @@ public class AugmentedBackusNaur {
 		Terminal xNum = new Terminal("x");
 		
 		// ALPHA = %x41-5A / %x61-7A ; A-Z / a-z
-		Terminal alpha = new Terminal(bla('A', 'z'));
+		NonTerminal alpha = new NonTerminal("alpha", new Terminal(bla('A', 'z')));
 		// DIGIT = %x30-39 ; 0-9
-		Terminal digit = new Terminal(bla('0', '9'));
+		NonTerminal digit = new NonTerminal("digit", new Terminal(bla('0', '9')));
 		// WSP = SP / HTAB ; white space
-		Terminal wsp = new Terminal((char) 0x20, (char) 0x09);
+		NonTerminal wsp = new NonTerminal("wsp", new Terminal((char) 0x20, (char) 0x09));
 		// CRLF = CR LF ; Internet standard newline
-		Terminal crlf = new Terminal((char) 0x0a, (char) 0x0d);
+		NonTerminal crlf = new NonTerminal("crlf", new Terminal((char) 0x0a, (char) 0x0d));
 		// VCHAR = %x21-7E ; visible (printing) characters
-		Terminal vchar = new Terminal(bla((char) 0x21, (char) 0x7e));
+		NonTerminal vchar = new NonTerminal("vchar", new Terminal(bla((char) 0x21, (char) 0x7e)));
 		// DQUOTE = %x22 ; " (Double Quote)
-		Terminal dQuote = new Terminal("\"");
+		NonTerminal dQuote = new NonTerminal("dQuote", new Terminal("\""));
 		//		BIT            =  "0" / "1"
-		Terminal bit = new Terminal('0', '1');
+		NonTerminal bit = new NonTerminal("bit", new Terminal('0', '1'));
 		//		HEXDIG         =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
-		Terminal hexdig = new Terminal('0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','a','b','c','d','e','f');
+		NonTerminal hexdig = new NonTerminal("hexdig", new Terminal('0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','a','b','c','d','e','f'));
 		
 		Rule tmpRulename = new Conjunction();
 		Rule tmpAlternation = new Conjunction();
