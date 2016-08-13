@@ -7,7 +7,7 @@ import de.claas.parser.rules.NonTerminal;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
-import de.claas.parser.visitors.AugmentedBackusNaurVisitor;
+import de.claas.parser.visitors.AugmentedBackusNaurPrinter;
 
 // https://www.ietf.org/rfc/rfc2234.txt
 /**
@@ -173,10 +173,7 @@ public class AugmentedBackusNaur {
 	}
 	
 	public static void main(String...strings) {
-		NonTerminal nonTerminal = grammar();
-		System.out.println(nonTerminal);
-		AugmentedBackusNaurVisitor visitor = new AugmentedBackusNaurVisitor();
-		nonTerminal.visit(visitor);
+		System.out.println(new AugmentedBackusNaurPrinter(grammar()));
 	}
 
 }
