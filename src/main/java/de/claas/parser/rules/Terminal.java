@@ -26,6 +26,8 @@ import de.claas.parser.results.TerminalNode;
 public class Terminal extends Rule {
 
 	private final List<String> terminals;
+	private final int rangeStart;
+	private final int rangeEnd;
 
 	/**
 	 * Creates an instances with the given parameters.
@@ -35,19 +37,24 @@ public class Terminal extends Rule {
 	 */
 	public Terminal(String... terminals) {
 		this.terminals = Arrays.asList(terminals);
+		this.rangeStart = -1;
+		this.rangeEnd = -1;
 	}
-	
+
 	/**
 	 * Creates an instances with the given parameters.
 	 * 
-	 * @param terminals
-	 *            the terminal symbols
+	 * @param rangeStart
+	 *            first character that this rule represents (inclusive)
+	 * @param rangeEnd
+	 *            last character that this rule represents (inclusive)
 	 */
-	public Terminal(char... terminals) {
+	public Terminal(char rangeStart, char rangeEnd) {
 		this.terminals = new ArrayList<>();
-		for(char c : terminals) {
-			this.terminals.add("" + c);
-		}
+		this.rangeStart = Math.min(rangeStart, rangeEnd);
+		this.rangeEnd = Math.max(rangeStart, rangeEnd);
+		for(int character = this.rangeStart; character <= rangeEnd; character++)
+			this.terminals.add("" + (char)character);
 	}
 
 	/**
@@ -67,10 +74,15 @@ public class Terminal extends Rule {
 
 		// look for terminal symbol
 		Node node = null;
-		for (String terminal : terminals) {
-			if (terminal.equals(token)) {
-				node = new TerminalNode(token);
-				break;
+		Character charAt = token.length() == 1 ? token.charAt(0) : null;
+		if (charAt != null && charAt >= rangeStart && charAt <= rangeEnd) {
+			node = new TerminalNode(token);
+		} else if (rangeStart == -1 && rangeEnd == -1) {
+			for (String terminal : terminals) {
+				if (terminal.equals(token)) {
+					node = new TerminalNode(token);
+					break;
+				}
 			}
 		}
 

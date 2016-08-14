@@ -27,6 +27,8 @@ import de.claas.parser.rules.Terminal;
 public class TerminalTest extends RuleTest {
 
 	private static final String[] DEFAULT_TERMINALS = { "a", "b" };
+	private static final char DEFAULT_RANGE_START = 'a';
+	private static final char DEFAULT_RANGE_END = 'z';
 
 	@Override
 	protected Rule build(Rule... children) {
@@ -59,6 +61,20 @@ public class TerminalTest extends RuleTest {
 	 */
 	protected Terminal build(String... terminals) {
 		return new Terminal(terminals);
+	}
+
+	/**
+	 * Returns an {@link Terminal} class that was instantiated with the given
+	 * parameters.
+	 * 
+	 * @param rangeStart
+	 *            first character that this rule represents (inclusive)
+	 * @param rangeEnd
+	 *            last character that this rule represents (inclusive)
+	 * @return an instantiated {@link Terminal} class
+	 */
+	protected Terminal build(char rangeStart, char rangeEnd) {
+		return new Terminal(rangeStart, rangeEnd);
 	}
 
 	@Test
@@ -100,6 +116,37 @@ public class TerminalTest extends RuleTest {
 		State state = buildState("world", "hello", "world");
 		Terminal rule = build(new String[] {});
 		assertNull(rule.process(state));
+	}
+
+	@Test
+	public void shouldProcessRangeBasedTerminals() {
+		State state = buildState("a", "b", "x", "z");
+		Terminal rule = build(DEFAULT_RANGE_START, DEFAULT_RANGE_END);
+		
+		TerminalNode node = (TerminalNode) rule.process(state);
+		assertNotNull(node);
+		assertEquals("a", node.getTerminal());
+		
+		node = (TerminalNode) rule.process(state);
+		assertNotNull(node);
+		assertEquals("b", node.getTerminal());
+		
+		node = (TerminalNode) rule.process(state);
+		assertNotNull(node);
+		assertEquals("x", node.getTerminal());
+		
+		node = (TerminalNode) rule.process(state);
+		assertNotNull(node);
+		assertEquals("z", node.getTerminal());
+	}
+	
+	@Test
+	public void shouldNotProcessTerminalsOutsideOfRange() {
+		State state = buildState("A", "0", "Z");
+		Terminal rule = build(DEFAULT_RANGE_START, DEFAULT_RANGE_END);
+		
+		TerminalNode node = (TerminalNode) rule.process(state);
+		assertNull(node);
 	}
 
 }
