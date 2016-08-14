@@ -135,7 +135,17 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 			Iterator<String> terminals = rule.getTerminals();
 			while (terminals.hasNext()) {
 				stringBuilder.append("'");
-				stringBuilder.append(terminals.next());
+				String terminal = terminals.next();
+				if (terminal.length() == 1) {
+					char character = terminal.charAt(0);
+					if(Character.isLetterOrDigit(character)) {
+						stringBuilder.append(terminal);						
+					} else {
+						stringBuilder.append(String.format("x%02X", (int)character));
+					}
+				} else {
+					stringBuilder.append(terminal);
+				}
 				stringBuilder.append("'");
 				if (terminals.hasNext())
 					stringBuilder.append(" / ");
