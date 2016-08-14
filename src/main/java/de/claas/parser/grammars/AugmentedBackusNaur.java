@@ -1,5 +1,6 @@
 package de.claas.parser.grammars;
 
+import de.claas.parser.Grammar;
 import de.claas.parser.Rule;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
@@ -7,7 +8,6 @@ import de.claas.parser.rules.NonTerminal;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
-import de.claas.parser.visitors.AugmentedBackusNaurPrinter;
 
 // https://www.ietf.org/rfc/rfc2234.txt
 /**
@@ -54,8 +54,12 @@ OCTET          =  %x00-FF ; 8 bits of data
  * @author Claas
  *
  */
-public class AugmentedBackusNaur {
+public class AugmentedBackusNaur extends Grammar {
 	
+	public AugmentedBackusNaur() {
+		super(grammar());
+	}
+
 	private static NonTerminal grammar() {
 		Terminal dash = new Terminal("-");
 		Terminal eq = new Terminal("=", "=/");
@@ -170,10 +174,6 @@ public class AugmentedBackusNaur {
 		for(char c = start; c <= end; c++)
 			characters[c-start] = c;
 		return characters;
-	}
-	
-	public static void main(String...strings) {
-		System.out.println(new AugmentedBackusNaurPrinter(grammar()));
 	}
 
 }
