@@ -83,7 +83,7 @@ public class AugmentedBackusNaur extends Grammar {
 		// DIGIT = %x30-39 ; 0-9
 		NonTerminal digit = new NonTerminal("digit", new Terminal('0', '9'));
 		// WSP = SP / HTAB ; white space
-		NonTerminal wsp = new NonTerminal("wsp", new Terminal((char) 0x20, (char) 0x09));
+		NonTerminal wsp = new NonTerminal("wsp", new Terminal("" + (char) 0x20, "" + (char) 0x09));
 		// CRLF = CR LF ; Internet standard newline
 		NonTerminal crlf = new NonTerminal("crlf", new Terminal((char) 0x0a, (char) 0x0d));
 		// VCHAR = %x21-7E ; visible (printing) characters
@@ -138,7 +138,7 @@ public class AugmentedBackusNaur extends Grammar {
 		NonTerminal element = new NonTerminal("element", new Disjunction(tmpRulename, group, option, charVal, numVal, proseVal));
 		
 		//repeat         =  1*DIGIT / (*DIGIT "*" *DIGIT)
-		NonTerminal repeat = new NonTerminal("repeat", new Disjunction(new Conjunction(digit, new Repetition(digit)), new Conjunction(new Repetition(digit), s, new Repetition(digit))));
+		NonTerminal repeat = new NonTerminal("repeat", new Disjunction(new Conjunction(new Repetition(digit), s, new Repetition(digit)), new Conjunction(digit, new Repetition(digit))));
 		
 		// repetition     =  [repeat] element
 		NonTerminal repetition = new NonTerminal("repetition", new Conjunction(new Optional(repeat), element));

@@ -112,7 +112,7 @@ public class Grammar {
 	 */
 	private static List<String> tokenize(List<String> terminals, String pattern) throws ParsingException {
 		List<String> tokens = new ArrayList<>();
-		String token = pattern.trim();
+		String token = pattern;//.trim();
 		do {
 			// look for tokens ...
 			boolean foundValidToken = false;
@@ -120,7 +120,7 @@ public class Grammar {
 				foundValidToken = token.startsWith(validToken);
 				if (foundValidToken) {
 					tokens.add(validToken);
-					token = token.substring(validToken.length()).trim();
+					token = token.substring(validToken.length());//.trim();
 					break;
 				}
 			}
