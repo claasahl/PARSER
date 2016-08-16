@@ -14,7 +14,7 @@ import de.claas.parser.results.TerminalNode;
  * 
  * The class {@link CleanUpVisitor}. It is an implementation of the interface
  * {@link NodeVisitor}. It is intended to simplify the node structure that
- * returned by {@link Grammar#parse(String, boolean)}. This is accomplished by
+ * returned by {@link Grammar#parse(String, boolean, boolean)}. This is accomplished by
  * removing {@link IntermediateNode} instances.
  * 
  * @author Claas Ahlrichs
