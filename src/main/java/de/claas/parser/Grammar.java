@@ -83,7 +83,7 @@ public class Grammar {
 	public Node parse(String data, boolean retainIntermediateNodes, boolean retainWhitespace) throws ParsingException {
 		ExtractTerminals visitor = new ExtractTerminals();
 		start.visit(visitor);
-		List<String> tokenized = tokenize(visitor.getTerminals(), data, retainWhitespace			);
+		List<String> tokenized = tokenize(visitor.getTerminals(), data, retainWhitespace);
 		Stack<String> tokens = new Stack<>();
 		for (int i = tokenized.size() - 1; i >= 0; i--) {
 			tokens.push(tokenized.get(i));
