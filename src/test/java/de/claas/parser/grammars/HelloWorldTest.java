@@ -53,7 +53,7 @@ public class HelloWorldTest {
 	@Test(expected = ParsingException.class)
 	public void shouldNotHandleMixedLanguages() throws ParsingException {
 		Grammar grammar = build();
-		assertNotNull(grammar.parse("hallo mundo"));
+		grammar.parse("hallo mundo");
 	}
 
 }
