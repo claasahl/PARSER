@@ -98,7 +98,7 @@ public class AugmentedBackusNaur extends Grammar {
 		Terminal xNum = new Terminal("x");
 
 		// ALPHA = %x41-5A / %x61-7A ; A-Z / a-z
-		NonTerminal alpha = new NonTerminal("alpha", new Terminal('A', 'z'));
+		NonTerminal alpha = new NonTerminal("alpha", new Disjunction(new Terminal('A', 'Z'), new Terminal('a', 'z')));
 		// DIGIT = %x30-39 ; 0-9
 		NonTerminal digit = new NonTerminal("digit", new Terminal('0', '9'));
 		// WSP = SP / HTAB ; white space
