@@ -122,29 +122,29 @@ public class TerminalTest extends RuleTest {
 	public void shouldProcessRangeBasedTerminals() {
 		State state = buildState("a", "b", "x", "z");
 		Terminal rule = build(DEFAULT_RANGE_START, DEFAULT_RANGE_END);
-		
+
 		TerminalNode node = (TerminalNode) rule.process(state);
 		assertNotNull(node);
 		assertEquals("a", node.getTerminal());
-		
+
 		node = (TerminalNode) rule.process(state);
 		assertNotNull(node);
 		assertEquals("b", node.getTerminal());
-		
+
 		node = (TerminalNode) rule.process(state);
 		assertNotNull(node);
 		assertEquals("x", node.getTerminal());
-		
+
 		node = (TerminalNode) rule.process(state);
 		assertNotNull(node);
 		assertEquals("z", node.getTerminal());
 	}
-	
+
 	@Test
 	public void shouldNotProcessTerminalsOutsideOfRange() {
 		State state = buildState("A", "0", "Z");
 		Terminal rule = build(DEFAULT_RANGE_START, DEFAULT_RANGE_END);
-		
+
 		TerminalNode node = (TerminalNode) rule.process(state);
 		assertNull(node);
 	}

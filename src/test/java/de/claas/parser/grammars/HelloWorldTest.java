@@ -5,11 +5,22 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 import de.claas.parser.Grammar;
+import de.claas.parser.GrammarTest;
 import de.claas.parser.exceptions.ParsingException;
 
-public class HelloWorldTest {
+/**
+ * 
+ * The JUnit test for class {@link HelloWorldTest}. It is intended to collect
+ * and document a set of test cases for the tested class. Please refer to the
+ * individual tests for more detailed information.
+ *
+ * @author Claas Ahlrichs
+ *
+ */
+public class HelloWorldTest extends GrammarTest<HelloWorld> {
 
-	private Grammar build() {
+	@Override
+	protected HelloWorld build() {
 		return new HelloWorld();
 	}
 
@@ -36,13 +47,13 @@ public class HelloWorldTest {
 		Grammar grammar = build();
 		assertNotNull(grammar.parse("hola mundo"));
 	}
-	
+
 	@Test
 	public void shouldRequireTrimmingOfWhitespace() throws ParsingException {
 		Grammar grammar = build();
 		assertNotNull(grammar.parse("hola mundo", false, false));
 	}
-	
+
 	@Test
 	public void shouldNotRequireTrimmingOfWhitespace() throws ParsingException {
 		Grammar grammar = build();

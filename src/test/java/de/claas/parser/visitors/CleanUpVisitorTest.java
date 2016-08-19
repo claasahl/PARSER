@@ -36,7 +36,7 @@ public class CleanUpVisitorTest {
 		Node n1 = new NonTerminalNode("n1");
 		Node n2 = new TerminalNode("n2");
 		n1.addChild(n2);
-		
+
 		n1.visit(visitor);
 		Iterator<Node> iterator = n1.iterator();
 		assertEquals(n2, iterator.next());
@@ -50,7 +50,7 @@ public class CleanUpVisitorTest {
 		Node n3 = new TerminalNode("n3");
 		n1.addChild(n2);
 		n2.addChild(n3);
-		
+
 		n1.visit(visitor);
 		Iterator<Node> iterator = n1.iterator();
 		assertEquals(n3, iterator.next());
@@ -68,7 +68,7 @@ public class CleanUpVisitorTest {
 		n3.addChild(n4);
 		Node n5 = new TerminalNode("n5");
 		n1.addChild(n5);
-		
+
 		n1.visit(visitor);
 		Iterator<Node> iterator = n1.iterator();
 		assertEquals(n4, iterator.next());

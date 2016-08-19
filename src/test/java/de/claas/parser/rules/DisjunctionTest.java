@@ -21,10 +21,10 @@ import de.claas.parser.rules.Disjunction;
 public class DisjunctionTest extends RuleTest {
 
 	@Override
-	protected Rule build(Rule...children) {
+	protected Rule build(Rule... children) {
 		return new Disjunction(children);
 	}
-	
+
 	@Override
 	protected Rule[] defaultChildren() {
 		return new Rule[] { buildTestRule("hello", new TerminalNode("hello")),
@@ -47,7 +47,7 @@ public class DisjunctionTest extends RuleTest {
 		assertNull(rule.process(processibleState()));
 		assertNull(rule.process(unprocessibleState()));
 	}
-	
+
 	@Test
 	public void shouldProcessIfAnyChildProcesses() {
 		Rule rule = build(defaultChildren());

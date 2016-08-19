@@ -17,12 +17,12 @@ import de.claas.parser.State;
 
 /**
  * 
- * The JUnit test for class {@link Rule}. It is intended to collect and document
- * a set of test cases for the tested class. Please refer to the individual
- * tests for more detailed information.
+ * The JUnit test for class {@link RuleTest}. It is intended to collect and
+ * document a set of test cases for the tested class. Please refer to the
+ * individual tests for more detailed information.
  *
  * @author Claas Ahlrichs
- * 
+ *
  */
 public abstract class RuleTest {
 

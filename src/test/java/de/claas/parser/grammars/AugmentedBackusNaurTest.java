@@ -1,6 +1,6 @@
 package de.claas.parser.grammars;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,11 +9,22 @@ import java.util.stream.Collectors;
 import org.junit.Test;
 
 import de.claas.parser.Grammar;
+import de.claas.parser.GrammarTest;
 import de.claas.parser.exceptions.ParsingException;
 
-public class AugmentedBackusNaurTest {
-	
-	private Grammar build() {
+/**
+ * 
+ * The JUnit test for class {@link AugmentedBackusNaurTest}. It is intended to
+ * collect and document a set of test cases for the tested class. Please refer
+ * to the individual tests for more detailed information.
+ *
+ * @author Claas Ahlrichs
+ *
+ */
+public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
+
+	@Override
+	protected AugmentedBackusNaur build() {
 		return new AugmentedBackusNaur();
 	}
 
@@ -22,25 +33,25 @@ public class AugmentedBackusNaurTest {
 		Grammar grammar = build();
 		assertNotNull(grammar.parse("rule = \"hel\" \"lo\"\r\n", false, true));
 	}
-	
+
 	@Test
 	public void shouldHandleAlternation() throws ParsingException {
 		Grammar grammar = build();
 		assertNotNull(grammar.parse("rule = \"hel\" / \"lo\"\r\n", false, true));
 	}
-	
+
 	@Test
 	public void shouldHandleIncrementalAlternatives() throws ParsingException {
 		Grammar grammar = build();
 		assertNotNull(grammar.parse("rule = \"hel\"\r\n =/ \"lo\"\r\n", false, true));
 	}
-	
+
 	@Test
 	public void shouldHandleComment() throws ParsingException {
 		Grammar grammar = build();
 		assertNotNull(grammar.parse("rule = \"R\" ; rrrrrrrr RRRR\r\n", false, true));
 	}
-	
+
 	@Test
 	public void shouldHandleRepetition() throws ParsingException {
 		Grammar grammar = build();
@@ -48,13 +59,13 @@ public class AugmentedBackusNaurTest {
 		assertNotNull(grammar.parse("rule = 2*\"R\"\r\n", false, true));
 		assertNotNull(grammar.parse("rule = *2\"R\"\r\n", false, true));
 	}
-	
+
 	@Test
 	public void shouldHandleGroup() throws ParsingException {
 		Grammar grammar = build();
 		assertNotNull(grammar.parse("rule = (\"hello\")\r\n", false, true));
 	}
-	
+
 	@Test
 	public void shouldHandleOption() throws ParsingException {
 		Grammar grammar = build();
@@ -65,9 +76,11 @@ public class AugmentedBackusNaurTest {
 	public void shouldHandleABNFSpecification() throws ParsingException {
 		List<String> rules = new ArrayList<>();
 		rules.add("rulelist       =  1*( rule / (*c-wsp c-nl) )");
-		rules.add("rule           =  rulename defined-as elements c-nl ; continues if next line starts with white space");
+		rules.add(
+				"rule           =  rulename defined-as elements c-nl ; continues if next line starts with white space");
 		rules.add("rulename       =  ALPHA *(ALPHA / DIGIT / \"-\")");
-		rules.add("defined-as     =  *c-wsp (\"=\" / \"=/\") *c-wsp ; basic rules definition and incremental alternatives");
+		rules.add(
+				"defined-as     =  *c-wsp (\"=\" / \"=/\") *c-wsp ; basic rules definition and incremental alternatives");
 		rules.add("elements       =  alternation *c-wsp");
 		rules.add("c-wsp          =  WSP / (c-nl WSP)");
 		rules.add("c-nl           =  comment / CRLF ; comment or newline");
@@ -79,12 +92,15 @@ public class AugmentedBackusNaurTest {
 		rules.add("element        =  rulename / group / option / char-val / num-val / prose-val");
 		rules.add("group          =  \"(\" *c-wsp alternation *c-wsp \")\"");
 		rules.add("option         =  \"[\" *c-wsp alternation *c-wsp \"]\"");
-		rules.add("char-val       =  DQUOTE *(%x20-21 / %x23-7E) DQUOTE ; quoted string of SP and VCHAR without DQUOTE");
+		rules.add(
+				"char-val       =  DQUOTE *(%x20-21 / %x23-7E) DQUOTE ; quoted string of SP and VCHAR without DQUOTE");
 		rules.add("num-val        =  \"%\" (bin-val / dec-val / hex-val)");
-		rules.add("bin-val        =  \"b\" 1*BIT [ 1*(\".\" 1*BIT) / (\"-\" 1*BIT) ]	; series of concatenated bit values or single ONEOF range");
+		rules.add(
+				"bin-val        =  \"b\" 1*BIT [ 1*(\".\" 1*BIT) / (\"-\" 1*BIT) ]	; series of concatenated bit values or single ONEOF range");
 		rules.add("dec-val        =  \"d\" 1*DIGIT [ 1*(\".\" 1*DIGIT) / (\"-\" 1*DIGIT) ]");
 		rules.add("hex-val        =  \"x\" 1*HEXDIG [ 1*(\".\" 1*HEXDIG) / (\"-\" 1*HEXDIG) ]");
-		rules.add("prose-val      =  \"<\" *(%x20-3D / %x3F-7E) \">\" ; bracketed string of SP and VCHAR without angles prose description, to be used as last resort");
+		rules.add(
+				"prose-val      =  \"<\" *(%x20-3D / %x3F-7E) \">\" ; bracketed string of SP and VCHAR without angles prose description, to be used as last resort");
 		rules.add("");
 		rules.add("ALPHA          =  %x41-5A / %x61-7A   ; A-Z / a-z");
 		rules.add("BIT            =  \"0\" / \"1\"");
@@ -104,7 +120,7 @@ public class AugmentedBackusNaurTest {
 		rules.add("CTL            =  %x00-1F / %x7F ; controls");
 		rules.add("LWSP           =  *(WSP / CRLF WSP) ; linear white space (past newline)");
 		rules.add("OCTET          =  %x00-FF ; 8 bits of data");
-		
+
 		Grammar grammar = build();
 		String data = rules.stream().collect(Collectors.joining("\r\n")) + "\r\n";
 		assertNotNull(grammar.parse(data, false, true));

@@ -5,11 +5,22 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import de.claas.parser.Grammar;
+import de.claas.parser.GrammarTest;
 import de.claas.parser.exceptions.ParsingException;
 
-public class RepeatTest {
+/**
+ * 
+ * The JUnit test for class {@link RepeatTest}. It is intended to collect and
+ * document a set of test cases for the tested class. Please refer to the
+ * individual tests for more detailed information.
+ *
+ * @author Claas Ahlrichs
+ *
+ */
+public class RepeatTest extends GrammarTest<Repeat> {
 
-	private Grammar build() {
+	@Override
+	protected Repeat build() {
 		return new Repeat();
 	}
 

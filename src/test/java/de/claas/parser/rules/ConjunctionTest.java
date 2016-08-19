@@ -47,7 +47,7 @@ public class ConjunctionTest extends RuleTest {
 		assertNull(rule.process(processibleState()));
 		assertNull(rule.process(unprocessibleState()));
 	}
-	
+
 	@Test
 	public void shouldNotProcessIfAnyChildFailsToProcess() {
 		Rule rule = build(defaultChildren());
