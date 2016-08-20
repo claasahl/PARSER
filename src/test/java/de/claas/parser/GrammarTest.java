@@ -1,15 +1,11 @@
 package de.claas.parser;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
+import org.junit.Assert;
 import org.junit.Test;
 
-import de.claas.parser.exceptions.ParsingException;
-import de.claas.parser.rules.Conjunction;
-import de.claas.parser.rules.Disjunction;
-import de.claas.parser.rules.NonTerminal;
-import de.claas.parser.rules.Repetition;
-import de.claas.parser.rules.Terminal;
+import de.claas.parser.visitors.NodeToString;
 
 /**
  * 
@@ -29,5 +25,21 @@ public abstract class GrammarTest<R extends Grammar> {
 	 * @return an instantiated {@link Grammar} class
 	 */
 	protected abstract R build();
+
+	/**
+	 * A convenience method for asserting the equality of nodes.
+	 * 
+	 * @param expected
+	 *            the expected tree of nodes
+	 * @param actual
+	 *            the actual tree of nodes
+	 */
+	protected static void assertEquals(Node expected, Node actual) {
+		NodeToString exp = new NodeToString();
+		expected.visit(exp);
+		NodeToString act = new NodeToString();
+		actual.visit(act);
+		Assert.assertEquals(exp.toString(), act.toString());
+	}
 
 }
