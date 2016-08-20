@@ -11,24 +11,24 @@ import de.claas.parser.Node;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
-import de.claas.parser.visitors.CleanUpVisitor;
+import de.claas.parser.visitors.RemoveIntermediateNodes;
 
 /**
  * 
- * The JUnit test for class {@link CleanUpVisitorTest}. It is intended to
+ * The JUnit test for class {@link RemoveIntermediateNodesTest}. It is intended to
  * collect and document a set of test cases for the tested class. Please refer
  * to the individual tests for more detailed information.
  *
  * @author Claas Ahlrichs
  *
  */
-public class CleanUpVisitorTest {
+public class RemoveIntermediateNodesTest {
 
-	private CleanUpVisitor visitor;
+	private RemoveIntermediateNodes visitor;
 
 	@Before
 	public void before() {
-		visitor = new CleanUpVisitor();
+		visitor = new RemoveIntermediateNodes();
 	}
 
 	@Test

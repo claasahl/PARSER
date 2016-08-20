@@ -7,7 +7,7 @@ import java.util.Stack;
 import de.claas.parser.exceptions.ParsingException;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.rules.NonTerminal;
-import de.claas.parser.visitors.CleanUpVisitor;
+import de.claas.parser.visitors.RemoveIntermediateNodes;
 import de.claas.parser.visitors.ExtractTerminals;
 
 /**
@@ -93,7 +93,7 @@ public class Grammar {
 		if (state.getUnprocessedTokens() > 0)
 			throw new ParsingException("Could not process all tokens.");
 		if (!retainIntermediateNodes)
-			node.visit(new CleanUpVisitor());
+			node.visit(new RemoveIntermediateNodes());
 		return node;
 	}
 
