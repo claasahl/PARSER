@@ -14,10 +14,10 @@ import de.claas.parser.rules.Terminal;
  * result as a tree of {@link Node} instances.
  * <ul>
  * <li>hello-world = de / en / se / es</li>
- * <li>de = "hallo" "welt"</li>
- * <li>en = "hello" "world"</li>
- * <li>se = "hallå" "värld"</li>
- * <li>es = "hola" "mundo"</li>
+ * <li>de = "hallo" " " "welt"</li>
+ * <li>en = "hello" " " "world"</li>
+ * <li>se = "hallå" " " "värld"</li>
+ * <li>es = "hola" " " "mundo"</li>
  * </ul>
  * The grammar has been defined as augmented Backus Naur form. Details on syntax
  * and grammar can be found in
@@ -41,10 +41,10 @@ public class HelloWorld extends Grammar {
 	 * @return the above described grammar
 	 */
 	private static NonTerminal grammar() {
-		NonTerminal de = new NonTerminal("de", new Conjunction(new Terminal("hallo"), new Terminal("welt")));
-		NonTerminal en = new NonTerminal("en", new Conjunction(new Terminal("hello"), new Terminal("world")));
-		NonTerminal se = new NonTerminal("se", new Conjunction(new Terminal("hallå"), new Terminal("värld")));
-		NonTerminal es = new NonTerminal("es", new Conjunction(new Terminal("hola"), new Terminal("mundo")));
+		NonTerminal de = new NonTerminal("de", new Conjunction(new Terminal("hallo"), new Terminal(" "), new Terminal("welt")));
+		NonTerminal en = new NonTerminal("en", new Conjunction(new Terminal("hello"), new Terminal(" "), new Terminal("world")));
+		NonTerminal se = new NonTerminal("se", new Conjunction(new Terminal("hallå"), new Terminal(" "), new Terminal("värld")));
+		NonTerminal es = new NonTerminal("es", new Conjunction(new Terminal("hola"), new Terminal(" "), new Terminal("mundo")));
 		return new NonTerminal("hello-world", new Disjunction(de, en, se, es));
 	}
 

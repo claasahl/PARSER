@@ -57,26 +57,6 @@ public class HelloWorldTest extends GrammarTest<HelloWorld> {
 		assertEquals(expected, actual);
 	}
 
-	@Test
-	public void shouldRequireTrimmingOfWhitespace() throws ParsingException {
-		Grammar grammar = build();
-		Node actual = grammar.parse("hola mundo", false, false);
-		Node expected = generateTree("es", "hola", "mundo");
-		assertEquals(expected, actual);
-	}
-
-	@Test
-	public void shouldNotRequireTrimmingOfWhitespace() throws ParsingException {
-		Grammar grammar = build();
-		Node actual = grammar.parse("holamundo", false, true);
-		Node expected = generateTree("es", "hola", "mundo");
-		assertEquals(expected, actual);
-		
-		actual = grammar.parse("holamundo", false, false);
-		expected = generateTree("es", "hola", "mundo");
-		assertEquals(expected, actual);
-	}
-
 	@Test(expected = ParsingException.class)
 	public void shouldNotHandleMixedLanguages() throws ParsingException {
 		Grammar grammar = build();
@@ -96,10 +76,12 @@ public class HelloWorldTest extends GrammarTest<HelloWorld> {
 	 */
 	private Node generateTree(String language, String hello, String world) {
 		Node t1 = new TerminalNode(hello);
-		Node t2 = new TerminalNode(world);
+		Node t2 = new TerminalNode(" ");
+		Node t3 = new TerminalNode(world);
 		Node n1 = new NonTerminalNode(language);
 		n1.addChild(t1);
 		n1.addChild(t2);
+		n1.addChild(t3);
 		Node expected = new NonTerminalNode("hello-world");
 		expected.addChild(n1);
 		return expected;

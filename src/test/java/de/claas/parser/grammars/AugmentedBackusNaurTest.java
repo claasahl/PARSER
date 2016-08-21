@@ -31,45 +31,45 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 	@Test
 	public void shouldHandleConcatenation() throws ParsingException {
 		Grammar grammar = build();
-		assertNotNull(grammar.parse("rule = \"hel\" \"lo\"\r\n", false, true));
+		assertNotNull(grammar.parse("rule = \"hel\" \"lo\"\r\n", false));
 	}
 
 	@Test
 	public void shouldHandleAlternation() throws ParsingException {
 		Grammar grammar = build();
-		assertNotNull(grammar.parse("rule = \"hel\" / \"lo\"\r\n", false, true));
+		assertNotNull(grammar.parse("rule = \"hel\" / \"lo\"\r\n", false));
 	}
 
 	@Test
 	public void shouldHandleIncrementalAlternatives() throws ParsingException {
 		Grammar grammar = build();
-		assertNotNull(grammar.parse("rule = \"hel\"\r\n =/ \"lo\"\r\n", false, true));
+		assertNotNull(grammar.parse("rule = \"hel\"\r\n =/ \"lo\"\r\n", false));
 	}
 
 	@Test
 	public void shouldHandleComment() throws ParsingException {
 		Grammar grammar = build();
-		assertNotNull(grammar.parse("rule = \"R\" ; rrrrrrrr RRRR\r\n", false, true));
+		assertNotNull(grammar.parse("rule = \"R\" ; rrrrrrrr RRRR\r\n", false));
 	}
 
 	@Test
 	public void shouldHandleRepetition() throws ParsingException {
 		Grammar grammar = build();
-		assertNotNull(grammar.parse("rule = *\"R\"\r\n", false, true));
-		assertNotNull(grammar.parse("rule = 2*\"R\"\r\n", false, true));
-		assertNotNull(grammar.parse("rule = *2\"R\"\r\n", false, true));
+		assertNotNull(grammar.parse("rule = *\"R\"\r\n", false));
+		assertNotNull(grammar.parse("rule = 2*\"R\"\r\n", false));
+		assertNotNull(grammar.parse("rule = *2\"R\"\r\n", false));
 	}
 
 	@Test
 	public void shouldHandleGroup() throws ParsingException {
 		Grammar grammar = build();
-		assertNotNull(grammar.parse("rule = (\"hello\")\r\n", false, true));
+		assertNotNull(grammar.parse("rule = (\"hello\")\r\n", false));
 	}
 
 	@Test
 	public void shouldHandleOption() throws ParsingException {
 		Grammar grammar = build();
-		assertNotNull(grammar.parse("rule = [\"hello\"]\r\n", false, true));
+		assertNotNull(grammar.parse("rule = [\"hello\"]\r\n", false));
 	}
 
 	@Test
@@ -123,7 +123,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 
 		Grammar grammar = build();
 		String data = rules.stream().collect(Collectors.joining("\r\n")) + "\r\n";
-		assertNotNull(grammar.parse(data, false, true));
+		assertNotNull(grammar.parse(data, false));
 	}
 
 }

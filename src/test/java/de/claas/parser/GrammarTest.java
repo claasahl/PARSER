@@ -1,10 +1,14 @@
 package de.claas.parser;
 
-import static org.junit.Assert.fail;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import de.claas.parser.exceptions.ParsingException;
 import de.claas.parser.visitors.NodeToString;
 
 /**
@@ -25,6 +29,40 @@ public abstract class GrammarTest<R extends Grammar> {
 	 * @return an instantiated {@link Grammar} class
 	 */
 	protected abstract R build();
+
+	@Test
+	public void shouldTokenizePattern() throws ParsingException {
+		R grammar = build();
+		String pattern = "abcd";
+		Set<String> terminals = new HashSet<>(Arrays.asList("d", "a", "bc"));
+		List<String> tokens = Arrays.asList("a", "bc", "d");
+		Assert.assertEquals(tokens, grammar.tokenize(terminals, pattern));
+	}
+
+	@Test(expected = ParsingException.class)
+	public void shouldNotTokenizePatternWithUnrecognizedToken() throws ParsingException {
+		R grammar = build();
+		String pattern = "abcd";
+		Set<String> terminals = new HashSet<>(Arrays.asList("d", "a"));
+		grammar.tokenize(terminals, pattern);
+	}
+
+	@Test(expected = ParsingException.class)
+	public void shouldNotTokenizePatternWithUnrecognizedWhitespace() throws ParsingException {
+		R grammar = build();
+		String pattern = "a bcd\n";
+		Set<String> terminals = new HashSet<>(Arrays.asList("d", "a", "bc", " "));
+		grammar.tokenize(terminals, pattern);
+	}
+
+	@Test
+	public void shouldHandleAmbigiousTerminals() throws ParsingException {
+		R grammar = build();
+		String pattern = "bc";
+		Set<String> terminals = new HashSet<>(Arrays.asList("bc", "b", "c"));
+		List<String> tokens = Arrays.asList("b", "c");
+		Assert.assertEquals(tokens, grammar.tokenize(terminals, pattern));
+	}
 
 	/**
 	 * A convenience method for asserting the equality of nodes.
