@@ -2,6 +2,7 @@ package de.claas.parser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 import de.claas.parser.exceptions.ParsingException;
@@ -41,8 +42,8 @@ public class Grammar {
 	 * are removed as well. If the given pattern is invalid, then a
 	 * {@link ParsingException} is thrown.
 	 * <p>
-	 * Calling this method is equivalent <code>parse(data, false, false)</code>
-	 * (see {@link #parse(String, boolean, boolean)}).
+	 * Calling this method is equivalent <code>parse(data, false)</code> (see
+	 * {@link #parse(String, boolean)}).
 	 * 
 	 * @param data
 	 *            the pattern
@@ -54,7 +55,7 @@ public class Grammar {
 	 *             that was passed into the constructor)
 	 */
 	public Node parse(String data) throws ParsingException {
-		return parse(data, false, false);
+		return parse(data, false);
 	}
 
 	/**
@@ -70,9 +71,6 @@ public class Grammar {
 	 *            whether {@link IntermediateNode} instances should be retained.
 	 *            Set to <code>false</code> if only non-terminal and terminal
 	 *            nodes are desired
-	 * @param retainWhitespace
-	 *            whether preceding and trailing whitespace should be retained.
-	 *            Set to <code>false</code> if whitespace is to be removed
 	 * @return the tree of terminals and non-terminals that represents the given
 	 *         pattern
 	 * @throws ParsingException
@@ -80,10 +78,10 @@ public class Grammar {
 	 *             the pattern is otherwise not in accordance with the grammar
 	 *             that was passed into the constructor)
 	 */
-	public Node parse(String data, boolean retainIntermediateNodes, boolean retainWhitespace) throws ParsingException {
+	public Node parse(String data, boolean retainIntermediateNodes) throws ParsingException {
 		ExtractTerminals visitor = new ExtractTerminals();
 		start.visit(visitor);
-		List<String> tokenized = tokenize(visitor.getTerminals(), data, retainWhitespace);
+		List<String> tokenized = tokenize(visitor.getTerminals(), data);
 		Stack<String> tokens = new Stack<>();
 		for (int i = tokenized.size() - 1; i >= 0; i--) {
 			tokens.push(tokenized.get(i));
@@ -97,50 +95,43 @@ public class Grammar {
 		return node;
 	}
 
+	// TODO tryParse?
+
 	/**
 	 * Returns the tokens that make up the given pattern. The pattern needs to
 	 * be in accordance with the grammar described in above. Otherwise a
 	 * {@link ParsingException} is thrown.
 	 * <p>
-	 * This function is sensitive to upper and lower case characters. Tokens may
-	 * be separated by white space, but do not need to be separated by it. Any
-	 * preceding and trailing whitespace can be removed during tokenization.
+	 * This function is sensitive to upper and lower case characters.
 	 * 
 	 * @param terminals
 	 *            the terminals (i.e. valid tokens)
 	 * @param pattern
 	 *            the pattern
-	 * @param retainWhitespaces
-	 *            whether preceding and trailing whitespace should be retained.
-	 *            Set to <code>false</code> if whitespace is to be removed
-	 * 
 	 * @return the tokens that make up the given pattern
 	 * @throws ParsingException
 	 *             if the pattern is invalid (i.e. contains illegal tokens)
 	 */
-	private static List<String> tokenize(List<String> terminals, String pattern, boolean retainWhitespace)
-			throws ParsingException {
+	protected List<String> tokenize(Set<String> terminals, String pattern) throws ParsingException {
 		List<String> tokens = new ArrayList<>();
-		String token = retainWhitespace ? pattern : pattern.trim();
 		do {
 			// look for tokens ...
-			boolean foundValidToken = false;
+			String token = null;
 			for (String validToken : terminals) {
-				foundValidToken = token.startsWith(validToken);
-				if (foundValidToken) {
-					tokens.add(validToken);
-					if(retainWhitespace)
-						token = token.substring(validToken.length());
-					else
-						token = token.substring(validToken.length()).trim();
-					break;
+				if (pattern.startsWith(validToken)) {
+					if(token == null || token.length() > validToken.length())
+						token = validToken;
 				}
 			}
 
 			// ... and handle unknown tokens
-			if (!foundValidToken)
-				throw new ParsingException("unknown token '" + token + "'");
-		} while (!token.isEmpty());
+			if (token != null) {
+				tokens.add(token);
+				pattern = pattern.substring(token.length());
+			} else { 
+				throw new ParsingException("unknown token '" + pattern + "'");
+			}
+		} while (!pattern.isEmpty());
 		return tokens;
 	}
 }

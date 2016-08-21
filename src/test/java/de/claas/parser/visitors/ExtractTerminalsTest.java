@@ -1,10 +1,11 @@
 package de.claas.parser.visitors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -81,17 +82,17 @@ public class ExtractTerminalsTest {
 	}
 
 	private void assertTerminals(Terminal... terminals) {
-		List<String> expectedTerminals = new ArrayList<>();
+		Set<String> expectedTerminals = new HashSet<>();
 		for (Terminal terminal : terminals) {
 			Iterator<String> iterator = terminal.getTerminals();
 			while (iterator.hasNext())
 				expectedTerminals.add(iterator.next());
 		}
 
-		List<String> actualTerminals = visitor.getTerminals();
+		Set<String> actualTerminals = visitor.getTerminals();
 		for (String terminal : expectedTerminals) {
 			assertTrue("List of actual terminals did not include '" + terminal + "' (" + actualTerminals + ").",
-					actualTerminals.contains(terminal));
+					actualTerminals.contains(terminal));	
 		}
 		assertEquals("The actual list of terminals is larger than expected.", expectedTerminals.size(),
 				actualTerminals.size());

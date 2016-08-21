@@ -1,6 +1,6 @@
 package de.claas.parser.visitors;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -32,16 +32,13 @@ public class ExtractTerminals implements RuleVisitor {
 	private Set<Rule> visited = new HashSet<>();
 
 	/**
-	 * Returns the terminal symbols in reversed alphabetical order. If this
-	 * visitor is used to visit multiple grammars, then the terminal symbols of
-	 * all grammars are returned.
+	 * Returns the terminal symbols. If this visitor is used to visit multiple
+	 * grammars, then the terminal symbols of all grammars are returned.
 	 * 
-	 * @return the terminal symbols in reversed alphabetical order
+	 * @return the terminal symbols
 	 */
-	public List<String> getTerminals() {
-		ArrayList<String> bla = new ArrayList<>(terminals);
-		bla.sort((String s1, String s2) -> -s1.compareToIgnoreCase(s2));
-		return bla;
+	public Set<String> getTerminals() {
+		return Collections.unmodifiableSet(terminals);
 	}
 
 	@Override
