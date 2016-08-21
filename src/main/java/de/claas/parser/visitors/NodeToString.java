@@ -49,26 +49,37 @@ public class NodeToString implements NodeVisitor {
 		decrementIndent();
 	}
 
+	/**
+	 * Increments the indentation for the next node.
+	 */
 	private void incrementIndent() {
 		indents.incrementAndGet();
 	}
 
+	/**
+	 * Decrements the indentation for the next node.
+	 */
 	private void decrementIndent() {
 		indents.decrementAndGet();
 	}
 
+	/**
+	 * Appends the specified node with its notes. The node will occupy a
+	 * separate line and use the correct indentation / spacing.
+	 * 
+	 * @param node
+	 *            the node
+	 * @param notes
+	 *            the notes
+	 */
 	private void appendNode(Node node, String... notes) {
-		spacing();
+		builder.append(new String(new byte[indents.get()]).replaceAll("\0", SEPARATOR));
 		for (String note : notes) {
 			builder.append(note);
 			builder.append(SEPARATOR);
 		}
 		builder.append(node.getClass().getName());
 		builder.append(NEWLINE);
-	}
-
-	private void spacing() {
-		builder.append(new String(new byte[indents.get()]).replaceAll("\0", SEPARATOR));
 	}
 
 	@Override

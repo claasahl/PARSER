@@ -32,6 +32,11 @@ public class NodeToStringTest {
 	public void before() {
 		visitor = new NodeToString();
 	}
+	
+	@Test
+	public void shouldHandleNoNode() {
+		assertEquals("", visitor.toString());
+	}
 
 	@Test
 	public void shouldHandleTerminalNode() {
