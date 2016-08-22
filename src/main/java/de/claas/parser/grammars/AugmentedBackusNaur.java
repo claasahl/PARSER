@@ -104,7 +104,7 @@ public class AugmentedBackusNaur extends Grammar {
 		// WSP = SP / HTAB ; white space
 		NonTerminal wsp = new NonTerminal("wsp", new Terminal("" + (char) 0x20, "" + (char) 0x09));
 		// CRLF = CR LF ; Internet standard newline
-		NonTerminal crlf = new NonTerminal("crlf", new Terminal((char) 0x0a, (char) 0x0d));
+		NonTerminal crlf = new NonTerminal("crlf", new Terminal("\r\n"));
 		// VCHAR = %x21-7E ; visible (printing) characters
 		NonTerminal vchar = new NonTerminal("vchar", new Terminal((char) 0x21, (char) 0x7e));
 		// DQUOTE = %x22 ; " (Double Quote)
