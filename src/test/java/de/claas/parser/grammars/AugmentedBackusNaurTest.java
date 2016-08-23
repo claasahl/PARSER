@@ -43,7 +43,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 	@Test
 	public void shouldHandleIncrementalAlternatives() throws ParsingException {
 		Grammar grammar = build();
-		assertNotNull(grammar.parse("rule = \"hel\"\r\n =/ \"lo\"\r\n", false));
+		assertNotNull(grammar.parse("rule = \"hel\"\r\nrule =/ \"lo\"\r\n", false));
 	}
 
 	@Test
