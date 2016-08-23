@@ -1,5 +1,7 @@
 package de.claas.parser.visitors;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.claas.parser.Node;
@@ -12,7 +14,9 @@ import de.claas.parser.results.TerminalNode;
  * 
  * The class {@link NodeToString}. It is an implementation of the interface
  * {@link NodeVisitor}. It is intended to "visualize" a tree of {@link Node}
- * objects. The tree is turned into a
+ * objects. The tree is turned into a human readable (if not "pretty") string.
+ * <p>
+ * Cyclic dependencies are silently ignored.
  * 
  * @author Claas Ahlrichs
  *
@@ -23,30 +27,37 @@ public class NodeToString implements NodeVisitor {
 	private static final String NEWLINE = "\n";
 	private final StringBuilder builder = new StringBuilder();
 	private final AtomicInteger indents = new AtomicInteger();
+	private final Set<Node> visitedNodes = new HashSet<>();
 
 	@Override
 	public void visitTerminalNode(TerminalNode node) {
-		appendNode(node, node.getTerminal());
+		if (visitedNodes.add(node)) {
+			appendNode(node, node.getTerminal());
+		}
 	}
 
 	@Override
 	public void visitIntermediateNode(IntermediateNode node) {
-		appendNode(node);
-		incrementIndent();
-		for (Node n : node) {
-			n.visit(this);
+		if (visitedNodes.add(node)) {
+			appendNode(node);
+			incrementIndent();
+			for (Node n : node) {
+				n.visit(this);
+			}
+			decrementIndent();
 		}
-		decrementIndent();
 	}
 
 	@Override
 	public void visitNonTerminaNode(NonTerminalNode node) {
-		appendNode(node, node.getName());
-		incrementIndent();
-		for (Node n : node) {
-			n.visit(this);
+		if (visitedNodes.add(node)) {
+			appendNode(node, node.getName());
+			incrementIndent();
+			for (Node n : node) {
+				n.visit(this);
+			}
+			decrementIndent();
 		}
-		decrementIndent();
 	}
 
 	/**

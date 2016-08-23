@@ -1,6 +1,8 @@
 package de.claas.parser.visitors;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.claas.parser.Rule;
@@ -16,7 +18,7 @@ import de.claas.parser.rules.Terminal;
  * 
  * The class {@link RuleToString}. It is an implementation of the interface
  * {@link RuleVisitor}. It is intended to "visualize" a tree of {@link Rule}
- * objects. The tree is turned into a
+ * objects. The tree is turned into a human readable (if not "pretty") string.
  * 
  * @author Claas Ahlrichs
  *
@@ -25,51 +27,73 @@ public class RuleToString implements RuleVisitor {
 
 	private static final String SEPARATOR = "-";
 	private static final String NEWLINE = "\n";
+	private static final String CYCLE = "...";
 	private final StringBuilder builder = new StringBuilder();
 	private final AtomicInteger indents = new AtomicInteger();
+	private final Set<Rule> visitedRules = new HashSet<>();
 
 	@Override
 	public void visitConjunction(Conjunction rule) {
-		appendRule(rule);
-		incrementIndent();
-		for (Rule child : rule) {
-			child.visit(this);
+		if (visitedRules.add(rule)) {
+			appendRule(rule);
+			incrementIndent();
+			for (Rule child : rule) {
+				child.visit(this);
+			}
+			decrementIndent();
+		} else {
+			appendRule(rule, CYCLE);
 		}
-		decrementIndent();
 	}
 
 	@Override
 	public void visitDisjunction(Disjunction rule) {
-		appendRule(rule);
-		incrementIndent();
-		for (Rule child : rule) {
-			child.visit(this);
+		if (visitedRules.add(rule)) {
+			appendRule(rule);
+			incrementIndent();
+			for (Rule child : rule) {
+				child.visit(this);
+			}
+			decrementIndent();
+		} else {
+			appendRule(rule, CYCLE);
 		}
-		decrementIndent();
 	}
 
 	@Override
 	public void visitNonTerminal(NonTerminal rule) {
-		appendRule(rule, rule.getName());
-		incrementIndent();
-		rule.getRule().visit(this);
-		decrementIndent();
+		if (visitedRules.add(rule)) {
+			appendRule(rule, rule.getName());
+			incrementIndent();
+			rule.getRule().visit(this);
+			decrementIndent();
+		} else {
+			appendRule(rule, CYCLE, rule.getName());
+		}
 	}
 
 	@Override
 	public void visitOptional(Optional rule) {
-		appendRule(rule);
-		incrementIndent();
-		rule.getRule().visit(this);
-		decrementIndent();
+		if (visitedRules.add(rule)) {
+			appendRule(rule);
+			incrementIndent();
+			rule.getRule().visit(this);
+			decrementIndent();
+		} else {
+			appendRule(rule, CYCLE);
+		}
 	}
 
 	@Override
 	public void visitRepetition(Repetition rule) {
-		appendRule(rule);
-		incrementIndent();
-		rule.getRule().visit(this);
-		decrementIndent();
+		if (visitedRules.add(rule)) {
+			appendRule(rule);
+			incrementIndent();
+			rule.getRule().visit(this);
+			decrementIndent();
+		} else {
+			appendRule(rule, CYCLE);
+		}
 	}
 
 	@Override
