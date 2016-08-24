@@ -82,6 +82,27 @@ public class Terminal extends Rule {
 				if (terminal.equals(token)) {
 					node = new TerminalNode(token);
 					break;
+				} else if (terminal.startsWith(token)) {	
+					state.beginGroup();
+					int offset = token.length();
+					while(offset < terminal.length()) {
+						token = state.processToken();
+						if (terminal.substring(offset).equals(token)) {
+							node = new TerminalNode(terminal);
+							break;
+						} else if (terminal.substring(offset).startsWith(token)) {
+							offset += token.length();
+						} else {
+							break;
+						}
+					};
+					
+					if(node == null) {
+						state.revert();
+					} else {
+						state.endGroup();
+					}
+					break;
 				}
 			}
 		}
