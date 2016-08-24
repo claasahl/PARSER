@@ -22,6 +22,7 @@ import de.claas.parser.results.TerminalNode;
  */
 public class RemoveIntermediateNodes implements NodeVisitor {
 
+	// TODO account for cycles?
 	private Stack<Node> parents = new Stack<>();
 
 	@Override
