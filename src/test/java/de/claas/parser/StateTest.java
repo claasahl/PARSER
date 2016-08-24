@@ -8,25 +8,24 @@ import org.junit.Test;
 
 /**
  * 
- * The JUnit test for class {@link ParserStateTest}. It is intended to collect
- * and document a set of test cases for the tested class. Please refer to the
+ * The JUnit test for class {@link StateTest}. It is intended to collect and
+ * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
  *
  * @author Claas Ahlrichs
  *
  */
-public class ParserStateTest {
+public class StateTest {
 
 	/**
-	 * Returns an instantiated {@link State} class with the specified
-	 * tokens. The first token, that is past into this function, will also be
-	 * the first token to be processed. Respectively, the last token will be
-	 * processed last.
+	 * Returns an instantiated {@link State} class with the specified tokens.
+	 * The first token, that is past into this function, will also be the first
+	 * token to be processed. Respectively, the last token will be processed
+	 * last.
 	 * 
 	 * @param tokens
 	 *            the (unprocessed) tokens
-	 * @return an instantiated {@link State} class with the specified
-	 *         tokens
+	 * @return an instantiated {@link State} class with the specified tokens
 	 */
 	protected State buildState(String... tokens) {
 		Stack<String> tmp = new Stack<>();
