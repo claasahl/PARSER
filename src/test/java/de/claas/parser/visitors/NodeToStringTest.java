@@ -1,6 +1,6 @@
 package de.claas.parser.visitors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +30,9 @@ public class NodeToStringTest {
 
 	@Before
 	public void before() {
-		visitor = new NodeToString();
+		visitor = new NodeToString("  ", "\n");
 	}
-	
+
 	@Test
 	public void shouldHandleNoNode() {
 		assertEquals("", visitor.toString());
@@ -41,19 +41,19 @@ public class NodeToStringTest {
 	@Test
 	public void shouldHandleTerminalNode() {
 		new TerminalNode("some terminal").visit(visitor);
-		assertEquals("some terminal-" + TerminalNode.class.getName() + "\n", visitor.toString());
+		assertEquals("TerminalNode:some terminal\n", visitor.toString());
 	}
 
 	@Test
 	public void shouldHandleIntermediateNode() {
 		new IntermediateNode().visit(visitor);
-		assertEquals(IntermediateNode.class.getName() + "\n", visitor.toString());
+		assertEquals("IntermediateNode\n", visitor.toString());
 	}
 
 	@Test
 	public void shouldHandleNonTerminalNode() {
 		new NonTerminalNode("some non-terminal").visit(visitor);
-		assertEquals("some non-terminal-" + NonTerminalNode.class.getName() + "\n", visitor.toString());
+		assertEquals("NonTerminalNode:some non-terminal\n", visitor.toString());
 	}
 
 	@Test
@@ -69,37 +69,39 @@ public class NodeToStringTest {
 		Node n1 = new NonTerminalNode("root");
 		n1.addChild(i1);
 		n1.addChild(i2);
+		n1.visit(visitor);
 
 		List<String> lines = new ArrayList<>();
-		lines.add("root-" + NonTerminalNode.class.getName());
-		lines.add("-" + IntermediateNode.class.getName());
-		lines.add("--t1-" + TerminalNode.class.getName());
-		lines.add("--t2-" + TerminalNode.class.getName());
-		lines.add("-" + IntermediateNode.class.getName());
-		lines.add("--t3-" + TerminalNode.class.getName());
+		lines.add("NonTerminalNode:root");
+		lines.add("  IntermediateNode");
+		lines.add("    TerminalNode:t1");
+		lines.add("    TerminalNode:t2");
+		lines.add("  IntermediateNode");
+		lines.add("    TerminalNode:t3");
+		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
+	}
 
+	@Test
+	public void shouldHandleCyclicNonTerminalNode() {
+		Node n1 = new NonTerminalNode("root");
+		n1.addChild(n1);
 		n1.visit(visitor);
+
+		List<String> lines = new ArrayList<>();
+		lines.add("NonTerminalNode:root");
+		lines.add("  NonTerminalNode:root");
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
 	
-	
 	@Test
-	public void shouldHandleCyclicNodes() {
-		Node t1 = new TerminalNode("t1");
-		Node i1 = new IntermediateNode();
-		i1.addChild(t1);
-		Node n1 = new NonTerminalNode("root");
-		n1.addChild(i1);
+	public void shouldHandleCyclicIntermediateNode() {
+		Node n1 = new IntermediateNode();
+		n1.addChild(n1);
+		n1.visit(visitor);
 
 		List<String> lines = new ArrayList<>();
-		lines.add("root-" + NonTerminalNode.class.getName());
-		lines.add("-" + IntermediateNode.class.getName());
-		lines.add("--t1-" + TerminalNode.class.getName());
-		lines.add("--t2-" + TerminalNode.class.getName());
-		lines.add("-" + IntermediateNode.class.getName());
-		lines.add("--t3-" + TerminalNode.class.getName());
-
-		n1.visit(visitor);
+		lines.add("IntermediateNode");
+		lines.add("  IntermediateNode");
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
 

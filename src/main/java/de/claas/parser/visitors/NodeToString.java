@@ -15,82 +15,109 @@ import de.claas.parser.results.TerminalNode;
  * The class {@link NodeToString}. It is an implementation of the interface
  * {@link NodeVisitor}. It is intended to "visualize" a tree of {@link Node}
  * objects. The tree is turned into a human readable (if not "pretty") string.
- * <p>
- * Cyclic dependencies are silently ignored.
  * 
  * @author Claas Ahlrichs
  *
  */
 public class NodeToString implements NodeVisitor {
 
-	private static final String SEPARATOR = "-";
-	private static final String NEWLINE = "\n";
+	private static final String DEFAULT_LEVEL_SEPARATOR = "  ";
+	private static final String DEFAULT_LINE_NEWLINE = "\r\n";
 	private final StringBuilder builder = new StringBuilder();
-	private final AtomicInteger indents = new AtomicInteger();
+	private final AtomicInteger levels = new AtomicInteger();
 	private final Set<Node> visitedNodes = new HashSet<>();
+	private final String levelSeparator;
+	private final String lineSeparator;
+
+	/**
+	 * Constructs a new NodeToString with default parameters. Calling this
+	 * constructor is equivalent to calling
+	 * <code>{@link #NodeToString(String, String)}</code> with
+	 * {@value #DEFAULT_LEVEL_SEPARATOR} as default level separator and the
+	 * system's line separator (property {@literal line.separator}).
+	 */
+	public NodeToString() {
+		this(DEFAULT_LEVEL_SEPARATOR, System.getProperty("line.separator", DEFAULT_LINE_NEWLINE));
+	}
+
+	/**
+	 * Constructs a new NodeToString with the specified parameters. The level
+	 * separator is prefixed to every stringified (i.e. turned into a string)
+	 * {@link Node} object and signified the node's depth within the tree. The
+	 * line separator is appended to every stringified {@link Node} object.
+	 * 
+	 * @param levelSeparator
+	 *            the level separator
+	 * @param lineSeparator
+	 *            the line separator
+	 */
+	public NodeToString(String levelSeparator, String lineSeparator) {
+		this.levelSeparator = levelSeparator;
+		this.lineSeparator = lineSeparator;
+	}
 
 	@Override
 	public void visitTerminalNode(TerminalNode node) {
-		if (visitedNodes.add(node)) {
-			appendNode(node, node.getTerminal());
-		}
+		appendNode(node, node.getTerminal());
 	}
 
 	@Override
 	public void visitIntermediateNode(IntermediateNode node) {
+		appendNode(node, null);
 		if (visitedNodes.add(node)) {
-			appendNode(node);
-			incrementIndent();
+			incrementLevel();
 			for (Node n : node) {
 				n.visit(this);
 			}
-			decrementIndent();
+			decrementLevel();
 		}
 	}
 
 	@Override
 	public void visitNonTerminaNode(NonTerminalNode node) {
+		appendNode(node, node.getName());
 		if (visitedNodes.add(node)) {
-			appendNode(node, node.getName());
-			incrementIndent();
+			incrementLevel();
 			for (Node n : node) {
 				n.visit(this);
 			}
-			decrementIndent();
+			decrementLevel();
 		}
 	}
 
 	/**
-	 * Increments the indentation for the next node.
+	 * Increments the level / indentation for the next node.
 	 */
-	private void incrementIndent() {
-		indents.incrementAndGet();
+	private void incrementLevel() {
+		levels.incrementAndGet();
 	}
 
 	/**
-	 * Decrements the indentation for the next node.
+	 * Decrements the level / indentation for the next node.
 	 */
-	private void decrementIndent() {
-		indents.decrementAndGet();
+	private void decrementLevel() {
+		levels.decrementAndGet();
 	}
 
 	/**
-	 * Appends the specified node with its notes. The node will occupy a
-	 * separate line and use the correct indentation / spacing.
+	 * Appends the specified node. The node will occupy a separate line and use
+	 * the correct indentation / spacing (according to its level within the
+	 * tree). The node will be represented by its (simple) class name and an
+	 * optional postfix.
 	 * 
 	 * @param node
 	 *            the node
-	 * @param notes
-	 *            the notes
+	 * @param postfix
+	 *            the postfix
 	 */
-	private void appendNode(Node node, String... notes) {
-		builder.append(new String(new byte[indents.get()]).replaceAll("\0", SEPARATOR));
-		for (String note : notes) {
-			builder.append(note);
-			builder.append(SEPARATOR);
+	private void appendNode(Node node, String postfix) {
+		builder.append(new String(new byte[levels.get()]).replaceAll("\0", levelSeparator));
+		builder.append(node.getClass().getSimpleName());
+		if (postfix != null) {
+			builder.append(":");
+			builder.append(postfix);
 		}
-		builder.append(node.getClass().getName());
-		builder.append(NEWLINE);
+		builder.append(lineSeparator);
 	}
 
 	@Override
