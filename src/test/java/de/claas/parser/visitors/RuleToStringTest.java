@@ -88,9 +88,9 @@ public class RuleToStringTest {
 
 	@Test
 	public void shouldHandleRules() {
-		NonTerminal digit = new NonTerminal("digit", new Terminal('0', '9'));
-		Repetition digits = new Repetition(digit);
-		NonTerminal repeat = new NonTerminal("repeat",
+		Rule digit = new NonTerminal("digit", new Terminal('0', '9'));
+		Rule digits = new Repetition(digit);
+		Rule repeat = new NonTerminal("repeat",
 				new Disjunction(new Conjunction(digit, digits), new Conjunction(digits, new Terminal("*"), digits)));
 
 		List<String> lines = new ArrayList<>();
@@ -120,6 +120,24 @@ public class RuleToStringTest {
 		}
 
 		repeat.visit(visitor);
+		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
+	}
+
+	@Test
+	public void shouldHandleCyclicRules() {
+		Rule r1 = new Conjunction();
+		Rule t1 = new Terminal("t1");
+		Rule n1 = new NonTerminal("cyclic", r1);
+		r1.addChild(t1);
+		r1.addChild(n1);
+		
+		List<String> lines = new ArrayList<>();
+		lines.add("cyclic-" + NonTerminal.class.getName());
+		lines.add("-" + Conjunction.class.getName());
+		lines.add("--t1-" + Terminal.class.getName());
+		lines.add("--...-cyclic-" + NonTerminal.class.getName());
+
+		n1.visit(visitor);
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
 

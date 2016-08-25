@@ -81,5 +81,26 @@ public class NodeToStringTest {
 		n1.visit(visitor);
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
+	
+	
+	@Test
+	public void shouldHandleCyclicNodes() {
+		Node t1 = new TerminalNode("t1");
+		Node i1 = new IntermediateNode();
+		i1.addChild(t1);
+		Node n1 = new NonTerminalNode("root");
+		n1.addChild(i1);
+
+		List<String> lines = new ArrayList<>();
+		lines.add("root-" + NonTerminalNode.class.getName());
+		lines.add("-" + IntermediateNode.class.getName());
+		lines.add("--t1-" + TerminalNode.class.getName());
+		lines.add("--t2-" + TerminalNode.class.getName());
+		lines.add("-" + IntermediateNode.class.getName());
+		lines.add("--t3-" + TerminalNode.class.getName());
+
+		n1.visit(visitor);
+		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
+	}
 
 }
