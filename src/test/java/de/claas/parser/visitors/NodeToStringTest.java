@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.Before;
-import org.junit.Test;
 
 import de.claas.parser.Node;
 import de.claas.parser.NodeVisitor;
@@ -24,7 +23,7 @@ import de.claas.parser.results.TerminalNode;
  * @author Claas Ahlrichs
  *
  */
-public class NodeToStringTest {
+public class NodeToStringTest extends NodeVisitorTest {
 
 	private NodeVisitor visitor;
 
@@ -33,30 +32,30 @@ public class NodeToStringTest {
 		visitor = new NodeToString("  ", "\n");
 	}
 
-	@Test
+	@Override
 	public void shouldHandleNoNode() {
 		assertEquals("", visitor.toString());
 	}
 
-	@Test
+	@Override
 	public void shouldHandleTerminalNode() {
 		new TerminalNode("some terminal").visit(visitor);
 		assertEquals("TerminalNode:some terminal\n", visitor.toString());
 	}
 
-	@Test
+	@Override
 	public void shouldHandleIntermediateNode() {
 		new IntermediateNode().visit(visitor);
 		assertEquals("IntermediateNode\n", visitor.toString());
 	}
 
-	@Test
+	@Override
 	public void shouldHandleNonTerminalNode() {
 		new NonTerminalNode("some non-terminal").visit(visitor);
 		assertEquals("NonTerminalNode:some non-terminal\n", visitor.toString());
 	}
 
-	@Test
+	@Override
 	public void shouldHandleNodes() {
 		Node t1 = new TerminalNode("t1");
 		Node t2 = new TerminalNode("t2");
@@ -81,7 +80,7 @@ public class NodeToStringTest {
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
 
-	@Test
+	@Override
 	public void shouldHandleCyclicNonTerminalNode() {
 		Node n1 = new NonTerminalNode("root");
 		n1.addChild(n1);
@@ -93,7 +92,7 @@ public class NodeToStringTest {
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
 	
-	@Test
+	@Override
 	public void shouldHandleCyclicIntermediateNode() {
 		Node n1 = new IntermediateNode();
 		n1.addChild(n1);

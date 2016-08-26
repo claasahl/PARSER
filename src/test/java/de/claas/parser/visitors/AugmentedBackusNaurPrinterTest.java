@@ -1,8 +1,7 @@
 package de.claas.parser.visitors;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
@@ -20,52 +19,88 @@ import de.claas.parser.rules.Terminal;
  * @author Claas Ahlrichs
  *
  */
-public class AugmentedBackusNaurPrinterTest {
+public class AugmentedBackusNaurPrinterTest extends RuleVisitorTest {
 
 	private static final String RULE_NAME = "ruleName";
 	private static final Terminal TERMINAL_RULE_ALPHA = new Terminal("A", "B", "C");
 	private static final Terminal TERMINAL_RULE_NUM = new Terminal("1", "2", "3");
 
-	@Test
-	public void shouldPrintConjunction() {
+	@Override
+	public void shouldHandleNoRule() {
+		fail();
+	}
+
+	@Override
+	public void shouldHandleConjunctionRule() {
 		NonTerminal rule = new NonTerminal(RULE_NAME, new Conjunction(TERMINAL_RULE_ALPHA, TERMINAL_RULE_NUM));
 		String printedRule = new AugmentedBackusNaurPrinter(rule).toString();
 		assertEquals("ruleName = (('A' / 'B' / 'C') ('1' / '2' / '3'))", printedRule);
 	}
 
-	@Test
-	public void shouldPrintDisjunction() {
+	@Override
+	public void shouldHandleDisjunctionRule() {
 		NonTerminal rule = new NonTerminal(RULE_NAME, new Disjunction(TERMINAL_RULE_ALPHA, TERMINAL_RULE_NUM));
 		String printedRule = new AugmentedBackusNaurPrinter(rule).toString();
 		assertEquals("ruleName = (('A' / 'B' / 'C') / ('1' / '2' / '3'))", printedRule);
 	}
 
-	@Test
-	public void shouldPrintOptional() {
+	@Override
+	public void shouldHandleNonTerminalRule() {
+		fail();
+	}
+
+	@Override
+	public void shouldHandleOptionalRule() {
 		NonTerminal rule = new NonTerminal(RULE_NAME, new Optional(TERMINAL_RULE_ALPHA));
 		String printedRule = new AugmentedBackusNaurPrinter(rule).toString();
 		assertEquals("ruleName = *1(('A' / 'B' / 'C'))", printedRule);
 	}
 
-	@Test
-	public void shouldPrintRepetition() {
+	@Override
+	public void shouldHandleRepetitionRule() {
 		NonTerminal rule = new NonTerminal(RULE_NAME, new Repetition(TERMINAL_RULE_ALPHA));
 		String printedRule = new AugmentedBackusNaurPrinter(rule).toString();
 		assertEquals("ruleName = *(('A' / 'B' / 'C'))", printedRule);
 	}
 
-	@Test
-	public void shouldPrintTerminal() {
+	@Override
+	public void shouldHandleTerminalRule() {
 		NonTerminal rule = new NonTerminal(RULE_NAME, TERMINAL_RULE_ALPHA);
 		String printedRule = new AugmentedBackusNaurPrinter(rule).toString();
 		assertEquals("ruleName = ('A' / 'B' / 'C')", printedRule);
 	}
 
-	@Test
-	public void shouldPrintRecursiveRule() {
+	@Override
+	public void shouldHandleRules() {
+		fail();
+	}
+
+	@Override
+	public void shouldHandleCyclicRepetitionRule() {
+		fail();
+	}
+
+	@Override
+	public void shouldHandleCyclicOptionalRule() {
 		NonTerminal rule = new NonTerminal(RULE_NAME);
 		rule.setRule(new Disjunction(rule, TERMINAL_RULE_NUM));
 		String printedRule = new AugmentedBackusNaurPrinter(rule).toString();
-		assertEquals("ruleName = (ruleName / ('1' / '2' / '3'))", printedRule);
+		assertEquals("ruleName = (ruleName / ('1' / '2' / '3'))", printedRule);	
+		fail();
+	}
+
+	@Override
+	public void shouldHandleCyclicNonTerminalRule() {
+		fail();
+	}
+
+	@Override
+	public void shouldHandleCyclicDisjunctionRule() {
+		fail();
+	}
+
+	@Override
+	public void shouldHandleCyclicConjunctionRule() {
+		fail();
 	}
 }

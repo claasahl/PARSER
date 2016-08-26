@@ -1,13 +1,12 @@
 package de.claas.parser.visitors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.Before;
-import org.junit.Test;
 
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
@@ -27,7 +26,7 @@ import de.claas.parser.rules.Terminal;
  * @author Claas Ahlrichs
  *
  */
-public class RuleToStringTest {
+public class RuleToStringTest extends RuleVisitorTest {
 
 	private RuleVisitor visitor;
 
@@ -36,12 +35,12 @@ public class RuleToStringTest {
 		visitor = new RuleToString("  ", "\n");
 	}
 
-	@Test
+	@Override
 	public void shouldHandleNoRule() {
 		assertEquals("", visitor.toString());
 	}
 
-	@Test
+	@Override
 	public void shouldHandleConjunctionRule() {
 		Rule r1 = new Terminal("t");
 		new Conjunction(r1).visit(visitor);
@@ -52,7 +51,7 @@ public class RuleToStringTest {
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
 
-	@Test
+	@Override
 	public void shouldHandleDisjunctionRule() {
 		Rule r1 = new Terminal("t");
 		new Disjunction(r1).visit(visitor);
@@ -63,7 +62,7 @@ public class RuleToStringTest {
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
 
-	@Test
+	@Override
 	public void shouldHandleNonTerminalRule() {
 		Rule r1 = new Terminal("t");
 		new NonTerminal("some rule", r1).visit(visitor);
@@ -74,7 +73,7 @@ public class RuleToStringTest {
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
 
-	@Test
+	@Override
 	public void shouldHandleOptionalRule() {
 		Rule r1 = new Terminal("t");
 		new Optional(r1).visit(visitor);
@@ -85,7 +84,7 @@ public class RuleToStringTest {
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
 
-	@Test
+	@Override
 	public void shouldHandleRepetitionRule() {
 		Rule r1 = new Terminal("t");
 		new Repetition(r1).visit(visitor);
@@ -96,7 +95,7 @@ public class RuleToStringTest {
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
 
-	@Test
+	@Override
 	public void shouldHandleTerminalRule() {
 		new Terminal("some", "terminal").visit(visitor);
 
@@ -106,7 +105,7 @@ public class RuleToStringTest {
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
 
-	@Test
+	@Override
 	public void shouldHandleRules() {
 		Rule digit = new NonTerminal("digit", new Terminal('0', '9'));
 		Rule digits = new Repetition(digit);
@@ -132,7 +131,7 @@ public class RuleToStringTest {
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
 	
-	@Test
+	@Override
 	public void shouldHandleCyclicRepetitionRule() {
 		Rule r0 = new Conjunction();
 		Rule r1 = new Repetition(r0);
@@ -146,7 +145,7 @@ public class RuleToStringTest {
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
 	
-	@Test
+	@Override
 	public void shouldHandleCyclicOptionalRule() {
 		Rule r0 = new Conjunction();
 		Rule r1 = new Optional(r0);
@@ -160,7 +159,7 @@ public class RuleToStringTest {
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
 	
-	@Test
+	@Override
 	public void shouldHandleCyclicNonTerminalRule() {
 		Rule r0 = new Conjunction();
 		Rule r1 = new NonTerminal("rulename", r0);
@@ -174,7 +173,7 @@ public class RuleToStringTest {
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
 	
-	@Test
+	@Override
 	public void shouldHandleCyclicDisjunctionRule() {
 		Rule r0 = new Conjunction();
 		Rule r1 = new Disjunction(r0);
@@ -188,7 +187,6 @@ public class RuleToStringTest {
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
 	
-	@Test
 	public void shouldHandleCyclicConjunctionRule() {
 		Rule r0 = new Conjunction();
 		Rule r1 = new Conjunction(r0);

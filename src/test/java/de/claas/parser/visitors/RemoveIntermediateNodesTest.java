@@ -22,7 +22,7 @@ import de.claas.parser.visitors.RemoveIntermediateNodes;
  * @author Claas Ahlrichs
  *
  */
-public class RemoveIntermediateNodesTest {
+public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 
 	private RemoveIntermediateNodes visitor;
 
@@ -75,6 +75,41 @@ public class RemoveIntermediateNodesTest {
 		assertFalse(n4.hasChildren());
 		assertEquals(n5, iterator.next());
 		assertFalse(n5.hasChildren());
+	}
+
+	@Override
+	public void shouldHandleNoNode() {
+		fail();
+	}
+
+	@Override
+	public void shouldHandleTerminalNode() {
+		fail();
+	}
+
+	@Override
+	public void shouldHandleIntermediateNode() {
+		fail();
+	}
+
+	@Override
+	public void shouldHandleNonTerminalNode() {
+		fail();
+	}
+
+	@Override
+	public void shouldHandleNodes() {
+		fail();
+	}
+
+	@Override
+	public void shouldHandleCyclicNonTerminalNode() {
+		fail();
+	}
+
+	@Override
+	public void shouldHandleCyclicIntermediateNode() {
+		fail();
 	}
 
 }

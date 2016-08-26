@@ -2,13 +2,13 @@ package de.claas.parser.visitors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 import org.junit.Before;
-import org.junit.Test;
 
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
@@ -26,7 +26,7 @@ import de.claas.parser.rules.Terminal;
  * @author Claas Ahlrichs
  *
  */
-public class ExtractTerminalsTest {
+public class ExtractTerminalsTest extends RuleVisitorTest {
 
 	private static final String RULE_NAME = "ruleName";
 	private static final Terminal TERMINAL_RULE_ALPHA = new Terminal("A", "B", "C");
@@ -38,47 +38,83 @@ public class ExtractTerminalsTest {
 		visitor = new ExtractTerminals();
 	}
 
-	@Test
-	public void shouldHandleConjunctions() {
+	@Override
+	public void shouldHandleNoRule() {
+		fail();
+	}
+
+	@Override
+	public void shouldHandleConjunctionRule() {
 		NonTerminal rule = new NonTerminal(RULE_NAME, new Conjunction(TERMINAL_RULE_ALPHA, TERMINAL_RULE_NUM));
 		rule.visit(visitor);
 		assertTerminals(TERMINAL_RULE_ALPHA, TERMINAL_RULE_NUM);
 	}
 
-	@Test
-	public void shouldHandleDisjunctions() {
+	@Override
+	public void shouldHandleDisjunctionRule() {
 		NonTerminal rule = new NonTerminal(RULE_NAME, new Disjunction(TERMINAL_RULE_ALPHA, TERMINAL_RULE_NUM));
 		rule.visit(visitor);
 		assertTerminals(TERMINAL_RULE_ALPHA, TERMINAL_RULE_NUM);
 	}
 
-	@Test
-	public void shouldHandleOptionals() {
+	@Override
+	public void shouldHandleNonTerminalRule() {
+		fail();
+	}
+
+	@Override
+	public void shouldHandleOptionalRule() {
 		NonTerminal rule = new NonTerminal(RULE_NAME, new Optional(TERMINAL_RULE_ALPHA));
 		rule.visit(visitor);
 		assertTerminals(TERMINAL_RULE_ALPHA);
 	}
 
-	@Test
-	public void shouldHandleRepetitions() {
+	@Override
+	public void shouldHandleRepetitionRule() {
 		NonTerminal rule = new NonTerminal(RULE_NAME, new Repetition(TERMINAL_RULE_ALPHA));
 		rule.visit(visitor);
 		assertTerminals(TERMINAL_RULE_ALPHA);
 	}
 
-	@Test
-	public void shouldHandleTerminals() {
+	@Override
+	public void shouldHandleTerminalRule() {
 		NonTerminal rule = new NonTerminal(RULE_NAME, TERMINAL_RULE_ALPHA);
 		rule.visit(visitor);
 		assertTerminals(TERMINAL_RULE_ALPHA);
 	}
 
-	@Test
-	public void shouldHandleRecursiveRules() {
+	@Override
+	public void shouldHandleRules() {
+		fail();
+	}
+
+	@Override
+	public void shouldHandleCyclicRepetitionRule() {
 		NonTerminal rule = new NonTerminal(RULE_NAME);
 		rule.setRule(new Disjunction(rule, TERMINAL_RULE_NUM));
 		rule.visit(visitor);
 		assertTerminals(TERMINAL_RULE_NUM);
+		fail();
+	}
+
+	@Override
+	public void shouldHandleCyclicOptionalRule() {
+		fail();
+	}
+
+	@Override
+	public void shouldHandleCyclicNonTerminalRule() {
+		fail();
+	}
+
+	@Override
+	public void shouldHandleCyclicDisjunctionRule() {
+		fail();
+	}
+
+	@Override
+	public void shouldHandleCyclicConjunctionRule() {
+		fail();
 	}
 
 	private void assertTerminals(Terminal... terminals) {
@@ -92,7 +128,7 @@ public class ExtractTerminalsTest {
 		Set<String> actualTerminals = visitor.getTerminals();
 		for (String terminal : expectedTerminals) {
 			assertTrue("List of actual terminals did not include '" + terminal + "' (" + actualTerminals + ").",
-					actualTerminals.contains(terminal));	
+					actualTerminals.contains(terminal));
 		}
 		assertEquals("The actual list of terminals is larger than expected.", expectedTerminals.size(),
 				actualTerminals.size());
