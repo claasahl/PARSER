@@ -28,7 +28,7 @@ import de.claas.parser.rules.Terminal;
  */
 public class ExtractTerminals implements RuleVisitor {
 
-	private final Set<Rule> visitedPath = new HashSet<>();
+	private final Set<Rule> visitedRules = new HashSet<>();
 	private final Set<String> terminals = new HashSet<>();
 
 	/**
@@ -43,47 +43,42 @@ public class ExtractTerminals implements RuleVisitor {
 
 	@Override
 	public void visitConjunction(Conjunction rule) {
-		if (visitedPath.add(rule)) {
+		if (visitedRules.add(rule)) {
 			Iterator<Rule> iterator = rule.iterator();
 			while (iterator.hasNext()) {
 				iterator.next().visit(this);
 			}
-			visitedPath.remove(rule);
 		}
 	}
 
 	@Override
 	public void visitDisjunction(Disjunction rule) {
-		if (visitedPath.add(rule)) {
+		if (visitedRules.add(rule)) {
 			Iterator<Rule> iterator = rule.iterator();
 			while (iterator.hasNext()) {
 				iterator.next().visit(this);
 			}
-			visitedPath.remove(rule);
 		}
 	}
 
 	@Override
 	public void visitNonTerminal(NonTerminal rule) {
-		if (visitedPath.add(rule)) {
+		if (visitedRules.add(rule)) {
 			rule.getRule().visit(this);
-			visitedPath.remove(rule);
 		}
 	}
 
 	@Override
 	public void visitOptional(Optional rule) {
-		if (visitedPath.add(rule)) {
+		if (visitedRules.add(rule)) {
 			rule.getRule().visit(this);
-			visitedPath.remove(rule);
 		}
 	}
 
 	@Override
 	public void visitRepetition(Repetition rule) {
-		if (visitedPath.add(rule)) {
+		if (visitedRules.add(rule)) {
 			rule.getRule().visit(this);
-			visitedPath.remove(rule);
 		}
 	}
 
