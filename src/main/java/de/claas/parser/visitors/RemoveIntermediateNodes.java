@@ -24,7 +24,7 @@ import de.claas.parser.results.TerminalNode;
  */
 public class RemoveIntermediateNodes implements NodeVisitor {
 
-	private final Set<Node> visitedNodes = new HashSet<>();
+	private final Set<Node> visitedPath = new HashSet<>();
 	private final Stack<Node> parents = new Stack<>();
 
 	@Override
@@ -34,7 +34,7 @@ public class RemoveIntermediateNodes implements NodeVisitor {
 
 	@Override
 	public void visitIntermediateNode(IntermediateNode node) {
-		if (visitedNodes.add(node) && !parents.isEmpty()) {
+		if (visitedPath.add(node) && !parents.isEmpty()) {
 			// enumerate all siblings
 			Node parent = parents.peek();
 			ArrayList<Node> siblings = new ArrayList<>();
@@ -62,12 +62,14 @@ public class RemoveIntermediateNodes implements NodeVisitor {
 			for (Node n : node) {
 				n.visit(this);
 			}
+			
+			visitedPath.remove(node);
 		}
 	}
 
 	@Override
 	public void visitNonTerminaNode(NonTerminalNode node) {
-		if (visitedNodes.add(node)) {
+		if (visitedPath.add(node)) {
 			parents.push(node);
 			ArrayList<Node> tmp = new ArrayList<>();
 			for (Node n : node) {
@@ -77,6 +79,7 @@ public class RemoveIntermediateNodes implements NodeVisitor {
 				n.visit(this);
 			}
 			parents.pop();
+			visitedPath.remove(node);
 		}
 	}
 

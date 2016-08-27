@@ -25,7 +25,7 @@ public class NodeToString implements NodeVisitor {
 	private static final String DEFAULT_LINE_NEWLINE = "\r\n";
 	private final StringBuilder builder = new StringBuilder();
 	private final AtomicInteger levels = new AtomicInteger();
-	private final Set<Node> visitedNodes = new HashSet<>();
+	private final Set<Node> visitedPath = new HashSet<>();
 	private final String levelSeparator;
 	private final String lineSeparator;
 
@@ -64,24 +64,26 @@ public class NodeToString implements NodeVisitor {
 	@Override
 	public void visitIntermediateNode(IntermediateNode node) {
 		appendNode(node, null);
-		if (visitedNodes.add(node)) {
+		if (visitedPath.add(node)) {
 			incrementLevel();
 			for (Node n : node) {
 				n.visit(this);
 			}
 			decrementLevel();
+			visitedPath.remove(node);
 		}
 	}
 
 	@Override
 	public void visitNonTerminaNode(NonTerminalNode node) {
 		appendNode(node, node.getName());
-		if (visitedNodes.add(node)) {
+		if (visitedPath.add(node)) {
 			incrementLevel();
 			for (Node n : node) {
 				n.visit(this);
 			}
 			decrementLevel();
+			visitedPath.remove(node);
 		}
 	}
 
