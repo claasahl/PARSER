@@ -10,6 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.claas.parser.Node;
+import de.claas.parser.results.IntermediateNode;
+import de.claas.parser.results.NonTerminalNode;
+import de.claas.parser.results.TerminalNode;
 
 /**
  * 
@@ -31,8 +34,8 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 
 	@Test
 	public void shouldNotRemoveAnything() {
-		Node n1 = buildNonTerminalNode(false, "n1");
-		Node n2 = buildTerminalNode("n2");
+		Node n1 = new NonTerminalNode("n1");
+		Node n2 = new TerminalNode("n2");
 		n1.addChild(n2);
 		n1.visit(visitor);
 
@@ -45,9 +48,9 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 
 	@Test
 	public void shouldRemoveSingleNode() {
-		Node n1 = buildNonTerminalNode(false, "n1");
-		Node n2 = buildIntermediateNode(false);
-		Node n3 = buildTerminalNode("n3");
+		Node n1 = new NonTerminalNode("n1");
+		Node n2 = new IntermediateNode();
+		Node n3 = new TerminalNode("n3");
 		n1.addChild(n2);
 		n2.addChild(n3);
 		n1.visit(visitor);
@@ -61,14 +64,14 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 
 	@Test
 	public void shouldRemoveMultipleNodes() {
-		Node n1 = buildNonTerminalNode(false, "n1");
-		Node n2 = buildIntermediateNode(false);
-		Node n3 = buildIntermediateNode(false);
-		Node n4 = buildTerminalNode("n4");
+		Node n1 = new NonTerminalNode("n1");
+		Node n2 = new IntermediateNode();
+		Node n3 = new IntermediateNode();
+		Node n4 = new TerminalNode("n4");
 		n1.addChild(n2);
 		n2.addChild(n3);
 		n3.addChild(n4);
-		Node n5 = buildTerminalNode("n5");
+		Node n5 = new TerminalNode("n5");
 		n1.addChild(n5);
 		n1.visit(visitor);
 
@@ -86,7 +89,7 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 
 	@Override
 	public void shouldHandleTerminalNode() {
-		Node node = buildTerminalNode("terminal");
+		Node node = new TerminalNode("terminal");
 		node.visit(visitor);
 
 		assertFalse(node.hasChildren());
@@ -94,7 +97,7 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 
 	@Override
 	public void shouldHandleIntermediateNode() {
-		Node node = buildIntermediateNode(false);
+		Node node = new IntermediateNode();
 		node.visit(visitor);
 
 		assertFalse(node.hasChildren());
@@ -102,7 +105,7 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 
 	@Override
 	public void shouldHandleNonTerminalNode() {
-		Node node = buildNonTerminalNode(false, "root");
+		Node node = new NonTerminalNode("root");
 		node.visit(visitor);
 
 		assertFalse(node.hasChildren());
@@ -110,15 +113,15 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 
 	@Override
 	public void shouldHandleNodes() {
-		Node t1 = buildTerminalNode("t1");
-		Node t2 = buildTerminalNode("t2");
-		Node t3 = buildTerminalNode("t3");
-		Node i1 = buildIntermediateNode(false);
+		Node t1 = new TerminalNode("t1");
+		Node t2 = new TerminalNode("t2");
+		Node t3 = new TerminalNode("t3");
+		Node i1 = new IntermediateNode();
 		i1.addChild(t1);
 		i1.addChild(t2);
-		Node i2 = buildIntermediateNode(false);
+		Node i2 = new IntermediateNode();
 		i2.addChild(t3);
-		Node node = buildNonTerminalNode(false, "root");
+		Node node = new NonTerminalNode("root");
 		node.addChild(i1);
 		node.addChild(i2);
 		node.visit(visitor);
@@ -131,7 +134,8 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 
 	@Override
 	public void shouldHandleCyclicNonTerminalNode() {
-		Node node = buildNonTerminalNode(true, "root");
+		NonTerminalNode node = new NonTerminalNode("root");
+		node.addChild(node);
 		node.visit(visitor);
 
 		assertTrue(node.hasChildren());
@@ -143,11 +147,13 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 
 	@Override
 	public void shouldHandleCyclicIntermediateNode() {
-		Node node = buildNonTerminalNode(false, "root");
-		node.addChild(buildIntermediateNode(true));
-		node.visit(visitor);
+		Node root = new NonTerminalNode("root");
+		IntermediateNode node = new IntermediateNode();
+		node.addChild(node);
+		root.addChild(node);
+		root.visit(visitor);
 
-		assertFalse(node.hasChildren());
+		assertFalse(root.hasChildren());
 	}
 
 }
