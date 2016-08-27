@@ -10,9 +10,6 @@ import org.junit.Before;
 
 import de.claas.parser.Node;
 import de.claas.parser.NodeVisitor;
-import de.claas.parser.results.IntermediateNode;
-import de.claas.parser.results.NonTerminalNode;
-import de.claas.parser.results.TerminalNode;
 
 /**
  * 
@@ -39,33 +36,33 @@ public class NodeToStringTest extends NodeVisitorTest {
 
 	@Override
 	public void shouldHandleTerminalNode() {
-		new TerminalNode("some terminal").visit(visitor);
-		assertEquals("TerminalNode:some terminal\n", visitor.toString());
+		buildTerminalNode("terminal").visit(visitor);
+		assertEquals("TerminalNode:terminal\n", visitor.toString());
 	}
 
 	@Override
 	public void shouldHandleIntermediateNode() {
-		new IntermediateNode().visit(visitor);
+		buildIntermediateNode(false).visit(visitor);
 		assertEquals("IntermediateNode\n", visitor.toString());
 	}
 
 	@Override
 	public void shouldHandleNonTerminalNode() {
-		new NonTerminalNode("some non-terminal").visit(visitor);
-		assertEquals("NonTerminalNode:some non-terminal\n", visitor.toString());
+		buildNonTerminalNode(false, "root").visit(visitor);
+		assertEquals("NonTerminalNode:root\n", visitor.toString());
 	}
 
 	@Override
 	public void shouldHandleNodes() {
-		Node t1 = new TerminalNode("t1");
-		Node t2 = new TerminalNode("t2");
-		Node t3 = new TerminalNode("t3");
-		Node i1 = new IntermediateNode();
+		Node t1 = buildTerminalNode("t1");
+		Node t2 = buildTerminalNode("t2");
+		Node t3 = buildTerminalNode("t3");
+		Node i1 = buildIntermediateNode(false);
 		i1.addChild(t1);
 		i1.addChild(t2);
-		Node i2 = new IntermediateNode();
+		Node i2 = buildIntermediateNode(false);
 		i2.addChild(t3);
-		Node n1 = new NonTerminalNode("root");
+		Node n1 = buildNonTerminalNode(false, "root");
 		n1.addChild(i1);
 		n1.addChild(i2);
 		n1.visit(visitor);
@@ -82,9 +79,7 @@ public class NodeToStringTest extends NodeVisitorTest {
 
 	@Override
 	public void shouldHandleCyclicNonTerminalNode() {
-		Node n1 = new NonTerminalNode("root");
-		n1.addChild(n1);
-		n1.visit(visitor);
+		buildNonTerminalNode(true, "root").visit(visitor);
 
 		List<String> lines = new ArrayList<>();
 		lines.add("NonTerminalNode:root");
@@ -94,10 +89,9 @@ public class NodeToStringTest extends NodeVisitorTest {
 	
 	@Override
 	public void shouldHandleCyclicIntermediateNode() {
-		Node n1 = new IntermediateNode();
-		n1.addChild(n1);
-		n1.visit(visitor);
+		buildIntermediateNode(true).visit(visitor);
 
+		// TODO simplify!
 		List<String> lines = new ArrayList<>();
 		lines.add("IntermediateNode");
 		lines.add("  IntermediateNode");
