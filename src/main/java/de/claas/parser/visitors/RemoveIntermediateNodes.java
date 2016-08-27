@@ -1,6 +1,8 @@
 package de.claas.parser.visitors;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Stack;
 
 import de.claas.parser.Grammar;
@@ -12,9 +14,9 @@ import de.claas.parser.results.TerminalNode;
 
 /**
  * 
- * The class {@link RemoveIntermediateNodes}. It is an implementation of the interface
- * {@link NodeVisitor}. It is intended to simplify the node structure that is
- * returned by {@link Grammar#parse(String, boolean)}. This is
+ * The class {@link RemoveIntermediateNodes}. It is an implementation of the
+ * interface {@link NodeVisitor}. It is intended to simplify the node structure
+ * that is returned by {@link Grammar#parse(String, boolean)}. This is
  * accomplished by removing {@link IntermediateNode} instances.
  * 
  * @author Claas Ahlrichs
@@ -22,8 +24,8 @@ import de.claas.parser.results.TerminalNode;
  */
 public class RemoveIntermediateNodes implements NodeVisitor {
 
-	// TODO account for cycles?
-	private Stack<Node> parents = new Stack<>();
+	private final Set<Node> visitedNodes = new HashSet<>();
+	private final Stack<Node> parents = new Stack<>();
 
 	@Override
 	public void visitTerminalNode(TerminalNode node) {
@@ -32,46 +34,50 @@ public class RemoveIntermediateNodes implements NodeVisitor {
 
 	@Override
 	public void visitIntermediateNode(IntermediateNode node) {
-		// enumerate all siblings
-		Node parent = parents.peek();
-		ArrayList<Node> siblings = new ArrayList<>();
-		for (Node n : parent) {
-			siblings.add(n);
-		}
-
-		// remove all siblings
-		for (Node n : siblings) {
-			parent.removeChild(n);
-		}
-
-		// add all siblings (preserving order)
-		for (Node n : siblings) {
-			if (n == node) {
-				for (Node c : node) {
-					parent.addChild(c);
-				}
-			} else {
-				parent.addChild(n);
+		if (visitedNodes.add(node) && !parents.isEmpty()) {
+			// enumerate all siblings
+			Node parent = parents.peek();
+			ArrayList<Node> siblings = new ArrayList<>();
+			for (Node n : parent) {
+				siblings.add(n);
 			}
-		}
 
-		// ... now visit all children
-		for (Node n : node) {
-			n.visit(this);
+			// remove all siblings
+			for (Node n : siblings) {
+				parent.removeChild(n);
+			}
+
+			// add all siblings (preserving order)
+			for (Node n : siblings) {
+				if (n == node) {
+					for (Node c : node) {
+						parent.addChild(c);
+					}
+				} else {
+					parent.addChild(n);
+				}
+			}
+
+			// ... now visit all children
+			for (Node n : node) {
+				n.visit(this);
+			}
 		}
 	}
 
 	@Override
 	public void visitNonTerminaNode(NonTerminalNode node) {
-		parents.push(node);
-		ArrayList<Node> tmp = new ArrayList<>();
-		for (Node n : node) {
-			tmp.add(n);
+		if (visitedNodes.add(node)) {
+			parents.push(node);
+			ArrayList<Node> tmp = new ArrayList<>();
+			for (Node n : node) {
+				tmp.add(n);
+			}
+			for (Node n : tmp) {
+				n.visit(this);
+			}
+			parents.pop();
 		}
-		for (Node n : tmp) {
-			n.visit(this);
-		}
-		parents.pop();
 	}
 
 }
