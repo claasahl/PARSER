@@ -18,44 +18,58 @@ import de.claas.parser.rules.Terminal;
 
 public class AugmentedBackusNaurPrinter implements RuleVisitor {
 
-	private final Set<Rule> visitedNonTerminals;
-	private final List<String> printedRules;
+	private final Set<Rule> visitedPath = new HashSet<>();
+	private final Set<Rule> visitedNonTerminals = new HashSet<>();
+	private final List<String> printedRules = new ArrayList<>();
 
 	public AugmentedBackusNaurPrinter(NonTerminal rule) {
-		this.visitedNonTerminals = new HashSet<>();
-		this.printedRules = new ArrayList<>();
 		rule.visit(this);
 	}
 
 	@Override
 	public void visitConjunction(Conjunction rule) {
-		for (Rule child : rule)
-			child.visit(this);
+		if (visitedPath.add(rule)) {
+			for (Rule child : rule)
+				child.visit(this);
+			visitedPath.remove(rule);
+		}
 	}
 
 	@Override
 	public void visitDisjunction(Disjunction rule) {
-		for (Rule child : rule)
-			child.visit(this);
+		if (visitedPath.add(rule)) {
+			for (Rule child : rule)
+				child.visit(this);
+			visitedPath.remove(rule);
+		}
 	}
 
 	@Override
 	public void visitNonTerminal(NonTerminal rule) {
-		if (visitedNonTerminals.add(rule)) {
-			String printedRule = new NonTerminalPrinter(rule).toString();
-			printedRules.add(printedRule);
-			rule.getRule().visit(this);
+		if (visitedPath.add(rule)) {
+			if (visitedNonTerminals.add(rule)) {
+				String printedRule = new NonTerminalPrinter(rule).toString();
+				printedRules.add(printedRule);
+				rule.getRule().visit(this);
+			}
+			visitedPath.remove(rule);
 		}
 	}
 
 	@Override
 	public void visitOptional(Optional rule) {
-		rule.getRule().visit(this);
+		if (visitedPath.add(rule)) {
+			rule.getRule().visit(this);
+			visitedPath.remove(rule);
+		}
 	}
 
 	@Override
 	public void visitRepetition(Repetition rule) {
-		rule.getRule().visit(this);
+		if (visitedPath.add(rule)) {
+			rule.getRule().visit(this);
+			visitedPath.remove(rule);
+		}
 	}
 
 	@Override
@@ -138,10 +152,10 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 				String terminal = terminals.next();
 				if (terminal.length() == 1) {
 					char character = terminal.charAt(0);
-					if(Character.isLetterOrDigit(character)) {
-						stringBuilder.append(terminal);						
+					if (Character.isLetterOrDigit(character)) {
+						stringBuilder.append(terminal);
 					} else {
-						stringBuilder.append(String.format("x%02X", (int)character));
+						stringBuilder.append(String.format("x%02X", (int) character));
 					}
 				} else {
 					stringBuilder.append(terminal);

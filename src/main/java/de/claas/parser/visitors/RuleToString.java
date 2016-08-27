@@ -29,16 +29,16 @@ public class RuleToString implements RuleVisitor {
 	private static final String DEFAULT_LINE_NEWLINE = "\r\n";
 	private final StringBuilder builder = new StringBuilder();
 	private final AtomicInteger levels = new AtomicInteger();
-	private final Set<Rule> visitedRules = new HashSet<>();
+	private final Set<Rule> visitedPath = new HashSet<>();
 	private final String levelSeparator;
 	private final String lineSeparator;
-	
+
 	/**
 	 * Constructs a new NodeToString with default parameters. Calling this
 	 * constructor is equivalent to calling
-	 * <code>{@link #RuleToString(String, String)}</code> with
-	 * {@value #DEFAULT_	LEVEL_SEPARATOR} as default level separator and the
-	 * system's line separator (property {@literal line.separator}).
+	 * <code>{@link #RuleToString(String, String)}</code> with {@value #DEFAULT_
+	 * LEVEL_SEPARATOR} as default level separator and the system's line
+	 * separator (property {@literal line.separator}).
 	 */
 	public RuleToString() {
 		this(DEFAULT_LEVEL_SEPARATOR, System.getProperty("line.separator", DEFAULT_LINE_NEWLINE));
@@ -63,54 +63,59 @@ public class RuleToString implements RuleVisitor {
 	@Override
 	public void visitConjunction(Conjunction rule) {
 		appendRule(rule, null);
-		if (visitedRules.add(rule)) {
+		if (visitedPath.add(rule)) {
 			incrementIndent();
 			for (Rule child : rule) {
 				child.visit(this);
 			}
 			decrementIndent();
+			visitedPath.remove(rule);
 		}
 	}
 
 	@Override
 	public void visitDisjunction(Disjunction rule) {
 		appendRule(rule, null);
-		if (visitedRules.add(rule)) {
+		if (visitedPath.add(rule)) {
 			incrementIndent();
 			for (Rule child : rule) {
 				child.visit(this);
 			}
 			decrementIndent();
+			visitedPath.remove(rule);
 		}
 	}
 
 	@Override
 	public void visitNonTerminal(NonTerminal rule) {
 		appendRule(rule, rule.getName());
-		if (visitedRules.add(rule)) {
+		if (visitedPath.add(rule)) {
 			incrementIndent();
 			rule.getRule().visit(this);
 			decrementIndent();
+			visitedPath.remove(rule);
 		}
 	}
 
 	@Override
 	public void visitOptional(Optional rule) {
 		appendRule(rule, null);
-		if (visitedRules.add(rule)) {
+		if (visitedPath.add(rule)) {
 			incrementIndent();
 			rule.getRule().visit(this);
 			decrementIndent();
+			visitedPath.remove(rule);
 		}
 	}
 
 	@Override
 	public void visitRepetition(Repetition rule) {
 		appendRule(rule, null);
-		if (visitedRules.add(rule)) {
+		if (visitedPath.add(rule)) {
 			incrementIndent();
 			rule.getRule().visit(this);
 			decrementIndent();
+			visitedPath.remove(rule);
 		}
 	}
 

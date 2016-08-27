@@ -44,7 +44,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 	public void shouldHandleConjunctionRule() {
 		Rule r1 = new Terminal("t");
 		new Conjunction(r1).visit(visitor);
-		
+
 		List<String> lines = new ArrayList<>();
 		lines.add("Conjunction");
 		lines.add("  Terminal:t");
@@ -55,7 +55,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 	public void shouldHandleDisjunctionRule() {
 		Rule r1 = new Terminal("t");
 		new Disjunction(r1).visit(visitor);
-		
+
 		List<String> lines = new ArrayList<>();
 		lines.add("Disjunction");
 		lines.add("  Terminal:t");
@@ -66,7 +66,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 	public void shouldHandleNonTerminalRule() {
 		Rule r1 = new Terminal("t");
 		new NonTerminal("some rule", r1).visit(visitor);
-		
+
 		List<String> lines = new ArrayList<>();
 		lines.add("NonTerminal:some rule");
 		lines.add("  Terminal:t");
@@ -88,7 +88,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 	public void shouldHandleRepetitionRule() {
 		Rule r1 = new Terminal("t");
 		new Repetition(r1).visit(visitor);
-		
+
 		List<String> lines = new ArrayList<>();
 		lines.add("Repetition");
 		lines.add("  Terminal:t");
@@ -122,77 +122,88 @@ public class RuleToStringTest extends RuleVisitorTest {
 		}
 		lines.add("      Repetition");
 		lines.add("        NonTerminal:digit");
+		for (int i = 0; i <= 9; i++) {
+			lines.add("          Terminal:" + i);
+		}
 		lines.add("    Conjunction");
 		lines.add("      Repetition");
+		lines.add("        NonTerminal:digit");
+		for (int i = 0; i <= 9; i++) {
+			lines.add("          Terminal:" + i);
+		}
 		lines.add("      Terminal:*");
 		lines.add("      Repetition");
+		lines.add("        NonTerminal:digit");
+		for (int i = 0; i <= 9; i++) {
+			lines.add("          Terminal:" + i);
+		}
 
 		repeat.visit(visitor);
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
-	
+
 	@Override
 	public void shouldHandleCyclicRepetitionRule() {
 		Rule r0 = new Conjunction();
 		Rule r1 = new Repetition(r0);
 		r0.addChild(r1);
 		r1.visit(visitor);
-		
+
 		List<String> lines = new ArrayList<>();
 		lines.add("Repetition");
 		lines.add("  Conjunction");
 		lines.add("    Repetition");
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
-	
+
 	@Override
 	public void shouldHandleCyclicOptionalRule() {
 		Rule r0 = new Conjunction();
 		Rule r1 = new Optional(r0);
 		r0.addChild(r1);
 		r1.visit(visitor);
-		
+
 		List<String> lines = new ArrayList<>();
 		lines.add("Optional");
 		lines.add("  Conjunction");
 		lines.add("    Optional");
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
-	
+
 	@Override
 	public void shouldHandleCyclicNonTerminalRule() {
 		Rule r0 = new Conjunction();
 		Rule r1 = new NonTerminal("rulename", r0);
 		r0.addChild(r1);
 		r1.visit(visitor);
-		
+
 		List<String> lines = new ArrayList<>();
 		lines.add("NonTerminal:rulename");
 		lines.add("  Conjunction");
 		lines.add("    NonTerminal:rulename");
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
-	
+
 	@Override
 	public void shouldHandleCyclicDisjunctionRule() {
 		Rule r0 = new Conjunction();
 		Rule r1 = new Disjunction(r0);
 		r0.addChild(r1);
 		r1.visit(visitor);
-		
+
 		List<String> lines = new ArrayList<>();
 		lines.add("Disjunction");
 		lines.add("  Conjunction");
 		lines.add("    Disjunction");
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
-	
+
 	public void shouldHandleCyclicConjunctionRule() {
 		Rule r0 = new Conjunction();
 		Rule r1 = new Conjunction(r0);
 		r0.addChild(r1);
 		r1.visit(visitor);
-		
+
 		List<String> lines = new ArrayList<>();
 		lines.add("Conjunction");
 		lines.add("  Conjunction");

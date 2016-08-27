@@ -28,8 +28,8 @@ import de.claas.parser.rules.Terminal;
  */
 public class ExtractTerminals implements RuleVisitor {
 
-	private Set<String> terminals = new HashSet<>();
-	private Set<Rule> visited = new HashSet<>();
+	private final Set<Rule> visitedPath = new HashSet<>();
+	private final Set<String> terminals = new HashSet<>();
 
 	/**
 	 * Returns the terminal symbols. If this visitor is used to visit multiple
@@ -43,52 +43,47 @@ public class ExtractTerminals implements RuleVisitor {
 
 	@Override
 	public void visitConjunction(Conjunction rule) {
-		Iterator<Rule> iterator = rule.iterator();
-		while (iterator.hasNext()) {
-			Rule child = iterator.next();
-			if (!visited.contains(child)) {
-				visited.add(child);
-				child.visit(this);
+		if (visitedPath.add(rule)) {
+			Iterator<Rule> iterator = rule.iterator();
+			while (iterator.hasNext()) {
+				iterator.next().visit(this);
 			}
+			visitedPath.remove(rule);
 		}
 	}
 
 	@Override
 	public void visitDisjunction(Disjunction rule) {
-		Iterator<Rule> iterator = rule.iterator();
-		while (iterator.hasNext()) {
-			Rule child = iterator.next();
-			if (!visited.contains(child)) {
-				visited.add(child);
-				child.visit(this);
+		if (visitedPath.add(rule)) {
+			Iterator<Rule> iterator = rule.iterator();
+			while (iterator.hasNext()) {
+				iterator.next().visit(this);
 			}
+			visitedPath.remove(rule);
 		}
 	}
 
 	@Override
 	public void visitNonTerminal(NonTerminal rule) {
-		Rule child = rule.getRule();
-		if (!visited.contains(child)) {
-			visited.add(child);
-			child.visit(this);
+		if (visitedPath.add(rule)) {
+			rule.getRule().visit(this);
+			visitedPath.remove(rule);
 		}
 	}
 
 	@Override
 	public void visitOptional(Optional rule) {
-		Rule child = rule.getRule();
-		if (!visited.contains(child)) {
-			visited.add(child);
-			child.visit(this);
+		if (visitedPath.add(rule)) {
+			rule.getRule().visit(this);
+			visitedPath.remove(rule);
 		}
 	}
 
 	@Override
 	public void visitRepetition(Repetition rule) {
-		Rule child = rule.getRule();
-		if (!visited.contains(child)) {
-			visited.add(child);
-			child.visit(this);
+		if (visitedPath.add(rule)) {
+			rule.getRule().visit(this);
+			visitedPath.remove(rule);
 		}
 	}
 
