@@ -6,14 +6,15 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 
 import de.claas.parser.Rule;
 import de.claas.parser.State;
 import de.claas.parser.results.TerminalNode;
-import de.claas.parser.rules.Terminal;
 
 /**
  * 
@@ -42,12 +43,12 @@ public class TerminalTest extends RuleTest {
 
 	@Override
 	protected State processibleState() {
-		return buildState(DEFAULT_TERMINALS);
+		return buildState(Arrays.asList(DEFAULT_TERMINALS).stream().collect(Collectors.joining()));
 	}
 
 	@Override
 	protected State unprocessibleState() {
-		return buildState("invlid", "token");
+		return buildState("invlid token");
 	}
 
 	/**
@@ -95,7 +96,7 @@ public class TerminalTest extends RuleTest {
 
 	@Test
 	public void shouldProcessAnyOfTheTerminals() {
-		State state = buildState("world", "hello", "world");
+		State state = buildState("worldhelloworld");
 		Terminal rule = build("hello", "world", "b");
 
 		TerminalNode node = (TerminalNode) rule.process(state);
@@ -113,14 +114,14 @@ public class TerminalTest extends RuleTest {
 
 	@Test
 	public void shouldNotProcessWithoutTerminals() {
-		State state = buildState("world", "hello", "world");
+		State state = buildState("world hello world");
 		Terminal rule = build(new String[] {});
 		assertNull(rule.process(state));
 	}
 
 	@Test
 	public void shouldProcessRangeBasedTerminals() {
-		State state = buildState("a", "b", "x", "z");
+		State state = buildState("abxz");
 		Terminal rule = build(DEFAULT_RANGE_START, DEFAULT_RANGE_END);
 
 		TerminalNode node = (TerminalNode) rule.process(state);
@@ -142,7 +143,7 @@ public class TerminalTest extends RuleTest {
 
 	@Test
 	public void shouldNotProcessTerminalsOutsideOfRange() {
-		State state = buildState("A", "0", "Z");
+		State state = buildState("A 0 Z");
 		Terminal rule = build(DEFAULT_RANGE_START, DEFAULT_RANGE_END);
 
 		TerminalNode node = (TerminalNode) rule.process(state);

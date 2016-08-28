@@ -50,14 +50,9 @@ public class TestRule extends Rule {
 
 	@Override
 	public Node process(State state) {
-		String token = state.processToken();
-		if (token == null)
-			return null;
-
-		if (token.equalsIgnoreCase(name)) {
+		if (state.process(name)) {
 			return this.output;
 		} else {
-			state.unprocessToken();
 			return null;
 		}
 	}

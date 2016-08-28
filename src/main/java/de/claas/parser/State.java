@@ -12,29 +12,13 @@ import java.util.Stack;
  */
 public class State {
 
-	private final Stack<String> tokens;
-	private final Stack<String> processedTokens;
+	private final String pattern;
+	private int offset = 0;
 	private final Stack<Integer> steps;
 
-	/**
-	 * Creates an instance with default parameters.
-	 */
-	public State() {
-		this(new Stack<>());
-	}
-
-	/**
-	 * Creates an instance with the given parameter.
-	 * 
-	 * @param tokens
-	 *            the tokens that need processing / parsing
-	 */
-	public State(Stack<String> tokens) {
-		// TODO no null values among tokens
-		this.tokens = new Stack<>();
-		this.tokens.addAll(tokens);
-		this.processedTokens = new Stack<>();
+	public State(String pattern) {
 		this.steps = new Stack<>();
+		this.pattern = pattern;
 	}
 
 	/**
@@ -46,47 +30,27 @@ public class State {
 	 * @return the next token. <code>null</code> if no more tokens are available
 	 */
 	public String processToken() {
-		if (tokens.isEmpty())
-			return null;
-
-		String token = tokens.pop();
-		processedTokens.push(token);
-		if (!steps.isEmpty())
-			steps.push(steps.pop() + 1);
-		return token;
+		return null;
 	}
 
-	/**
-	 * Returns the token that was most recently processed and marks it as
-	 * <i>unprocessed</i>. The returned token is taken from a stack of
-	 * (processed) tokens and transferred back to a stack of unprocessed tokens.
-	 * 
-	 * @return the token that was most recently processed
-	 */
-	public String unprocessToken() {
-		String token = processedTokens.pop();
-		tokens.push(token);
-		if (!steps.isEmpty())
-			steps.push(steps.pop() - 1);
-		return token;
+	public boolean process(String token) {
+		if (getUnprocessedPattern().startsWith(token)) {
+			offset += token.length();
+			if (!steps.isEmpty())
+				steps.push(steps.pop() + token.length());
+
+			return true;
+		} else {
+			return false;
+		}
 	}
 
-	/**
-	 * Returns the (current) number of unprocessed tokens.
-	 * 
-	 * @return the (current) number of unprocessed tokens
-	 */
-	public int getUnprocessedTokens() {
-		return tokens.size();
+	public String getUnprocessedPattern() {
+		return pattern.substring(offset);
 	}
 
-	/**
-	 * Returns the (current) number of processed tokens.
-	 * 
-	 * @return the (current) number of processed tokens
-	 */
-	public int getProcessedTokens() {
-		return processedTokens.size();
+	public String getProcessedPattern() {
+		return pattern.substring(0, offset);
 	}
 
 	/**
@@ -134,11 +98,12 @@ public class State {
 	 * ending groups.
 	 */
 	public void revert() {
-		for (int i = steps.pop(); i > 0; i--) {
-			String tmp = processedTokens.pop();
-			tokens.push(tmp);
-		}
+		offset -= steps.pop();
 		steps.push(0);
+	}
+
+	public boolean isFullyProcessed() {
+		return getUnprocessedPattern().isEmpty();
 	}
 
 }

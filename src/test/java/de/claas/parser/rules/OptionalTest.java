@@ -8,8 +8,6 @@ import org.junit.Test;
 import de.claas.parser.Rule;
 import de.claas.parser.State;
 import de.claas.parser.results.TerminalNode;
-import de.claas.parser.rules.Decorator;
-import de.claas.parser.rules.Optional;
 
 /**
  * 
@@ -44,19 +42,19 @@ public class OptionalTest extends DecoratorTest {
 
 	@Test
 	public void shouldProcessAtMostOneToken() {
-		State state = buildState("decorated", "decorated", "invalid");
+		State state = buildState("decorateddecoratedinvalid");
 		Rule rule = build(defaultChildren());
 		assertNotNull(rule.process(state));
-		assertEquals(1, state.getProcessedTokens());
-		assertEquals(2, state.getUnprocessedTokens());
+		assertEquals("decorated", state.getProcessedPattern());
+		assertEquals("decoratedinvalid", state.getUnprocessedPattern());
 
 		assertNotNull(rule.process(state));
-		assertEquals(2, state.getProcessedTokens());
-		assertEquals(1, state.getUnprocessedTokens());
+		assertEquals("decorateddecorated", state.getProcessedPattern());
+		assertEquals("invalid", state.getUnprocessedPattern());
 
 		assertNotNull(rule.process(state));
-		assertEquals(2, state.getProcessedTokens());
-		assertEquals(1, state.getUnprocessedTokens());
+		assertEquals("decorateddecorated", state.getProcessedPattern());
+		assertEquals("invalid", state.getUnprocessedPattern());
 	}
 
 }

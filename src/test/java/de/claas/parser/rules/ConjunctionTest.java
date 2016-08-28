@@ -7,7 +7,6 @@ import org.junit.Test;
 import de.claas.parser.Rule;
 import de.claas.parser.State;
 import de.claas.parser.results.TerminalNode;
-import de.claas.parser.rules.Conjunction;
 
 /**
  * 
@@ -33,7 +32,7 @@ public class ConjunctionTest extends RuleTest {
 
 	@Override
 	protected State processibleState() {
-		return buildState("hello", "world");
+		return buildState("helloworld");
 	}
 
 	@Override
@@ -51,8 +50,8 @@ public class ConjunctionTest extends RuleTest {
 	@Test
 	public void shouldNotProcessIfAnyChildFailsToProcess() {
 		Rule rule = build(defaultChildren());
-		assertNull(rule.process(buildState("hello", "invalid")));
-		assertNull(rule.process(buildState("invalid", "world")));
+		assertNull(rule.process(buildState("helloinvalid")));
+		assertNull(rule.process(buildState("invalidworld")));
 		assertNull(rule.process(buildState("hello")));
 		assertNull(rule.process(buildState("world")));
 	}

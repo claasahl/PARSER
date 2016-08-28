@@ -8,8 +8,6 @@ import org.junit.Test;
 import de.claas.parser.Rule;
 import de.claas.parser.State;
 import de.claas.parser.results.TerminalNode;
-import de.claas.parser.rules.Decorator;
-import de.claas.parser.rules.Repetition;
 
 /**
  * 
@@ -44,14 +42,14 @@ public class RepetitionTest extends DecoratorTest {
 
 	@Test
 	public void shouldProcessMultipleTokens() {
-		State state = buildState("decorated", "decorated", "invalid");
+		State state = buildState("decorateddecoratedinvalid");
 		Rule rule = build(defaultChildren());
 		assertNotNull(rule.process(state));
-		assertEquals(2, state.getProcessedTokens());
-		assertEquals(1, state.getUnprocessedTokens());
+		assertEquals("decorateddecorated", state.getProcessedPattern());
+		assertEquals("invalid", state.getUnprocessedPattern());
 
 		assertNotNull(rule.process(state));
-		assertEquals(2, state.getProcessedTokens());
-		assertEquals(1, state.getUnprocessedTokens());
+		assertEquals("decorateddecorated", state.getProcessedPattern());
+		assertEquals("invalid", state.getUnprocessedPattern());
 	}
 }

@@ -1,15 +1,9 @@
 package de.claas.parser;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
-
 import de.claas.parser.exceptions.ParsingException;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.rules.NonTerminal;
 import de.claas.parser.visitors.RemoveIntermediateNodes;
-import de.claas.parser.visitors.ExtractTerminals;
 
 /**
  * 
@@ -79,16 +73,9 @@ public class Grammar {
 	 *             that was passed into the constructor)
 	 */
 	public Node parse(String data, boolean retainIntermediateNodes) throws ParsingException {
-		ExtractTerminals visitor = new ExtractTerminals();
-		start.visit(visitor);
-		List<String> tokenized = tokenize(visitor.getTerminals(), data);
-		Stack<String> tokens = new Stack<>();
-		for (int i = tokenized.size() - 1; i >= 0; i--) {
-			tokens.push(tokenized.get(i));
-		}
-		State state = new State(tokens);
+		State state = new State(data);
 		Node node = start.process(state);
-		if (state.getUnprocessedTokens() > 0)
+		if (node == null || !state.isFullyProcessed())
 			throw new ParsingException("Could not process all tokens.");
 		if (!retainIntermediateNodes)
 			node.visit(new RemoveIntermediateNodes());
@@ -96,42 +83,4 @@ public class Grammar {
 	}
 
 	// TODO tryParse?
-
-	/**
-	 * Returns the tokens that make up the given pattern. The pattern needs to
-	 * be in accordance with the grammar described in above. Otherwise a
-	 * {@link ParsingException} is thrown.
-	 * <p>
-	 * This function is sensitive to upper and lower case characters.
-	 * 
-	 * @param terminals
-	 *            the terminals (i.e. valid tokens)
-	 * @param pattern
-	 *            the pattern
-	 * @return the tokens that make up the given pattern
-	 * @throws ParsingException
-	 *             if the pattern is invalid (i.e. contains illegal tokens)
-	 */
-	protected List<String> tokenize(Set<String> terminals, String pattern) throws ParsingException {
-		List<String> tokens = new ArrayList<>();
-		do {
-			// look for tokens ...
-			String token = null;
-			for (String validToken : terminals) {
-				if (pattern.startsWith(validToken)) {
-					if(token == null || token.length() > validToken.length())
-						token = validToken;
-				}
-			}
-
-			// ... and handle unknown tokens
-			if (token != null) {
-				tokens.add(token);
-				pattern = pattern.substring(token.length());
-			} else { 
-				throw new ParsingException("unknown token '" + pattern + "'");
-			}
-		} while (!pattern.isEmpty());
-		return tokens;
-	}
 }

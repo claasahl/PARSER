@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
-import java.util.Stack;
 
 import org.junit.Test;
 
@@ -78,12 +77,8 @@ public abstract class RuleTest {
 	 *            the (unprocessed) tokens
 	 * @return an instantiated {@link State} class with the specified tokens
 	 */
-	protected State buildState(String... tokens) {
-		Stack<String> tmp = new Stack<>();
-		for (int i = tokens.length - 1; i >= 0; i--) {
-			tmp.push(tokens[i]);
-		}
-		return new State(tmp);
+	protected State buildState(String pattern) {
+		return new State(pattern);
 	}
 
 	/**
@@ -195,14 +190,16 @@ public abstract class RuleTest {
 			return;
 
 		State state = processibleState();
-		int processedTokens = state.getProcessedTokens();
-		int unprocessedTokens = state.getUnprocessedTokens();
+		String processedPattern = state.getProcessedPattern();
+		String unprocessedPattern = state.getUnprocessedPattern();
 		int processingGroups = state.getGroups();
 
 		Rule rule = build(defaultChildren());
 		assertNotNull(rule.process(state));
-		assertTrue(processedTokens <= state.getProcessedTokens());
-		assertTrue(unprocessedTokens >= state.getUnprocessedTokens());
+		assertTrue(state.getProcessedPattern().startsWith(processedPattern));
+		assertTrue(state.getProcessedPattern().length() >= processedPattern.length());
+		assertTrue(unprocessedPattern.endsWith(state.getUnprocessedPattern()));
+		assertTrue(unprocessedPattern.length() >= state.getUnprocessedPattern().length());
 		assertEquals(processingGroups, state.getGroups());
 	}
 
@@ -213,14 +210,14 @@ public abstract class RuleTest {
 			return;
 
 		State state = unprocessibleState();
-		int processedTokens = state.getProcessedTokens();
-		int unprocessedTokens = state.getUnprocessedTokens();
+		String processedPattern = state.getProcessedPattern();
+		String unprocessedPattern = state.getUnprocessedPattern();
 		int processingGroups = state.getGroups();
 
 		Rule rule = build(defaultChildren());
 		assertNull(rule.process(state));
-		assertEquals(processedTokens, state.getProcessedTokens());
-		assertEquals(unprocessedTokens, state.getUnprocessedTokens());
+		assertEquals(processedPattern, state.getProcessedPattern());
+		assertEquals(unprocessedPattern, state.getUnprocessedPattern());
 		assertEquals(processingGroups, state.getGroups());
 	}
 
@@ -230,15 +227,15 @@ public abstract class RuleTest {
 		if (unprocessibleState() == null)
 			return;
 
-		State state = buildState();
-		int processedTokens = state.getProcessedTokens();
-		int unprocessedTokens = state.getUnprocessedTokens();
+		State state = buildState("");
+		String processedPattern = state.getProcessedPattern();
+		String unprocessedPattern = state.getUnprocessedPattern();
 		int processingGroups = state.getGroups();
 
 		Rule rule = build(defaultChildren());
 		assertNull(rule.process(state));
-		assertEquals(processedTokens, state.getProcessedTokens());
-		assertEquals(unprocessedTokens, state.getUnprocessedTokens());
+		assertEquals(processedPattern, state.getProcessedPattern());
+		assertEquals(unprocessedPattern, state.getUnprocessedPattern());
 		assertEquals(processingGroups, state.getGroups());
 	}
 

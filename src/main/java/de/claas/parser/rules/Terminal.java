@@ -26,8 +26,6 @@ import de.claas.parser.results.TerminalNode;
 public class Terminal extends Rule {
 
 	private final List<String> terminals;
-	private final int rangeStart;
-	private final int rangeEnd;
 
 	/**
 	 * Creates an instances with the given parameters.
@@ -37,8 +35,6 @@ public class Terminal extends Rule {
 	 */
 	public Terminal(String... terminals) {
 		this.terminals = Arrays.asList(terminals);
-		this.rangeStart = -1;
-		this.rangeEnd = -1;
 	}
 
 	/**
@@ -51,10 +47,8 @@ public class Terminal extends Rule {
 	 */
 	public Terminal(char rangeStart, char rangeEnd) {
 		this.terminals = new ArrayList<>();
-		this.rangeStart = Math.min(rangeStart, rangeEnd);
-		this.rangeEnd = Math.max(rangeStart, rangeEnd);
-		for(int character = this.rangeStart; character <= rangeEnd; character++)
-			this.terminals.add("" + (char)character);
+		for (int character = rangeStart; character <= rangeEnd; character++)
+			this.terminals.add("" + (char) character);
 	}
 
 	/**
@@ -68,49 +62,17 @@ public class Terminal extends Rule {
 
 	@Override
 	public Node process(State state) {
-		String token = state.processToken();
-		if (token == null)
-			return null;
-
-		// look for terminal symbol
-		Node node = null;
-		Character charAt = token.length() == 1 ? token.charAt(0) : null;
-		if (charAt != null && charAt >= rangeStart && charAt <= rangeEnd) {
-			node = new TerminalNode(token);
-		} else if (rangeStart == -1 && rangeEnd == -1) {
+		state.beginGroup();
+		try {
 			for (String terminal : terminals) {
-				if (terminal.equals(token)) {
-					node = new TerminalNode(token);
-					break;
-				} else if (terminal.startsWith(token)) {	
-					state.beginGroup();
-					int offset = token.length();
-					while(offset < terminal.length()) {
-						token = state.processToken();
-						if (terminal.substring(offset).equals(token)) {
-							node = new TerminalNode(terminal);
-							break;
-						} else if (terminal.substring(offset).startsWith(token)) {
-							offset += token.length();
-						} else {
-							break;
-						}
-					};
-					
-					if(node == null) {
-						state.revert();
-					} else {
-						state.endGroup();
-					}
-					break;
+				if (state.process(terminal)) {
+					return new TerminalNode(terminal);
 				}
 			}
+			return null;
+		} finally {
+			state.endGroup();
 		}
-
-		// revert state if no valid terminal was found
-		if (node == null)
-			state.unprocessToken();
-		return node;
 	}
 
 	@Override
