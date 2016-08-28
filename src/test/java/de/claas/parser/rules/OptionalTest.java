@@ -45,16 +45,16 @@ public class OptionalTest extends DecoratorTest {
 		State state = buildState("decorateddecoratedinvalid");
 		Rule rule = build(defaultChildren());
 		assertNotNull(rule.process(state));
-		assertEquals("decorated", state.getProcessedPattern());
-		assertEquals("decoratedinvalid", state.getUnprocessedPattern());
+		assertEquals("decorated", state.getProcessedData());
+		assertEquals("decoratedinvalid", state.getUnprocessedData());
 
 		assertNotNull(rule.process(state));
-		assertEquals("decorateddecorated", state.getProcessedPattern());
-		assertEquals("invalid", state.getUnprocessedPattern());
+		assertEquals("decorateddecorated", state.getProcessedData());
+		assertEquals("invalid", state.getUnprocessedData());
 
 		assertNotNull(rule.process(state));
-		assertEquals("decorateddecorated", state.getProcessedPattern());
-		assertEquals("invalid", state.getUnprocessedPattern());
+		assertEquals("decorateddecorated", state.getProcessedData());
+		assertEquals("invalid", state.getUnprocessedData());
 	}
 
 }

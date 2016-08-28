@@ -190,16 +190,16 @@ public abstract class RuleTest {
 			return;
 
 		State state = processibleState();
-		String processedPattern = state.getProcessedPattern();
-		String unprocessedPattern = state.getUnprocessedPattern();
+		String processedPattern = state.getProcessedData();
+		String unprocessedPattern = state.getUnprocessedData();
 		int processingGroups = state.getGroups();
 
 		Rule rule = build(defaultChildren());
 		assertNotNull(rule.process(state));
-		assertTrue(state.getProcessedPattern().startsWith(processedPattern));
-		assertTrue(state.getProcessedPattern().length() >= processedPattern.length());
-		assertTrue(unprocessedPattern.endsWith(state.getUnprocessedPattern()));
-		assertTrue(unprocessedPattern.length() >= state.getUnprocessedPattern().length());
+		assertTrue(state.getProcessedData().startsWith(processedPattern));
+		assertTrue(state.getProcessedData().length() >= processedPattern.length());
+		assertTrue(unprocessedPattern.endsWith(state.getUnprocessedData()));
+		assertTrue(unprocessedPattern.length() >= state.getUnprocessedData().length());
 		assertEquals(processingGroups, state.getGroups());
 	}
 
@@ -210,14 +210,14 @@ public abstract class RuleTest {
 			return;
 
 		State state = unprocessibleState();
-		String processedPattern = state.getProcessedPattern();
-		String unprocessedPattern = state.getUnprocessedPattern();
+		String processedPattern = state.getProcessedData();
+		String unprocessedPattern = state.getUnprocessedData();
 		int processingGroups = state.getGroups();
 
 		Rule rule = build(defaultChildren());
 		assertNull(rule.process(state));
-		assertEquals(processedPattern, state.getProcessedPattern());
-		assertEquals(unprocessedPattern, state.getUnprocessedPattern());
+		assertEquals(processedPattern, state.getProcessedData());
+		assertEquals(unprocessedPattern, state.getUnprocessedData());
 		assertEquals(processingGroups, state.getGroups());
 	}
 
@@ -228,14 +228,14 @@ public abstract class RuleTest {
 			return;
 
 		State state = buildState("");
-		String processedPattern = state.getProcessedPattern();
-		String unprocessedPattern = state.getUnprocessedPattern();
+		String processedPattern = state.getProcessedData();
+		String unprocessedPattern = state.getUnprocessedData();
 		int processingGroups = state.getGroups();
 
 		Rule rule = build(defaultChildren());
 		assertNull(rule.process(state));
-		assertEquals(processedPattern, state.getProcessedPattern());
-		assertEquals(unprocessedPattern, state.getUnprocessedPattern());
+		assertEquals(processedPattern, state.getProcessedData());
+		assertEquals(unprocessedPattern, state.getUnprocessedData());
 		assertEquals(processingGroups, state.getGroups());
 	}
 

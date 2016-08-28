@@ -29,16 +29,16 @@ public class StateTest {
 	@Test
 	public void shouldProperlyInitializeEmptyState() {
 		State state = buildState("");
-		assertEquals("", state.getProcessedPattern());
-		assertEquals("", state.getUnprocessedPattern());
+		assertEquals("", state.getProcessedData());
+		assertEquals("", state.getUnprocessedData());
 		assertEquals(0, state.getGroups());
 	}
 
 	@Test
 	public void shouldProperlyInitializeNonEmptyState() {
 		State state = buildState("helloworld");
-		assertEquals("", state.getProcessedPattern());
-		assertEquals("helloworld", state.getUnprocessedPattern());
+		assertEquals("", state.getProcessedData());
+		assertEquals("helloworld", state.getUnprocessedData());
 		assertEquals(0, state.getGroups());
 	}
 }

@@ -45,11 +45,11 @@ public class RepetitionTest extends DecoratorTest {
 		State state = buildState("decorateddecoratedinvalid");
 		Rule rule = build(defaultChildren());
 		assertNotNull(rule.process(state));
-		assertEquals("decorateddecorated", state.getProcessedPattern());
-		assertEquals("invalid", state.getUnprocessedPattern());
+		assertEquals("decorateddecorated", state.getProcessedData());
+		assertEquals("invalid", state.getUnprocessedData());
 
 		assertNotNull(rule.process(state));
-		assertEquals("decorateddecorated", state.getProcessedPattern());
-		assertEquals("invalid", state.getUnprocessedPattern());
+		assertEquals("decorateddecorated", state.getProcessedData());
+		assertEquals("invalid", state.getUnprocessedData());
 	}
 }

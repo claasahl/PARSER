@@ -12,29 +12,32 @@ import java.util.Stack;
  */
 public class State {
 
-	private final String pattern;
-	private int offset = 0;
 	private final Stack<Integer> steps;
+	private final String data;
+	private int offset = 0;
 
-	public State(String pattern) {
+	/**
+	 * Constructs a new State with the specified parameter.
+	 * 
+	 * @param data
+	 *            the data
+	 */
+	public State(String data) {
 		this.steps = new Stack<>();
-		this.pattern = pattern;
+		this.data = data;
 	}
 
 	/**
-	 * Returns the next token and marks it as <i>processed</i>. The returned
-	 * token is taken from a stack of (unprocessed) tokens and transferred to a
-	 * stack of processed tokens. If no more tokens are available, then
-	 * <code>null</code> is returned.
+	 * Returns <code>true</code> if the specified token was successfully
+	 * processed. Otherwise, <code>false</code> is returned.
 	 * 
-	 * @return the next token. <code>null</code> if no more tokens are available
+	 * @param token
+	 *            the token
+	 * @return <code>true</code> if the specified token was successfully
+	 *         processed and <code>false</code> otherwise
 	 */
-	public String processToken() {
-		return null;
-	}
-
 	public boolean process(String token) {
-		if (getUnprocessedPattern().startsWith(token)) {
+		if (data.startsWith(token, offset)) {
 			offset += token.length();
 			if (!steps.isEmpty())
 				steps.push(steps.pop() + token.length());
@@ -45,12 +48,12 @@ public class State {
 		}
 	}
 
-	public String getUnprocessedPattern() {
-		return pattern.substring(offset);
+	public String getUnprocessedData() {
+		return data.substring(offset);
 	}
 
-	public String getProcessedPattern() {
-		return pattern.substring(0, offset);
+	public String getProcessedData() {
+		return data.substring(0, offset);
 	}
 
 	/**
@@ -88,10 +91,9 @@ public class State {
 	}
 
 	/**
-	 * Reverts the changes of the current processing group. This method
-	 * transfers the number of tokens, that were processed as part of the
-	 * current processing group, from the processed tokens back to the
-	 * (remaining) tokens. Thus reverting the state to the beginning of the
+	 * Reverts the changes of the current processing group. This method marks
+	 * the tokens, that were processed as part of the current processing group,
+	 * as unprocessed and thus reverting the state to the beginning of the
 	 * processing group.
 	 * <p>
 	 * This method will not end a group. Use {@link #endGroup()} for closing /
@@ -103,7 +105,7 @@ public class State {
 	}
 
 	public boolean isFullyProcessed() {
-		return getUnprocessedPattern().isEmpty();
+		return getUnprocessedData().isEmpty();
 	}
 
 }
