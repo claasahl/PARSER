@@ -11,7 +11,6 @@ import java.util.Iterator;
 import org.junit.Test;
 
 import de.claas.parser.Rule;
-import de.claas.parser.rules.Decorator;
 
 /**
  * 

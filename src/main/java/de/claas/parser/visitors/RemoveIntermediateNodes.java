@@ -51,7 +51,7 @@ public class RemoveIntermediateNodes implements NodeVisitor {
 			for (Node n : siblings) {
 				if (n == node) {
 					for (Node c : node) {
-						if(c != node) {
+						if (c != node) {
 							parent.addChild(c);
 						}
 					}
@@ -64,7 +64,7 @@ public class RemoveIntermediateNodes implements NodeVisitor {
 			for (Node n : node) {
 				n.visit(this);
 			}
-			
+
 			visitedPath.remove(node);
 		}
 	}
