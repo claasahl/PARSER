@@ -107,10 +107,11 @@ public class RuleToStringTest extends RuleVisitorTest {
 
 	@Override
 	public void shouldHandleRules() {
+		Rule asterics = new Terminal("*");
 		Rule digit = new NonTerminal("digit", new Terminal('0', '9'));
 		Rule digits = new Repetition(digit);
 		Rule repeat = new NonTerminal("repeat",
-				new Disjunction(new Conjunction(digit, digits), new Conjunction(digits, new Terminal("*"), digits)));
+				new Disjunction(new Conjunction(digit, digits), new Conjunction(digits, asterics, digits)));
 
 		List<String> lines = new ArrayList<>();
 		lines.add("NonTerminal:repeat");

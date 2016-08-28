@@ -36,19 +36,19 @@ public abstract class RuleVisitorTest {
 
 	@Test
 	public abstract void shouldHandleRules();
-	
+
 	@Test
 	public abstract void shouldHandleCyclicRepetitionRule();
-	
+
 	@Test
 	public abstract void shouldHandleCyclicOptionalRule();
-	
+
 	@Test
 	public abstract void shouldHandleCyclicNonTerminalRule();
-	
+
 	@Test
 	public abstract void shouldHandleCyclicDisjunctionRule();
-	
+
 	@Test
 	public abstract void shouldHandleCyclicConjunctionRule();
 

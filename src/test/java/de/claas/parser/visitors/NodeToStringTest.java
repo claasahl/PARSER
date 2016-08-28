@@ -91,7 +91,7 @@ public class NodeToStringTest extends NodeVisitorTest {
 		lines.add("  NonTerminalNode:root");
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
-	
+
 	@Override
 	public void shouldHandleCyclicIntermediateNode() {
 		IntermediateNode node = new IntermediateNode();
