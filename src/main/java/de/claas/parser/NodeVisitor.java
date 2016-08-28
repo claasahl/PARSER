@@ -1,5 +1,6 @@
 package de.claas.parser;
 
+import de.claas.parser.exceptions.CyclicNodeException;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
@@ -32,6 +33,10 @@ public interface NodeVisitor {
 	 * 
 	 * @param node
 	 *            the node
+	 * @throws CyclicNodeException
+	 *             if the visited node is part of a cyclic graph (i.e. the node
+	 *             references itself either directly or indirectly) and if this
+	 *             cannot be handled by the visitor
 	 */
 	default void visitIntermediateNode(IntermediateNode node) {
 		for (Node n : node) {
@@ -44,6 +49,10 @@ public interface NodeVisitor {
 	 * 
 	 * @param node
 	 *            the node
+	 * @throws CyclicNodeException
+	 *             if the visited node is part of a cyclic graph (i.e. the node
+	 *             references itself either directly or indirectly) and if this
+	 *             cannot be handled by the visitor
 	 */
 	void visitNonTerminaNode(NonTerminalNode node);
 

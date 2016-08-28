@@ -1,5 +1,6 @@
 package de.claas.parser;
 
+import de.claas.parser.exceptions.CyclicRuleException;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
@@ -27,6 +28,10 @@ public interface RuleVisitor {
 	 * 
 	 * @param rule
 	 *            the rule
+	 * @throws CyclicRuleException
+	 *             if the visited rule is part of a cyclic graph (i.e. the rule
+	 *             references itself either directly or indirectly) and if this
+	 *             cannot be handled by the visitor
 	 */
 	void visitConjunction(Conjunction rule);
 
@@ -35,6 +40,10 @@ public interface RuleVisitor {
 	 * 
 	 * @param rule
 	 *            the rule
+	 * @throws CyclicRuleException
+	 *             if the visited rule is part of a cyclic graph (i.e. the rule
+	 *             references itself either directly or indirectly) and if this
+	 *             cannot be handled by the visitor
 	 */
 	void visitDisjunction(Disjunction rule);
 
@@ -43,6 +52,10 @@ public interface RuleVisitor {
 	 * 
 	 * @param rule
 	 *            the rule
+	 * @throws CyclicRuleException
+	 *             if the visited rule is part of a cyclic graph (i.e. the rule
+	 *             references itself either directly or indirectly) and if this
+	 *             cannot be handled by the visitor
 	 */
 	void visitNonTerminal(NonTerminal rule);
 
@@ -51,6 +64,10 @@ public interface RuleVisitor {
 	 * 
 	 * @param rule
 	 *            the rule
+	 * @throws CyclicRuleException
+	 *             if the visited rule is part of a cyclic graph (i.e. the rule
+	 *             references itself either directly or indirectly) and if this
+	 *             cannot be handled by the visitor
 	 */
 	void visitOptional(Optional rule);
 
@@ -59,6 +76,10 @@ public interface RuleVisitor {
 	 * 
 	 * @param rule
 	 *            the rule
+	 * @throws CyclicRuleException
+	 *             if the visited rule is part of a cyclic graph (i.e. the rule
+	 *             references itself either directly or indirectly) and if this
+	 *             cannot be handled by the visitor
 	 */
 	void visitRepetition(Repetition rule);
 
