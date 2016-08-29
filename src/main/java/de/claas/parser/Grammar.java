@@ -75,7 +75,7 @@ public class Grammar {
 	public Node parse(String data, boolean retainIntermediateNodes) throws ParsingException {
 		State state = new State(data);
 		Node node = start.process(state);
-		if (node == null || !state.isFullyProcessed())
+		if (node == null || !state.getUnprocessedData().isEmpty())
 			throw new ParsingException("Could not process all tokens.");
 		if (!retainIntermediateNodes)
 			node.visit(new RemoveIntermediateNodes());

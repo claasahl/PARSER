@@ -4,8 +4,10 @@ import java.util.Stack;
 
 /**
  * 
- * The class {@link State}. It is intended to represent the state while
- * processing / parsing tokens.
+ * The class {@link State}. It is intended to be used by {@link Grammar}
+ * instances during processing / parsing. The state is fed with data, that is
+ * presumed to fulfill the grammar in question, and provides methods for
+ * processing the given data as well as methods for querying its internal state.
  * 
  * @author Claas Ahlrichs
  *
@@ -17,10 +19,10 @@ public class State {
 	private int offset = 0;
 
 	/**
-	 * Constructs a new State with the specified parameter.
+	 * Constructs a new {@link State} with the specified parameter.
 	 * 
 	 * @param data
-	 *            the data
+	 *            the data that will be processed by this {@link State}
 	 */
 	public State(String data) {
 		this.steps = new Stack<>();
@@ -48,12 +50,44 @@ public class State {
 		}
 	}
 
+	/**
+	 * Returns the unprocessed data of this state. An empty string is returned
+	 * if all data were processed. Equals {@link #getData()} if no data was
+	 * processed. The returned string is the trailing part of this state's data
+	 * (i.e. this state's data ends with the unprocessed data). The length of
+	 * the returned string decreases as more data is being processed.
+	 * 
+	 * @return the unprocessed data of this state
+	 */
 	public String getUnprocessedData() {
 		return data.substring(offset);
 	}
 
+	/**
+	 * Returns the processed data of this state. An empty string is returned if
+	 * no data was processed. Equals {@link #getData()} if all data were
+	 * processed. The returned string is the leading part of this state's data
+	 * (i.e. this state's data starts with the processed data). The length of
+	 * the returned string increases as more data is being processed.
+	 * 
+	 * @return the processed data of this state
+	 */
 	public String getProcessedData() {
 		return data.substring(0, offset);
+	}
+
+	/**
+	 * Returns the data that is being processed by this state. The returned data
+	 * corresponds to what was specified during construction. While the data is
+	 * being processed (i.e. {@link #hasUnprocessedData()} is
+	 * <code>true</code>), the data can be split into two parts: the processed
+	 * part and the unprocessed part. See {@link #getProcessedData()} and
+	 * {@link #getUnprocessedData()} for more details on their semantics.
+	 * 
+	 * @return the data that is being processed by this state
+	 */
+	public String getData() {
+		return data;
 	}
 
 	/**
@@ -102,10 +136,6 @@ public class State {
 	public void revert() {
 		offset -= steps.pop();
 		steps.push(0);
-	}
-
-	public boolean isFullyProcessed() {
-		return getUnprocessedData().isEmpty();
 	}
 
 }
