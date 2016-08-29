@@ -1,6 +1,7 @@
 package de.claas.parser.rules;
 
 import de.claas.parser.Node;
+import de.claas.parser.Result;
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
 import de.claas.parser.State;
@@ -33,12 +34,11 @@ public class Disjunction extends Rule {
 	public Node process(State state) {
 		state.beginGroup();
 		try {
+			Node node = new IntermediateNode();
 			for (Rule rule : this) {
-				Node child = rule.process(state);
-				if (child != null) {
-					Node node = new IntermediateNode();
-					node.addChild(child);
-					return node;
+				Node result = Result.get(rule, state, node, null);
+				if(result != null) {
+					return result;
 				}
 			}
 			state.revert();

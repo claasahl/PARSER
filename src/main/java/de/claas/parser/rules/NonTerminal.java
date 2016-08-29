@@ -1,6 +1,7 @@
 package de.claas.parser.rules;
 
 import de.claas.parser.Node;
+import de.claas.parser.Result;
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
 import de.claas.parser.State;
@@ -57,15 +58,8 @@ public class NonTerminal extends Decorator {
 
 	@Override
 	public Node process(State state) {
-		Node node = null;
-		if (getRule() != null) {
-			Node child = getRule().process(state);
-			if (child != null) {
-				node = new NonTerminalNode(getName());
-				node.addChild(child);
-			}
-		}
-		return node;
+		Node node = new NonTerminalNode(getName());
+		return Result.get(getRule(), state, node, null);
 	}
 
 	@Override

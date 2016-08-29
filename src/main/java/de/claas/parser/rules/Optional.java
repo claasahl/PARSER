@@ -1,6 +1,7 @@
 package de.claas.parser.rules;
 
 import de.claas.parser.Node;
+import de.claas.parser.Result;
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
 import de.claas.parser.State;
@@ -34,15 +35,8 @@ public class Optional extends Decorator {
 	public Node process(State state) {
 		state.beginGroup();
 		try {
-			Node node = null;
-			if (getRule() != null) {
-				node = new IntermediateNode();
-				Node child = getRule().process(state);
-				if (child != null) {
-					node.addChild(child);
-				}
-			}
-			return node;
+			Node node = new IntermediateNode();
+			return Result.get(getRule(), state, node, node);
 		} finally {
 			state.endGroup();
 		}

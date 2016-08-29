@@ -1,6 +1,7 @@
 package de.claas.parser.rules;
 
 import de.claas.parser.Node;
+import de.claas.parser.Result;
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
 import de.claas.parser.State;
@@ -35,13 +36,8 @@ public class Repetition extends Decorator {
 	public Node process(State state) {
 		state.beginGroup();
 		try {
-			Node node = null;
-			Node child = null;
-			if (getRule() != null) {
-				node = new IntermediateNode();
-				while ((child = getRule().process(state)) != null) {
-					node.addChild(child);
-				}
+			Node node = new IntermediateNode();
+			while (Result.get(getRule(), state, node, null) != null) {
 			}
 			return node;
 		} finally {

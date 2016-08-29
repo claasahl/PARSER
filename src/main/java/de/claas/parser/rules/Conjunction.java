@@ -1,6 +1,7 @@
 package de.claas.parser.rules;
 
 import de.claas.parser.Node;
+import de.claas.parser.Result;
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
 import de.claas.parser.State;
@@ -35,10 +36,7 @@ public class Conjunction extends Rule {
 		try {
 			Node node = hasChildren() ? new IntermediateNode() : null;
 			for (Rule rule : this) {
-				Node child = rule.process(state);
-				if (child != null) {
-					node.addChild(child);
-				} else {
+				if (Result.get(rule, state, node, null) == null) {
 					state.revert();
 					return null;
 				}
