@@ -1,6 +1,7 @@
 package de.claas.parser;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -36,9 +37,50 @@ public class StateTest {
 
 	@Test
 	public void shouldProperlyInitializeNonEmptyState() {
-		State state = buildState("helloworld");
+		State state = buildState("hello world");
 		assertEquals("", state.getProcessedData());
-		assertEquals("helloworld", state.getUnprocessedData());
+		assertEquals("hello world", state.getUnprocessedData());
 		assertEquals(0, state.getGroups());
+	}
+	
+	@Test
+	public void shouldRevertNothing() {
+		State state = buildState("hello world");
+		assertTrue(state.process("hello"));
+		assertTrue(state.process(" "));
+		assertEquals("hello ", state.getProcessedData());
+		assertEquals("world", state.getUnprocessedData());
+		state.beginGroup();
+		state.revert();
+		assertEquals("hello ", state.getProcessedData());
+		assertEquals("world", state.getUnprocessedData());
+	}
+	
+	@Test
+	public void shouldRevertLastGroup() {
+		State state = buildState("hello world");
+		state.beginGroup();
+		assertTrue(state.process("hello"));
+		state.beginGroup();
+		assertTrue(state.process(" "));
+		assertTrue(state.process("world"));
+		assertEquals("hello world", state.getProcessedData());
+		assertEquals("", state.getUnprocessedData());
+		state.revert();
+		assertEquals("hello", state.getProcessedData());
+		assertEquals(" world", state.getUnprocessedData());
+	}
+	
+	@Test
+	public void shouldRevertEverything() {
+		State state = buildState("hello world");
+		state.beginGroup();
+		assertTrue(state.process("hello"));
+		assertTrue(state.process(" "));
+		assertEquals("hello ", state.getProcessedData());
+		assertEquals("world", state.getUnprocessedData());
+		state.revert();
+		assertEquals("", state.getProcessedData());
+		assertEquals("hello world", state.getUnprocessedData());
 	}
 }
