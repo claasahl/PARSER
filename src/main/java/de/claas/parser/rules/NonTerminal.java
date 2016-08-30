@@ -25,7 +25,7 @@ public class NonTerminal extends Decorator {
 	private final String name;
 
 	/**
-	 * Creates an instance with the given parameter.
+	 * Constructs a new {@link NonTerminal} with the specified parameter.
 	 * 
 	 * @param name
 	 *            the name

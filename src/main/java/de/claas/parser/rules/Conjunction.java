@@ -21,7 +21,7 @@ import de.claas.parser.results.IntermediateNode;
 public class Conjunction extends Rule {
 
 	/**
-	 * Creates an instance with the given parameters.
+	 * Constructs a new {@link Conjunction} with the specified parameters.
 	 * 
 	 * @param children
 	 *            the children

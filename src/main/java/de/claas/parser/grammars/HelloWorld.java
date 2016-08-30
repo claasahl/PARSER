@@ -29,7 +29,7 @@ import de.claas.parser.rules.Terminal;
 public class HelloWorld extends Grammar {
 
 	/**
-	 * Creates an instance with default parameters.
+	 * Constructs a new {@link HelloWorld} with default parameters.
 	 */
 	public HelloWorld() {
 		super(grammar());

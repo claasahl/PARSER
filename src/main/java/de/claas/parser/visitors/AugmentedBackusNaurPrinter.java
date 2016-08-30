@@ -38,8 +38,9 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 	private final String lineSeparator;
 
 	/**
-	 * Constructs a new AugmentedBackusNaurPrinter with default parameters.
-	 * Calling this constructor is equivalent to calling
+	 * 
+	 * Constructs a new {@link AugmentedBackusNaurPrinter} with default
+	 * parameters. Calling this constructor is equivalent to calling
 	 * <code>{@link #AugmentedBackusNaurPrinter(NonTerminal, String)}</code>
 	 * with the system's line separator (property {@literal line.separator}).
 	 * 
@@ -51,7 +52,7 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 	}
 
 	/**
-	 * Constructs a new AugmentedBackusNaurPrinter with the specified
+	 * Constructs a new {@link AugmentedBackusNaurPrinter} with the specified
 	 * parameters. The specified (non terminal) rule is assumed to represent the
 	 * grammar's root-rule and it is stringified (i.e. turned into a string).
 	 * The line separator is appended to every stringified {@link NonTerminal}

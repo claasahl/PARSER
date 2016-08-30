@@ -23,7 +23,7 @@ import de.claas.parser.results.IntermediateNode;
 public class Repetition extends Decorator {
 
 	/**
-	 * Creates an instance with the given parameter.
+	 * Constructs a new {@link Repetition} with the specified parameter.
 	 * 
 	 * @param rule
 	 *            the repeatable rule

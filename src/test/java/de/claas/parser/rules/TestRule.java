@@ -22,9 +22,9 @@ public class TestRule extends Rule {
 	private final Node output;
 
 	/**
-	 * Creates an instance with the given parameters. The specified node is
-	 * returned by {@link #process(State)} if the processed token equals
-	 * {@link #getName()}.
+	 * Constructs a new {@link TestRule} with the specified parameters. The
+	 * specified node is returned by {@link #process(State)} if the processed
+	 * token equals {@link #getName()}.
 	 * 
 	 * @param name
 	 *            the name

@@ -21,7 +21,7 @@ import de.claas.parser.results.IntermediateNode;
 public class Disjunction extends Rule {
 
 	/**
-	 * Creates an instance with the given parameters.
+	 * Constructs a new {@link Disjunction} with the specified parameters.
 	 * 
 	 * @param children
 	 *            the children
@@ -37,7 +37,7 @@ public class Disjunction extends Rule {
 			Node node = new IntermediateNode();
 			for (Rule rule : this) {
 				Node result = Result.get(rule, state, node, null);
-				if(result != null) {
+				if (result != null) {
 					return result;
 				}
 			}

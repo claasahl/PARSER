@@ -22,7 +22,7 @@ public abstract class Decorator extends Rule {
 	private Rule rule;
 
 	/**
-	 * Creates an instance with default parameters.
+	 * Constructs a new {@link Decorator} with default parameters.
 	 */
 	public Decorator() {
 		this(null);

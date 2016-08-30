@@ -36,7 +36,7 @@ import de.claas.parser.rules.Terminal;
 public class Number extends Grammar {
 
 	/**
-	 * Creates an instance with default parameters.
+	 * Constructs a new {@link Number} with default parameters.
 	 */
 	public Number() {
 		super(grammar());

@@ -30,8 +30,8 @@ public class NodeToString implements NodeVisitor {
 	private final String lineSeparator;
 
 	/**
-	 * Constructs a new NodeToString with default parameters. Calling this
-	 * constructor is equivalent to calling
+	 * Constructs a new {@link NodeToString} with default parameters. Calling
+	 * this constructor is equivalent to calling
 	 * <code>{@link #NodeToString(String, String)}</code> with
 	 * {@value #DEFAULT_LEVEL_SEPARATOR} as default level separator and the
 	 * system's line separator (property {@literal line.separator}).
@@ -41,10 +41,11 @@ public class NodeToString implements NodeVisitor {
 	}
 
 	/**
-	 * Constructs a new NodeToString with the specified parameters. The level
-	 * separator is prefixed to every stringified (i.e. turned into a string)
-	 * {@link Node} object and signified the node's depth within the tree. The
-	 * line separator is appended to every stringified {@link Node} object.
+	 * Constructs a new {@link NodeToString} with the specified parameters. The
+	 * level separator is prefixed to every stringified (i.e. turned into a
+	 * string) {@link Node} object and signified the node's depth within the
+	 * tree. The line separator is appended to every stringified {@link Node}
+	 * object.
 	 * 
 	 * @param levelSeparator
 	 *            the level separator

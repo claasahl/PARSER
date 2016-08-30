@@ -22,7 +22,7 @@ import de.claas.parser.results.IntermediateNode;
 public class Optional extends Decorator {
 
 	/**
-	 * Creates an instance with the given parameter.
+	 * Constructs a new {@link Optional} with the specified parameter.
 	 * 
 	 * @param rule
 	 *            the optional rule

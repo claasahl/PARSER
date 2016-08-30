@@ -34,8 +34,8 @@ public class RuleToString implements RuleVisitor {
 	private final String lineSeparator;
 
 	/**
-	 * Constructs a new NodeToString with default parameters. Calling this
-	 * constructor is equivalent to calling
+	 * Constructs a new {@link RuleToString} with default parameters. Calling
+	 * this constructor is equivalent to calling
 	 * <code>{@link #RuleToString(String, String)}</code> with {@value #DEFAULT_
 	 * LEVEL_SEPARATOR} as default level separator and the system's line
 	 * separator (property {@literal line.separator}).
@@ -45,10 +45,11 @@ public class RuleToString implements RuleVisitor {
 	}
 
 	/**
-	 * Constructs a new NodeToString with the specified parameters. The level
-	 * separator is prefixed to every stringified (i.e. turned into a string)
-	 * {@link Rule} object and signified the rule's depth within the tree. The
-	 * line separator is appended to every stringified {@link Rule} object.
+	 * Constructs a new {@link RuleToString} with the specified parameters. The
+	 * level separator is prefixed to every stringified (i.e. turned into a
+	 * string) {@link Rule} object and signified the rule's depth within the
+	 * tree. The line separator is appended to every stringified {@link Rule}
+	 * object.
 	 * 
 	 * @param levelSeparator
 	 *            the level separator

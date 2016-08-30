@@ -20,10 +20,10 @@ public class Grammar {
 	private final NonTerminal start;
 
 	/**
-	 * Creates an instance with the given parameter.
+	 * Constructs a new {@link Grammar} with the specified parameter.
 	 * 
 	 * @param grammar
-	 *            the grammar
+	 *            the grammar's initial {@link NonTerminal} rule
 	 */
 	public Grammar(NonTerminal grammar) {
 		this.start = grammar;

@@ -68,7 +68,7 @@ import de.claas.parser.rules.Terminal;
 public class AugmentedBackusNaur extends Grammar {
 
 	/**
-	 * Creates an instance with default parameters.
+	 * Constructs a new {@link AugmentedBackusNaur} with default parameters.
 	 */
 	public AugmentedBackusNaur() {
 		super(grammar());

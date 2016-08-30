@@ -21,10 +21,10 @@ public class TerminalNode extends Node {
 	private final String terminal;
 
 	/**
-	 * Creates an instance with the given parameter.
+	 * Constructs a new {@link TerminalNode} with the specified parameter.
 	 * 
 	 * @param terminal
-	 *            the terminal symbol
+	 *            the terminal
 	 */
 	public TerminalNode(String terminal) {
 		this.terminal = terminal;

@@ -33,7 +33,7 @@ import de.claas.parser.rules.Terminal;
 public class Repeat extends Grammar {
 
 	/**
-	 * Creates an instance with default parameters.
+	 * Constructs a new {@link Repeat} with default parameters.
 	 */
 	public Repeat() {
 		super(grammar());

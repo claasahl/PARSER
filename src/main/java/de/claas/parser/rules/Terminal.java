@@ -28,7 +28,7 @@ public class Terminal extends Rule {
 	private final List<String> terminals;
 
 	/**
-	 * Creates an instances with the given parameters.
+	 * Constructs a new {@link Terminal} with the specified parameters.
 	 * 
 	 * @param terminals
 	 *            the terminal symbols
