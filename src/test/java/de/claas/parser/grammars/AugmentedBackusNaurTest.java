@@ -29,31 +29,31 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 	}
 
 	@Test
-	public void shouldHandleConcatenation() throws ParsingException {
+	public void shouldHandleConcatenation() {
 		Grammar grammar = build();
 		assertNotNull(grammar.parse("rule = \"hel\" \"lo\"\r\n", false));
 	}
 
 	@Test
-	public void shouldHandleAlternation() throws ParsingException {
+	public void shouldHandleAlternation() {
 		Grammar grammar = build();
 		assertNotNull(grammar.parse("rule = \"hel\" / \"lo\"\r\n", false));
 	}
 
 	@Test
-	public void shouldHandleIncrementalAlternatives() throws ParsingException {
+	public void shouldHandleIncrementalAlternatives() {
 		Grammar grammar = build();
 		assertNotNull(grammar.parse("rule = \"hel\"\r\nrule =/ \"lo\"\r\n", false));
 	}
 
 	@Test
-	public void shouldHandleComment() throws ParsingException {
+	public void shouldHandleComment() {
 		Grammar grammar = build();
 		assertNotNull(grammar.parse("rule = \"R\" ; rrrrrrrr RRRR\r\n", false));
 	}
 
 	@Test
-	public void shouldHandleRepetition() throws ParsingException {
+	public void shouldHandleRepetition() {
 		Grammar grammar = build();
 		assertNotNull(grammar.parse("rule = *\"R\"\r\n", false));
 		assertNotNull(grammar.parse("rule = 2*\"R\"\r\n", false));
@@ -61,19 +61,19 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 	}
 
 	@Test
-	public void shouldHandleGroup() throws ParsingException {
+	public void shouldHandleGroup() {
 		Grammar grammar = build();
 		assertNotNull(grammar.parse("rule = (\"hello\")\r\n", false));
 	}
 
 	@Test
-	public void shouldHandleOption() throws ParsingException {
+	public void shouldHandleOption() {
 		Grammar grammar = build();
 		assertNotNull(grammar.parse("rule = [\"hello\"]\r\n", false));
 	}
 
 	@Test
-	public void shouldHandleABNFSpecification() throws ParsingException {
+	public void shouldHandleABNFSpecification() {
 		List<String> rules = new ArrayList<>();
 		rules.add("rulelist       =  1*( rule / (*c-wsp c-nl) )");
 		rules.add(

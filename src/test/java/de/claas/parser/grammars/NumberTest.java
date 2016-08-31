@@ -26,14 +26,14 @@ public class NumberTest extends GrammarTest<Number> {
 	}
 
 	@Test
-	public void shouldHandleIntegers() throws ParsingException {
+	public void shouldHandleIntegers() {
 		Grammar grammar = build();
 		assertEquals(generateTree(false, "23", null, null, null, null), grammar.parse("23"));
 		assertEquals(generateTree(true, "42", null, null, null, null), grammar.parse("-42"));
 	}
 
 	@Test
-	public void shouldHandleFractionalNumbers() throws ParsingException {
+	public void shouldHandleFractionalNumbers() {
 		Grammar grammar = build();
 		assertEquals(generateTree(false, "23", "43", null, null, null), grammar.parse("23.43"));
 		assertEquals(generateTree(true, "42", "111111111111111111111111112", null, null, null),
@@ -41,7 +41,7 @@ public class NumberTest extends GrammarTest<Number> {
 	}
 
 	@Test
-	public void shouldHandleExponentialNumbers() throws ParsingException {
+	public void shouldHandleExponentialNumbers() {
 		Grammar grammar = build();
 		assertEquals(generateTree(false, "23", null, "e", "-", "9"), grammar.parse("23e-9"));
 		assertEquals(generateTree(true, "42", null, "E", "+", "8"), grammar.parse("-42E+8"));
@@ -51,19 +51,19 @@ public class NumberTest extends GrammarTest<Number> {
 	}
 
 	@Test
-	public void shouldHandleZero() throws ParsingException {
+	public void shouldHandleZero() {
 		Grammar grammar = build();
 		assertEquals(generateTree(false, "0", null, null, null, null), grammar.parse("0"));
 	}
 
 	@Test(expected = ParsingException.class)
-	public void shouldNotHandleZeroAsFirstDigit() throws ParsingException {
+	public void shouldNotHandleZeroAsFirstDigit() {
 		Grammar grammar = build();
 		grammar.parse("01");
 	}
 
 	@Test(expected = ParsingException.class)
-	public void shouldNotHandlePlusAsFirstDigit() throws ParsingException {
+	public void shouldNotHandlePlusAsFirstDigit() {
 		Grammar grammar = build();
 		grammar.parse("+1");
 	}

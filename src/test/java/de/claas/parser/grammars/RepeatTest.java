@@ -25,37 +25,37 @@ public class RepeatTest extends GrammarTest<Repeat> {
 	}
 
 	@Test
-	public void shouldHandleUnconstraintRepetitions() throws ParsingException {
+	public void shouldHandleUnconstraintRepetitions() {
 		Grammar grammar = build();
 		assertNotNull(grammar.parse("*"));
 	}
 
 	@Test
-	public void shouldHandleMinimumRepetitions() throws ParsingException {
+	public void shouldHandleMinimumRepetitions() {
 		Grammar grammar = build();
 		assertNotNull(grammar.parse("1*"));
 	}
 
 	@Test
-	public void shouldHandleMaximumRepetitions() throws ParsingException {
+	public void shouldHandleMaximumRepetitions() {
 		Grammar grammar = build();
 		assertNotNull(grammar.parse("*1"));
 	}
 
 	@Test
-	public void shouldHandleRangeRepetitions() throws ParsingException {
+	public void shouldHandleRangeRepetitions() {
 		Grammar grammar = build();
 		assertNotNull(grammar.parse("1*2"));
 	}
 
 	@Test
-	public void shouldHandleFixedRepetitions() throws ParsingException {
+	public void shouldHandleFixedRepetitions() {
 		Grammar grammar = build();
 		assertNotNull(grammar.parse("1"));
 	}
 
 	@Test(expected = ParsingException.class)
-	public void shouldNotHandle() throws ParsingException {
+	public void shouldNotHandle() {
 		Grammar grammar = build();
 		grammar.parse("**");
 	}

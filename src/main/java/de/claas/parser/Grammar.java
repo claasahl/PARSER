@@ -48,7 +48,7 @@ public class Grammar {
 	 *             the pattern is otherwise not in accordance with the grammar
 	 *             that was passed into the constructor)
 	 */
-	public Node parse(String data) throws ParsingException {
+	public Node parse(String data) {
 		return parse(data, false);
 	}
 
@@ -72,7 +72,7 @@ public class Grammar {
 	 *             the pattern is otherwise not in accordance with the grammar
 	 *             that was passed into the constructor)
 	 */
-	public Node parse(String data, boolean retainIntermediateNodes) throws ParsingException {
+	public Node parse(String data, boolean retainIntermediateNodes) {
 		State state = new State(data);
 		Node node = start.process(state);
 		if (node == null || !state.getUnprocessedData().isEmpty())

@@ -26,7 +26,7 @@ public class HelloWorldTest extends GrammarTest<HelloWorld> {
 	}
 
 	@Test
-	public void shouldHandleDE() throws ParsingException {
+	public void shouldHandleDE() {
 		Grammar grammar = build();
 		Node actual = grammar.parse("hallo welt");
 		Node expected = generateTree("de", "hallo", "welt");
@@ -34,7 +34,7 @@ public class HelloWorldTest extends GrammarTest<HelloWorld> {
 	}
 
 	@Test
-	public void shouldHandleEN() throws ParsingException {
+	public void shouldHandleEN() {
 		Grammar grammar = build();
 		Node actual = grammar.parse("hello world");
 		Node expected = generateTree("en", "hello", "world");
@@ -42,7 +42,7 @@ public class HelloWorldTest extends GrammarTest<HelloWorld> {
 	}
 
 	@Test
-	public void shouldHandleSE() throws ParsingException {
+	public void shouldHandleSE() {
 		Grammar grammar = build();
 		Node actual = grammar.parse("hallå värld");
 		Node expected = generateTree("se", "hallå", "värld");
@@ -50,7 +50,7 @@ public class HelloWorldTest extends GrammarTest<HelloWorld> {
 	}
 
 	@Test
-	public void shouldHandleES() throws ParsingException {
+	public void shouldHandleES() {
 		Grammar grammar = build();
 		Node actual = grammar.parse("hola mundo");
 		Node expected = generateTree("es", "hola", "mundo");
@@ -58,7 +58,7 @@ public class HelloWorldTest extends GrammarTest<HelloWorld> {
 	}
 
 	@Test(expected = ParsingException.class)
-	public void shouldNotHandleMixedLanguages() throws ParsingException {
+	public void shouldNotHandleMixedLanguages() {
 		Grammar grammar = build();
 		grammar.parse("hallo mundo");
 	}

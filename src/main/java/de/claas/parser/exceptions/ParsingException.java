@@ -7,7 +7,7 @@ package de.claas.parser.exceptions;
  * @author Claas Ahlrichs
  *
  */
-public class ParsingException extends Exception {
+public class ParsingException extends RuntimeException {
 
 	private static final long serialVersionUID = 7967586094665395837L;
 
