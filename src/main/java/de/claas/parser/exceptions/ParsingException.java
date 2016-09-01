@@ -1,8 +1,13 @@
 package de.claas.parser.exceptions;
 
+import de.claas.parser.Grammar;
+
 /**
  * 
- * Superclass of all specialized exceptions in this package.
+ * The class {@link ParsingException}. It is thrown to indicate that a
+ * {@link Grammar} cannot parse the data that was passed into it. The data is
+ * considered invalid, e.g. it contains illegal tokens or the data is otherwise
+ * not in accordance with the grammar.
  * 
  * @author Claas Ahlrichs
  *

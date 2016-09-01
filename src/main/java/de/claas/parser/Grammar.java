@@ -8,8 +8,8 @@ import de.claas.parser.visitors.RemoveIntermediateNodes;
 /**
  * 
  * The class {@link Grammar}. It is intended to parse sentences of a given
- * grammar. This class takes a set of {@link NonTerminal} rules (i.e. named
- * rules) and uses them to parse sentences. The result is returned as a tree of
+ * grammar. This class takes a {@link NonTerminal} as initial rule (i.e. named
+ * rule) and uses it to parse sentences. The result is returned as a tree of
  * {@link Node} instances.
  * 
  * @author Claas Ahlrichs
@@ -20,6 +20,7 @@ public class Grammar {
 	private final NonTerminal start;
 
 	/**
+	 * 
 	 * Constructs a new {@link Grammar} with the specified parameter.
 	 * 
 	 * @param grammar
@@ -31,22 +32,22 @@ public class Grammar {
 
 	/**
 	 * Parses and returns the tree of terminals and non-terminals that
-	 * represents the given pattern. Any intermediate nodes (and thus
+	 * represents the specified data. Any intermediate nodes (and thus
 	 * non-essential nodes) are removed. Any preceding and trailing whitespace
-	 * are removed as well. If the given pattern is invalid, then a
+	 * are removed as well. If the given data is in any way invalid, then a
 	 * {@link ParsingException} is thrown.
 	 * <p>
 	 * Calling this method is equivalent <code>parse(data, false)</code> (see
 	 * {@link #parse(String, boolean)}).
 	 * 
 	 * @param data
-	 *            the pattern
-	 * @return the tree of terminals and non-terminals that represents the given
-	 *         pattern
+	 *            the data that is being parsed
+	 * @return the tree of terminals and non-terminals that represents the
+	 *         specified data
 	 * @throws ParsingException
-	 *             if the pattern is invalid (e.g. contains illegal tokens or
-	 *             the pattern is otherwise not in accordance with the grammar
-	 *             that was passed into the constructor)
+	 *             if the data is invalid (e.g. contains illegal tokens or the
+	 *             data is otherwise not in accordance with the grammar that was
+	 *             passed into the constructor)
 	 */
 	public Node parse(String data) {
 		return parse(data, false);
@@ -54,23 +55,23 @@ public class Grammar {
 
 	/**
 	 * Parses and returns the tree of terminals and non-terminals that
-	 * represents the given pattern. Optionally intermediate nodes (and thus
+	 * represents the specified data. Optionally intermediate nodes (and thus
 	 * non-essential nodes) can be removed. Also optionally, preceding and
-	 * trailing whitespace can be removed. If the given pattern is invalid, then
-	 * a {@link ParsingException} is thrown.
+	 * trailing whitespace can be removed. If the given data is in any way
+	 * invalid, then a {@link ParsingException} is thrown.
 	 * 
 	 * @param data
-	 *            the pattern
+	 *            the data that is being parsed
 	 * @param retainIntermediateNodes
 	 *            whether {@link IntermediateNode} instances should be retained.
 	 *            Set to <code>false</code> if only non-terminal and terminal
 	 *            nodes are desired
-	 * @return the tree of terminals and non-terminals that represents the given
-	 *         pattern
+	 * @return the tree of terminals and non-terminals that represents the
+	 *         specified data
 	 * @throws ParsingException
-	 *             if the pattern is invalid (e.g. contains illegal tokens or
-	 *             the pattern is otherwise not in accordance with the grammar
-	 *             that was passed into the constructor)
+	 *             if the data is invalid (e.g. contains illegal tokens or the
+	 *             data is otherwise not in accordance with the grammar that was
+	 *             passed into the constructor)
 	 */
 	public Node parse(String data, boolean retainIntermediateNodes) {
 		State state = new State(data);
