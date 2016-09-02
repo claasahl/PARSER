@@ -1,12 +1,17 @@
 package de.claas.parser.rules;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+
+import java.util.Iterator;
 
 import org.junit.Test;
 
+import de.claas.parser.Node;
 import de.claas.parser.Rule;
 import de.claas.parser.State;
+import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.results.TerminalNode;
 
 /**
@@ -55,6 +60,24 @@ public class OptionalTest extends DecoratorTest {
 		assertNotNull(rule.process(state));
 		assertEquals("decorateddecorated", state.getProcessedData());
 		assertEquals("invalid", state.getUnprocessedData());
+	}
+	
+	@Test
+	public void shouldReturnIntermediateNode() {
+		Rule rule = build(defaultChildren());
+		Node node = rule.process(processibleState());
+		assertEquals(IntermediateNode.class, node.getClass());
+	}
+	
+	@Test
+	public void shouldReturnAppropriateNodeTree() {
+		Rule rule = build(defaultChildren());
+		Node node = rule.process(processibleState());
+		
+		Iterator<Node> children = node.iterator();
+		TerminalNode child = (TerminalNode) children.next();
+		assertEquals("decorated", child.getTerminal());
+		assertFalse(children.hasNext());
 	}
 
 }

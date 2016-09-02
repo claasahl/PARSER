@@ -1,9 +1,13 @@
 package de.claas.parser.rules;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
+import java.util.Iterator;
 
 import org.junit.Test;
 
+import de.claas.parser.Node;
 import de.claas.parser.Rule;
 import de.claas.parser.State;
 import de.claas.parser.results.NonTerminalNode;
@@ -49,6 +53,25 @@ public class NonTerminalTest extends DecoratorTest {
 
 		NonTerminalNode node = (NonTerminalNode) rule.process(state);
 		assertEquals(DEFAULT_NAME, node.getName());
+	}
+
+	@Test
+	public void shouldReturnNonTerminalNode() {
+		Rule rule = build(defaultChildren());
+		Node node = rule.process(processibleState());
+		assertEquals(NonTerminalNode.class, node.getClass());
+	}
+
+	@Test
+	public void shouldReturnAppropriateNodeTree() {
+		Rule rule = build(defaultChildren());
+		NonTerminalNode node = (NonTerminalNode) rule.process(processibleState());
+
+		assertEquals(DEFAULT_NAME, node.getName());
+		Iterator<Node> children = node.iterator();
+		TerminalNode child = (TerminalNode) children.next();
+		assertEquals("nonTerminal", child.getTerminal());
+		assertFalse(children.hasNext());
 	}
 
 }

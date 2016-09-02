@@ -12,8 +12,10 @@ import java.util.stream.Collectors;
 
 import org.junit.Test;
 
+import de.claas.parser.Node;
 import de.claas.parser.Rule;
 import de.claas.parser.State;
+import de.claas.parser.results.TerminalNode;
 
 /**
  * 
@@ -101,11 +103,11 @@ public class TerminalTest extends RuleTest {
 		assertNotNull(rule.process(state));
 		assertEquals("world", state.getProcessedData());
 		assertEquals("helloworld", state.getUnprocessedData());
-		
+
 		assertNotNull(rule.process(state));
 		assertEquals("worldhello", state.getProcessedData());
 		assertEquals("world", state.getUnprocessedData());
-		
+
 		assertNotNull(rule.process(state));
 		assertEquals("worldhelloworld", state.getProcessedData());
 		assertEquals("", state.getUnprocessedData());
@@ -126,12 +128,12 @@ public class TerminalTest extends RuleTest {
 		assertNotNull(rule.process(state));
 		assertEquals("a", state.getProcessedData());
 		assertEquals("bxz", state.getUnprocessedData());
-		
+
 		assertNotNull(rule.process(state));
 		assertNotNull(rule.process(state));
 		assertEquals("abx", state.getProcessedData());
 		assertEquals("z", state.getUnprocessedData());
-		
+
 		assertNotNull(rule.process(state));
 		assertEquals("abxz", state.getProcessedData());
 		assertEquals("", state.getUnprocessedData());
@@ -142,6 +144,20 @@ public class TerminalTest extends RuleTest {
 		State state = buildState("A 0 Z");
 		Terminal rule = build(DEFAULT_RANGE_START, DEFAULT_RANGE_END);
 		assertNull(rule.process(state));
+	}
+
+	@Test
+	public void shouldReturnTerminalNode() {
+		Rule rule = build(defaultChildren());
+		Node node = rule.process(processibleState());
+		assertEquals(TerminalNode.class, node.getClass());
+	}
+
+	@Test
+	public void shouldReturnAppropriateNodeTree() {
+		Rule rule = build(defaultChildren());
+		TerminalNode node = (TerminalNode) rule.process(processibleState());
+		assertEquals(DEFAULT_TERMINALS[0], node.getTerminal());
 	}
 
 }

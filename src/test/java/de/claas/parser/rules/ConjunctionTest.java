@@ -1,11 +1,17 @@
 package de.claas.parser.rules;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+
+import java.util.Iterator;
 
 import org.junit.Test;
 
+import de.claas.parser.Node;
 import de.claas.parser.Rule;
 import de.claas.parser.State;
+import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.results.TerminalNode;
 
 /**
@@ -54,6 +60,24 @@ public class ConjunctionTest extends RuleTest {
 		assertNull(rule.process(buildState("invalidworld")));
 		assertNull(rule.process(buildState("hello")));
 		assertNull(rule.process(buildState("world")));
+	}
+
+	@Test
+	public void shouldReturnIntermediateNode() {
+		Rule rule = build(defaultChildren());
+		Node node = rule.process(processibleState());
+		assertEquals(IntermediateNode.class, node.getClass());
+	}
+
+	@Test
+	public void shouldReturnAppropriateNodeTree() {
+		Rule rule = build(defaultChildren());
+		Node node = rule.process(processibleState());
+
+		Iterator<Node> children = node.iterator();
+		assertEquals("hello", ((TerminalNode) children.next()).getTerminal());
+		assertEquals("world", ((TerminalNode) children.next()).getTerminal());
+		assertFalse(children.hasNext());
 	}
 
 }
