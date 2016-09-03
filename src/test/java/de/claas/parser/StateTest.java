@@ -42,7 +42,7 @@ public class StateTest {
 		assertEquals("hello world", state.getUnprocessedData());
 		assertEquals(0, state.getGroups());
 	}
-	
+
 	@Test
 	public void shouldRevertNothing() {
 		State state = buildState("hello world");
@@ -55,7 +55,7 @@ public class StateTest {
 		assertEquals("hello ", state.getProcessedData());
 		assertEquals("world", state.getUnprocessedData());
 	}
-	
+
 	@Test
 	public void shouldRevertLastGroup() {
 		State state = buildState("hello world");
@@ -70,7 +70,7 @@ public class StateTest {
 		assertEquals("hello", state.getProcessedData());
 		assertEquals(" world", state.getUnprocessedData());
 	}
-	
+
 	@Test
 	public void shouldRevertEverything() {
 		State state = buildState("hello world");

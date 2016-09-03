@@ -61,19 +61,19 @@ public class OptionalTest extends DecoratorTest {
 		assertEquals("decorateddecorated", state.getProcessedData());
 		assertEquals("invalid", state.getUnprocessedData());
 	}
-	
+
 	@Test
 	public void shouldReturnIntermediateNode() {
 		Rule rule = build(defaultChildren());
 		Node node = rule.process(processibleState());
 		assertEquals(IntermediateNode.class, node.getClass());
 	}
-	
+
 	@Test
 	public void shouldReturnAppropriateNodeTree() {
 		Rule rule = build(defaultChildren());
 		Node node = rule.process(processibleState());
-		
+
 		Iterator<Node> children = node.iterator();
 		TerminalNode child = (TerminalNode) children.next();
 		assertEquals("decorated", child.getTerminal());

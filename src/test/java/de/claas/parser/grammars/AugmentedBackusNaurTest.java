@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import de.claas.parser.Grammar;
 import de.claas.parser.GrammarTest;
-import de.claas.parser.exceptions.ParsingException;
 
 /**
  * 
