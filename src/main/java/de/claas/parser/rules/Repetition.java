@@ -87,7 +87,7 @@ public class Repetition extends Decorator {
 			Node node = new IntermediateNode();
 			for (int repetitions = 1; repetitions <= maxRepetitions; repetitions++) {
 				if (Result.get(getRule(), state, node, null) == null) {
-					if (repetitions < minRepetitions) {
+					if (repetitions <= minRepetitions) {
 						state.revert();
 						return null;
 					} else {
