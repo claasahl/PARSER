@@ -47,8 +47,8 @@ public class Repeat extends Grammar {
 	private static NonTerminal grammar() {
 		NonTerminal digit = new NonTerminal("digit", new Terminal('0', '9'));
 		Repetition digits = new Repetition(digit);
-		NonTerminal repeat = new NonTerminal("repeat",
-				new Disjunction(new Conjunction(digit, digits), new Conjunction(digits, new Terminal("*"), digits)));
+		NonTerminal repeat = new NonTerminal("repeat", new Disjunction(new Repetition(digit, 1, Integer.MAX_VALUE),
+				new Conjunction(digits, new Terminal("*"), digits)));
 		return repeat;
 	}
 

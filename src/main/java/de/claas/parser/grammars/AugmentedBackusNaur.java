@@ -129,7 +129,7 @@ public class AugmentedBackusNaur extends Grammar {
 		NonTerminal cWSP = new NonTerminal("c-wsp", new Disjunction(wsp, new Conjunction(cNL, wsp)));
 
 		// hex-val = "x" 1*HEXDIG [ 1*("." 1*HEXDIG) / ("-" 1*HEXDIG) ]
-		Rule rule31 = new Conjunction(hexdig, new Repetition(hexdig));
+		Rule rule31 = new Repetition(hexdig, 1, Integer.MAX_VALUE);
 		NonTerminal hexVal = new NonTerminal("hex-val",
 				new Conjunction(xNum, rule31,
 						new Optional(new Disjunction(
@@ -142,7 +142,7 @@ public class AugmentedBackusNaur extends Grammar {
 				new Disjunction(new Terminal((char) 0x20, (char) 0x3d), new Terminal((char) 0x3f, (char) 0x7e))), rrr));
 
 		// dec-val = "d" 1*DIGIT [ 1*("." 1*DIGIT) / ("-" 1*DIGIT) ]
-		Rule rule32 = new Conjunction(digit, new Repetition(digit));
+		Rule rule32 = new Repetition(digit, 1, Integer.MAX_VALUE);
 		NonTerminal decVal = new NonTerminal("dec-val",
 				new Conjunction(dNum, rule32,
 						new Optional(new Disjunction(
@@ -151,7 +151,7 @@ public class AugmentedBackusNaur extends Grammar {
 
 		// bin-val = "b" 1*BIT [ 1*("." 1*BIT) / ("-" 1*BIT) ] ; series of
 		// concatenated bit values or single ONEOF range
-		Rule rule33 = new Conjunction(bit, new Repetition(bit));
+		Rule rule33 = new Repetition(bit, 1, Integer.MAX_VALUE);
 		NonTerminal binVal = new NonTerminal("bin-val",
 				new Conjunction(bNum, rule33,
 						new Optional(new Disjunction(
@@ -182,7 +182,7 @@ public class AugmentedBackusNaur extends Grammar {
 		// repeat = 1*DIGIT / (*DIGIT "*" *DIGIT)
 		NonTerminal repeat = new NonTerminal("repeat",
 				new Disjunction(new Conjunction(new Repetition(digit), s, new Repetition(digit)),
-						new Conjunction(digit, new Repetition(digit))));
+						new Repetition(digit, 1, Integer.MAX_VALUE)));
 
 		// repetition = [repeat] element
 		NonTerminal repetition = new NonTerminal("repetition", new Conjunction(new Optional(repeat), element));

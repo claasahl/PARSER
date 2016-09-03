@@ -55,9 +55,10 @@ public class Number extends Grammar {
 		NonTerminal decimalPoint = new NonTerminal("decimal-point", new Terminal("."));
 		NonTerminal digit = new NonTerminal("digit", new Terminal('0', '9'));
 		NonTerminal digit19 = new NonTerminal("digit1-9", new Terminal('1', '9'));
-		NonTerminal exp = new NonTerminal("exp",
-				new Conjunction(e, new Optional(new Disjunction(plus, minus)), digit, new Repetition(digit)));
-		NonTerminal frac = new NonTerminal("frac", new Conjunction(decimalPoint, digit, new Repetition(digit)));
+		NonTerminal exp = new NonTerminal("exp", new Conjunction(e, new Optional(new Disjunction(plus, minus)),
+				new Repetition(digit, 1, Integer.MAX_VALUE)));
+		NonTerminal frac = new NonTerminal("frac",
+				new Conjunction(decimalPoint, new Repetition(digit, 1, Integer.MAX_VALUE)));
 		NonTerminal integer = new NonTerminal("integer",
 				new Disjunction(zero, new Conjunction(digit19, new Repetition(digit))));
 		NonTerminal number = new NonTerminal("number",
