@@ -2,6 +2,8 @@ package de.claas.parser.rules;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,7 +20,8 @@ import de.claas.parser.results.TerminalNode;
  * grammar's alphabet) within a grammar.
  * <p>
  * This rule will successfully process a given state if the processed token
- * equals any of the terminal symbols (see {@link #getTerminals()}).
+ * equals any of the terminal symbols (see {@link #getTerminals()}). This rule
+ * is greedy and thus it gives preference to longer terminal symbols.
  * 
  * @author Claas Ahlrichs
  *
@@ -35,6 +38,7 @@ public class Terminal extends Rule {
 	 */
 	public Terminal(String... terminals) {
 		this.terminals = Arrays.asList(terminals);
+		Collections.sort(this.terminals, Collections.reverseOrder(new TerminalLengthComparator()));
 	}
 
 	/**
@@ -78,6 +82,25 @@ public class Terminal extends Rule {
 	@Override
 	public void visit(RuleVisitor visitor) {
 		visitor.visitTerminal(this);
+	}
+
+	/**
+	 * 
+	 * The class {@link TerminalLengthComparator}. It is intended to order
+	 * terminal symbols according to their length. The rational behind this
+	 * comparator is such that longer terminal symbols are given preference by
+	 * the {@link Terminal} rule that uses it.
+	 * 
+	 * @author Claas Ahlrichs
+	 *
+	 */
+	private static class TerminalLengthComparator implements Comparator<String> {
+
+		@Override
+		public int compare(String terminalA, String terminalB) {
+			return Integer.compare(terminalA.length(), terminalB.length());
+		}
+
 	}
 
 }

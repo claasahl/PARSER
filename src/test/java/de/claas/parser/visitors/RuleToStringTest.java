@@ -100,8 +100,8 @@ public class RuleToStringTest extends RuleVisitorTest {
 		new Terminal("some", "terminal").visit(visitor);
 
 		List<String> lines = new ArrayList<>();
-		lines.add("Terminal:some");
 		lines.add("Terminal:terminal");
+		lines.add("Terminal:some");
 		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
 	}
 
