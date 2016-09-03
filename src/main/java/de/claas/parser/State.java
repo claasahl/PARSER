@@ -21,6 +21,19 @@ public class State {
 	/**
 	 * Constructs a new {@link State} with the specified parameter.
 	 * 
+	 * @param state
+	 *            the state which is being duplicated
+	 */
+	public State(State state) {
+		this.steps = new Stack<>();
+		this.steps.addAll(state.steps);
+		this.data = state.data;
+		this.offset = state.offset;
+	}
+
+	/**
+	 * Constructs a new {@link State} with the specified parameter.
+	 * 
 	 * @param data
 	 *            the data that will be processed by this {@link State}
 	 */
