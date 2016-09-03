@@ -76,4 +76,43 @@ public class RepetitionTest extends DecoratorTest {
 		assertFalse(children.hasNext());
 	}
 	
+	@Test
+	public void shouldRepeatAtMostOnce() {
+		State state = buildState("rerere??");
+		Rule child = buildTestRule("re", new TerminalNode("re"));
+		Rule rule = new Repetition(child, 0, 1);
+		assertNotNull(rule.process(state));
+		assertEquals("re", state.getProcessedData());
+		assertEquals("rere??", state.getUnprocessedData());
+	}
+
+	@Test
+	public void shouldRepeatExactlyTwice() {
+		State state = buildState("rerere??");
+		Rule child = buildTestRule("re", new TerminalNode("re"));
+		Rule rule = new Repetition(child, 2, 2);
+		assertNotNull(rule.process(state));
+		assertEquals("rere", state.getProcessedData());
+		assertEquals("re??", state.getUnprocessedData());
+	}
+	
+	@Test
+	public void shouldRepeatAtLeastThrice() {
+		State state = buildState("rererererererere??");
+		Rule child = buildTestRule("re", new TerminalNode("re"));
+		Rule rule = new Repetition(child, 2, Integer.MAX_VALUE);
+		assertNotNull(rule.process(state));
+		assertEquals("rererererererere", state.getProcessedData());
+		assertEquals("??", state.getUnprocessedData());
+	}
+
+	@Test
+	public void shouldRepeatWithinRange() {
+		State state = buildState("rererererererere??");
+		Rule child = buildTestRule("re", new TerminalNode("re"));
+		Rule rule = new Repetition(child, 2, 4);
+		assertNotNull(rule.process(state));
+		assertEquals("rererere", state.getProcessedData());
+		assertEquals("rererere??", state.getUnprocessedData());
+	}
 }
