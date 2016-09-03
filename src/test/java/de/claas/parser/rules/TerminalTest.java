@@ -78,6 +78,31 @@ public class TerminalTest extends RuleTest {
 	protected Terminal build(char rangeStart, char rangeEnd) {
 		return new Terminal(rangeStart, rangeEnd);
 	}
+	
+	@Override
+	public void shouldHaveChildren() {
+		// terminal nodes do not have children!
+		shouldNotAddChildren();
+	}
+	
+	@Override
+	public void shouldHaveNonEmptyIterator() {
+		// terminal nodes do not have children!
+		shouldNotAddChildren();
+	}
+	
+	@Override
+	public void shouldManageChildren() {
+		// terminal nodes do not have children!
+		shouldNotAddChildren();
+	}
+	
+	@Test
+	public void shouldNotAddChildren() {
+		Rule rule = build(new Rule[] {});
+		Rule child = build(new Rule[] {});
+		assertFalse(rule.addChild(child));
+	}
 
 	@Test
 	public void shouldNotHaveTerminals() {

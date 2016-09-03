@@ -78,6 +78,22 @@ public class Terminal extends Rule {
 			state.endGroup();
 		}
 	}
+	
+	@Override
+	public boolean addChild(Rule rule) {
+		return false;
+	}
+
+	@Override
+	public boolean removeChild(Rule rule) {
+		return false;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		return super.equals(obj);
+	}
 
 	@Override
 	public void visit(RuleVisitor visitor) {
