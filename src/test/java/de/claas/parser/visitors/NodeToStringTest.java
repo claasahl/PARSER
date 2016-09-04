@@ -77,7 +77,7 @@ public class NodeToStringTest extends NodeVisitorTest {
 		lines.add("    TerminalNode:t2");
 		lines.add("  IntermediateNode");
 		lines.add("    TerminalNode:t3");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
+		assertEquals(join(lines), visitor.toString());
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class NodeToStringTest extends NodeVisitorTest {
 		List<String> lines = new ArrayList<>();
 		lines.add("NonTerminalNode:root");
 		lines.add("  NonTerminalNode:root");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
+		assertEquals(join(lines), visitor.toString());
 	}
 
 	@Override
@@ -98,11 +98,22 @@ public class NodeToStringTest extends NodeVisitorTest {
 		node.addChild(node);
 		node.visit(visitor);
 
-		// TODO simplify!
 		List<String> lines = new ArrayList<>();
 		lines.add("IntermediateNode");
 		lines.add("  IntermediateNode");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
+		assertEquals(join(lines), visitor.toString());
+	}
+
+	/**
+	 * Returns the specified lines as one joined string. A new line character
+	 * will be appended to each line (including the last one).
+	 * 
+	 * @param lines
+	 *            the lines / strings that need to be joined
+	 * @return the specified lines as one joined string
+	 */
+	private String join(List<String> lines) {
+		return lines.stream().collect(Collectors.joining("\n")) + "\n";
 	}
 
 }
