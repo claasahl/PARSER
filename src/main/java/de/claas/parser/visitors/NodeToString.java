@@ -15,6 +15,9 @@ import de.claas.parser.results.TerminalNode;
  * The class {@link NodeToString}. It is an implementation of the interface
  * {@link NodeVisitor}. It is intended to "visualize" a tree of {@link Node}
  * objects. The tree is turned into a human readable (if not "pretty") string.
+ * <p>
+ * This visitor is meant for one-time use, only. As such, it should be used to
+ * visualize multiple trees.
  * 
  * @author Claas Ahlrichs
  *

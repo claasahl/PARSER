@@ -25,6 +25,9 @@ import de.claas.parser.rules.Terminal;
  * {@link Grammar} by turning it into a human readable string. The resulting
  * string is in augmented Backus Naur form. Details on syntax and grammar can be
  * found in <a href="https://www.ietf.org/rfc/rfc2234.txt">RFC 2234</a>.
+ * <p>
+ * This visitor is meant for one-time use, only. As such, it should not be used
+ * to visualize multiple grammars.
  *
  * @author Claas Ahlrichs
  *

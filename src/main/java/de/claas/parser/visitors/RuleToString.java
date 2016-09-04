@@ -19,6 +19,9 @@ import de.claas.parser.rules.Terminal;
  * The class {@link RuleToString}. It is an implementation of the interface
  * {@link RuleVisitor}. It is intended to "visualize" a tree of {@link Rule}
  * objects. The tree is turned into a human readable (if not "pretty") string.
+ * <p>
+ * This visitor is meant for one-time use, only. As such, it should be used to
+ * visualize multiple trees.
  * 
  * @author Claas Ahlrichs
  *

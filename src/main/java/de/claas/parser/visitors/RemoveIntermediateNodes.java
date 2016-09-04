@@ -18,6 +18,9 @@ import de.claas.parser.results.TerminalNode;
  * interface {@link NodeVisitor}. It is intended to simplify the node structure
  * that is returned by {@link Grammar#parse(String, boolean)}. This is
  * accomplished by removing {@link IntermediateNode} instances.
+ * <p>
+ * This visitor is meant for one-time use, only. As such, it should not be used
+ * to simplify the node structure of multiple trees.
  * 
  * @author Claas Ahlrichs
  *
