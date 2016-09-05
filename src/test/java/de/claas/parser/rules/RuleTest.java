@@ -108,7 +108,7 @@ public abstract class RuleTest {
 	@Test
 	public void shouldHaveChildren() {
 		Rule rule = build();
-		Rule child = buildTestRule("child", null);
+		Rule child = build();
 		assertTrue(rule.addChild(child));
 		assertTrue(rule.hasChildren());
 	}
@@ -122,7 +122,7 @@ public abstract class RuleTest {
 	@Test
 	public void shouldHaveNonEmptyIterator() {
 		Rule rule = build();
-		Rule child = buildTestRule("child", null);
+		Rule child = build();
 		assertTrue(rule.addChild(child));
 		assertTrue(rule.iterator().hasNext());
 	}
@@ -237,6 +237,36 @@ public abstract class RuleTest {
 		assertEquals(processedPattern, state.getProcessedData());
 		assertEquals(unprocessedPattern, state.getUnprocessedData());
 		assertEquals(processingGroups, state.getGroups());
+	}
+	
+	@Test
+	public void implementationOfEqualsShouldHandleNull() {
+		Rule rule = build(defaultChildren());
+		assertFalse(rule.equals(null));
+	}
+	
+	@Test
+	public void implementationOfEqualsShouldBeReflexive() {
+		Rule rule = build(defaultChildren());
+		assertTrue(rule.equals(rule));
+	}
+	
+	@Test
+	public void implementationOfEqualsShouldBeSymmetric() {
+		Rule ruleA = build(defaultChildren());
+		Rule ruleB = build(defaultChildren());
+		assertTrue(ruleA.equals(ruleB));
+		assertTrue(ruleB.equals(ruleA));
+	}
+	
+	@Test
+	public void implementationOfEqualsShouldBeTransitive() {
+		Rule ruleA = build(defaultChildren());
+		Rule ruleB = build(defaultChildren());
+		Rule ruleC = build(defaultChildren());
+		assertTrue(ruleA.equals(ruleB));
+		assertTrue(ruleB.equals(ruleC));
+		assertTrue(ruleA.equals(ruleC));
 	}
 
 }
