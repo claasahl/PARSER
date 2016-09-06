@@ -67,4 +67,16 @@ public class NonTerminal extends Decorator {
 		visitor.visitNonTerminal(this);
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj != null && NonTerminal.class.isAssignableFrom(obj.getClass())) {
+			boolean equality = true;
+			NonTerminal rule = (NonTerminal) obj;
+			equality &= name.equals(rule.name);
+			equality &= super.equals(obj);
+			return equality;
+		}
+		return false;
+	}
+
 }

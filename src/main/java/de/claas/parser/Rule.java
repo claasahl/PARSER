@@ -108,4 +108,13 @@ public abstract class Rule implements Iterable<Rule> {
 	 */
 	public abstract void visit(RuleVisitor visitor);
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj != null && Rule.class.isAssignableFrom(obj.getClass())) {
+			Rule rule = (Rule) obj;
+			return children.equals(rule.children);
+		}
+		return false;
+	}
+
 }

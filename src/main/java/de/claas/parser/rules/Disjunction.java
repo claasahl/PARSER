@@ -70,5 +70,13 @@ public class Disjunction extends Rule {
 	public void visit(RuleVisitor visitor) {
 		visitor.visitDisjunction(this);
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj != null && Disjunction.class.isAssignableFrom(obj.getClass())) {
+			return super.equals(obj);
+		}
+		return false;
+	}
 
 }

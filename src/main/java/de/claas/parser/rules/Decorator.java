@@ -91,4 +91,19 @@ public abstract class Decorator extends Rule {
 			throw new IllegalStateException(ONLY_ONCE);
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj != null && Decorator.class.isAssignableFrom(obj.getClass())) {
+			boolean equality = true;
+			Decorator rule = (Decorator) obj;
+			if (this.rule == null)
+				equality &= rule.rule == null;
+			else
+				equality &= this.rule.equals(rule.getRule());
+			equality &= super.equals(obj);
+			return equality;
+		}
+		return false;
+	}
+
 }

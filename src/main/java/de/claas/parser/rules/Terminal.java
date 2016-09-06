@@ -78,7 +78,7 @@ public class Terminal extends Rule {
 			state.endGroup();
 		}
 	}
-	
+
 	@Override
 	public boolean addChild(Rule rule) {
 		return false;
@@ -88,16 +88,22 @@ public class Terminal extends Rule {
 	public boolean removeChild(Rule rule) {
 		return false;
 	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		return super.equals(obj);
-	}
 
 	@Override
 	public void visit(RuleVisitor visitor) {
 		visitor.visitTerminal(this);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj != null && Terminal.class.isAssignableFrom(obj.getClass())) {
+			boolean equality = true;
+			Terminal rule = (Terminal) obj;
+			equality &= terminals.equals(rule.terminals);
+			equality &= super.equals(obj);
+			return equality;
+		}
+		return false;
 	}
 
 	/**
