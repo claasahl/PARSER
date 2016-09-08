@@ -29,4 +29,12 @@ public class IntermediateNode extends Node {
 		return "I";
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj != null && IntermediateNode.class.isAssignableFrom(obj.getClass())) {
+			return super.equals(obj);
+		}
+		return false;
+	}
+
 }

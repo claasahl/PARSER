@@ -49,4 +49,16 @@ public class NonTerminalNode extends Node {
 		return String.format("N:%s", getName());
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj != null && NonTerminalNode.class.isAssignableFrom(obj.getClass())) {
+			boolean equality = true;
+			NonTerminalNode node = (NonTerminalNode) obj;
+			equality &= name.equals(node.name);
+			equality &= super.equals(obj);
+			return equality;
+		}
+		return false;
+	}
+
 }

@@ -92,5 +92,14 @@ public abstract class Node implements Iterable<Node> {
 	 *            the visitor
 	 */
 	public abstract void visit(NodeVisitor visitor);
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj != null && Node.class.isAssignableFrom(obj.getClass())) {
+			Node node = (Node) obj;
+			return children.equals(node.children);
+		}
+		return false;
+	}
 
 }

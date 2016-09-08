@@ -59,4 +59,16 @@ public class TerminalNode extends Node {
 		return String.format("T:%s", getTerminal());
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj != null && TerminalNode.class.isAssignableFrom(obj.getClass())) {
+			boolean equality = true;
+			TerminalNode node = (TerminalNode) obj;
+			equality &= terminal.equals(node.terminal);
+			equality &= super.equals(obj);
+			return equality;
+		}
+		return false;
+	}
+
 }
