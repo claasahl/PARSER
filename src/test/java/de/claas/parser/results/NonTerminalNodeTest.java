@@ -1,9 +1,5 @@
 package de.claas.parser.results;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 import de.claas.parser.Node;
 import de.claas.parser.NodeTest;
 
@@ -27,11 +23,6 @@ public class NonTerminalNodeTest extends NodeTest {
 			node.addChild(child);
 		}
 		return node;
-	}
-
-	@Test
-	public void test() {
-		fail("Not yet implemented");
 	}
 
 }

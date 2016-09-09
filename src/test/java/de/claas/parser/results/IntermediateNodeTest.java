@@ -1,13 +1,7 @@
 package de.claas.parser.results;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 import de.claas.parser.Node;
 import de.claas.parser.NodeTest;
-import de.claas.parser.Rule;
-import de.claas.parser.State;
 
 /**
  * 
@@ -27,11 +21,6 @@ public class IntermediateNodeTest extends NodeTest {
 			node.addChild(child);
 		}
 		return node;
-	}
-	
-	@Test
-	public void test() {
-		fail("Not yet implemented");
 	}
 
 }

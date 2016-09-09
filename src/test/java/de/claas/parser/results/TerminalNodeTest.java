@@ -1,7 +1,6 @@
 package de.claas.parser.results;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
@@ -37,7 +36,7 @@ public class TerminalNodeTest extends NodeTest {
 		// terminal nodes do not have children!
 		shouldNotAddChildren();
 	}
-	
+
 	@Override
 	public void shouldManageChildren() {
 		// terminal nodes do not have children!
@@ -49,11 +48,6 @@ public class TerminalNodeTest extends NodeTest {
 		Node node = build();
 		Node child = build();
 		assertFalse(node.addChild(child));
-	}
-
-	@Test
-	public void test() {
-		fail("Not yet implemented");
 	}
 
 }
