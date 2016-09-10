@@ -16,9 +16,9 @@ import de.claas.parser.results.TerminalNode;
 /**
  * 
  * The class {@link InterpreterBase}. It is an implementation of the interface
- * {@link NodeVisitor}. It is intended to provide basic setup for interpreters.
- * This class provides detection of cycles and makes sure that only expected
- * nodes are visited. Thus, concrete interpreters can focus on their main task.
+ * {@link NodeVisitor}. It is intended to provide common functionality for
+ * interpreters (i.e. detection of cycles and unexpected nodes). Thus, concrete
+ * interpreters can focus on their main task.
  *
  * 
  * @author Claas Ahlrichs
@@ -102,7 +102,7 @@ public abstract class InterpreterBase implements NodeVisitor {
 	 * Sets the class of the node that is expected to be visited next.
 	 * 
 	 * @param expected
-	 *            class the next node
+	 *            the class of the next node
 	 */
 	protected void expect(Class<? extends Node> expected) {
 		this.expected = expected;
@@ -123,6 +123,19 @@ public abstract class InterpreterBase implements NodeVisitor {
 		visitUnlessCyclicOrUnexpected(this::visitingNonTerminalNode, node);
 	}
 
+	/**
+	 * Consumes the specified node, if the node is expected and not cyclic. An
+	 * exception is thrown if the node is unexpected or cyclic.
+	 * 
+	 * @param consumer
+	 *            the node's consumer
+	 * @param node
+	 *            the node
+	 * @throws InterpretingException
+	 *             if the specified node is unexpected
+	 * @throws CyclicNodeException
+	 *             if the specified node is cyclic
+	 */
 	private <T extends Node> void visitUnlessCyclicOrUnexpected(Consumer<T> consumer, T node) {
 		if (visitedPath.add(node)) {
 			if (node != null && node.getClass().isAssignableFrom(expected)) {
@@ -142,14 +155,36 @@ public abstract class InterpreterBase implements NodeVisitor {
 		}
 	}
 
+	/**
+	 * Called by {@link TerminalNode}-nodes, if the node is expected and not
+	 * cyclic.
+	 * 
+	 * @param node
+	 *            the node
+	 */
 	protected abstract void visitingTerminalNode(TerminalNode node);
 
+	/**
+	 * Called by {@link IntermediateNode}-nodes, if the node is expected and not
+	 * cyclic. The default implementation will simply visit all children of the
+	 * given node.
+	 * 
+	 * @param node
+	 *            the node
+	 */
 	protected void visitingIntermediateNode(IntermediateNode node) {
 		for (Node n : node) {
 			n.visit(this);
 		}
 	}
 
+	/**
+	 * Called by {@link NonTerminalNode}-nodes, if the node is expected and not
+	 * cyclic.
+	 * 
+	 * @param node
+	 *            the node
+	 */
 	protected abstract void visitingNonTerminalNode(NonTerminalNode node);
 
 }
