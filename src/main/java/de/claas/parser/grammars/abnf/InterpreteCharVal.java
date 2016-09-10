@@ -1,14 +1,9 @@
 package de.claas.parser.grammars.abnf;
 
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
-import java.util.function.Consumer;
 
 import de.claas.parser.Node;
-import de.claas.parser.exceptions.CyclicNodeException;
 import de.claas.parser.exceptions.InterpretingException;
-import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 import de.claas.parser.rules.Terminal;
@@ -31,7 +26,6 @@ import de.claas.parser.rules.Terminal;
  */
 public class InterpreteCharVal extends InterpreterBase {
 
-	private final Set<Node> visitedPath = new HashSet<>();
 	private final StringBuilder content = new StringBuilder();
 
 	/**
@@ -42,49 +36,25 @@ public class InterpreteCharVal extends InterpreterBase {
 	}
 
 	@Override
-	public void visitTerminalNode(TerminalNode node) {
-		if (isExpectedTerminal()) {
+	protected void visitingTerminalNode(TerminalNode node) {
 			content.append(node.getTerminal());
-		} else {
-			String msg = "Unexpected terminal: '%s' (expected terminal node)";
-			throw new InterpretingException(String.format(msg, getExpectedNonTerminal()));
-		}
 	}
 
 	@Override
-	public void visitIntermediateNode(IntermediateNode node) {
-		visitUnlessCyclic(super::visitIntermediateNode, node);
-	}
-
-	@Override
-	public void visitNonTerminaNode(NonTerminalNode node) {
-		visitUnlessCyclic(this::bla, node);
-	}
-
-	private <T extends Node> void visitUnlessCyclic(Consumer<T> consumer, T node) {
-		if (visitedPath.add(node)) {
-			try {
-				consumer.accept(node);
-			} finally {
-				visitedPath.remove(node);
-			}
-		} else {
-			throw new CyclicNodeException(node);
-		}
-	}
-	
-	private void bla(NonTerminalNode node) {
-		if (isExpectedNonTerminal(node)) {
+	protected void visitingNonTerminalNode(NonTerminalNode node) {
+		if (isNonTerminalExpected(node)) {
 			switch (node.getName().toLowerCase()) {
 			case "char-val":
 				try {
 					// first child should be a double quote
 					Iterator<Node> iterator = node.iterator();
 					setExpectedNonTerminal("dquote");
+					expect(NonTerminalNode.class);
 					iterator.next().visit(this);
 
 					// at least one terminal node should follow
 					setExpectedNonTerminal(null);
+					expect(TerminalNode.class);
 					Node child = null;
 					do {
 						child = iterator.next();
@@ -95,6 +65,7 @@ public class InterpreteCharVal extends InterpreterBase {
 
 					// the last child should be a double quote
 					setExpectedNonTerminal("dquote");
+					expect(NonTerminalNode.class);
 					child.visit(this);
 
 					// construct rule

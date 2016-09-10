@@ -1,6 +1,6 @@
 package de.claas.parser.grammars.abnf;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -38,41 +38,49 @@ public abstract class InterpreterBaseTest<T extends InterpreterBase> extends Nod
 		T visitor = build();
 		assertNull(visitor.getRule());
 	}
-	
-	@Test(expected=InterpretingException.class)
+
+	@Test(expected = InterpretingException.class)
 	public void shouldHandleTerminalNode() {
 		T visitor = build();
 		new TerminalNode("some terminal").visit(visitor);
 	}
 
-	@Override
+	@Test(expected = InterpretingException.class)
 	public void shouldHandleIntermediateNode() {
-		// silently ignore intermediate nodes
 		T visitor = build();
 		new IntermediateNode().visit(visitor);
-		assertNull(visitor.getRule());
 	}
 
-	@Test(expected=InterpretingException.class)
+	@Test(expected = InterpretingException.class)
 	public void shouldHandleNonTerminalNode() {
 		T visitor = build();
 		new NonTerminalNode(visitor.getExpectedNonTerminal()).visit(visitor);
 	}
-	
-	@Test(expected=CyclicNodeException.class)
+
+	@Test
 	public void shouldHandleCyclicNonTerminalNode() {
-		T visitor = build();
-		NonTerminalNode node = new NonTerminalNode(visitor.getExpectedNonTerminal());
-		node.addChild(node);
-		node.visit(visitor);
+		try {
+			T visitor = build();
+			NonTerminalNode node = new NonTerminalNode(visitor.getExpectedNonTerminal());
+			node.addChild(node);
+			node.visit(visitor);
+			fail("expected InterpretingException or CyclicNodeException exception");
+		} catch (InterpretingException | CyclicNodeException e) {
+			// either of these exceptions are expected
+		}
 	}
 
-	@Test(expected=CyclicNodeException.class)
+	@Test
 	public void shouldHandleCyclicIntermediateNode() {
-		T visitor = build();
-		IntermediateNode node = new IntermediateNode();
-		node.addChild(node);
-		node.visit(visitor);
+		try {
+			T visitor = build();
+			IntermediateNode node = new IntermediateNode();
+			node.addChild(node);
+			node.visit(visitor);
+			fail("expected InterpretingException or CyclicNodeException exception");
+		} catch (InterpretingException | CyclicNodeException e) {
+			// either of these exceptions are expected
+		}
 	}
 
 	@Test
@@ -86,7 +94,7 @@ public abstract class InterpreterBaseTest<T extends InterpreterBase> extends Nod
 		T visitor = build();
 		visitor.setExpectedNonTerminal("expected");
 		NonTerminalNode node = new NonTerminalNode("expected");
-		assertTrue(visitor.isExpectedNonTerminal(node));
+		assertTrue(visitor.isNonTerminalExpected(node));
 	}
 
 	@Test
@@ -94,7 +102,7 @@ public abstract class InterpreterBaseTest<T extends InterpreterBase> extends Nod
 		T visitor = build();
 		visitor.setExpectedNonTerminal("expected");
 		NonTerminalNode node = new NonTerminalNode("unexpected");
-		assertFalse(visitor.isExpectedNonTerminal(node));
+		assertFalse(visitor.isNonTerminalExpected(node));
 	}
 
 	@Test(expected = NullPointerException.class)
@@ -102,7 +110,7 @@ public abstract class InterpreterBaseTest<T extends InterpreterBase> extends Nod
 		T visitor = build();
 		visitor.setExpectedNonTerminal("expected");
 		NonTerminalNode node = new NonTerminalNode(null);
-		assertFalse(visitor.isExpectedNonTerminal(node));
+		assertFalse(visitor.isNonTerminalExpected(node));
 	}
 
 }
