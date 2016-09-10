@@ -3,6 +3,7 @@ package de.claas.parser.grammars.abnf;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import de.claas.parser.Node;
 import de.claas.parser.NodeVisitor;
@@ -28,8 +29,9 @@ public abstract class InterpreterBase implements NodeVisitor {
 
 	private final Set<Node> visitedPath = new HashSet<>();
 	private Rule rule;
-	private Class<? extends Node> expected;
-	private String expectedNonTerminal;
+	private Function<Node, Boolean> expected;
+	private Class<? extends Node> expectedClass;
+	private String expectedName;
 
 	/**
 	 * 
@@ -41,8 +43,7 @@ public abstract class InterpreterBase implements NodeVisitor {
 	 *            the name of the first non-terminal
 	 */
 	public InterpreterBase(String firstNonTerminal) {
-		this.expectedNonTerminal = firstNonTerminal;
-		expect(NonTerminalNode.class);
+		expectNonTerminalNode(firstNonTerminal);
 	}
 
 	/**
@@ -65,47 +66,48 @@ public abstract class InterpreterBase implements NodeVisitor {
 	}
 
 	/**
-	 * Tests if the specified non-terminal is expected.
+	 * Notifies this interpreter that the next node is expected to be a
+	 * {@link NonTerminalNode} with the specified name.
+	 * 
+	 * @param name
+	 *            the name
+	 */
+	protected void expectNonTerminalNode(String name) {
+		this.expectedName = name;
+		this.expectedClass = NonTerminalNode.class;
+		this.expected = this::isExpectedNonTerminal;
+	}
+
+	/**
+	 * Notifies this interpreter that the next node is expected to be an
+	 * {@link IntermediateNode}.
+	 */
+	protected void expectIntermediateNode() {
+		this.expectedName = null;
+		this.expectedClass = IntermediateNode.class;
+		this.expected = this::isExpectedClass;
+	}
+
+	/**
+	 * Notifies this interpreter that the next node is expected to be a
+	 * {@link TerminalNode}.
+	 */
+	protected void expectTerminalNode() {
+		this.expectedName = null;
+		this.expectedClass = TerminalNode.class;
+		this.expected = this::isExpectedClass;
+	}
+
+	/**
+	 * Tests if the specified node is expected.
 	 * 
 	 * @param node
-	 *            the non-terminal being tested
-	 * @return <code>true</code>, if the non-terminal's name corresponds to the
-	 *         value returned by {@link #getExpectedNonTerminal()}. Otherwise,
-	 *         <code>false</code>
+	 *            the node
+	 * @return <code>true</code> if the specified node is expected,
+	 *         <code>false</code> otherwise
 	 */
-	protected boolean isNonTerminalExpected(NonTerminalNode node) {
-		return node.getName().equalsIgnoreCase(expectedNonTerminal);
-	}
-
-	/**
-	 * Returns the name of the next expected non-terminal.
-	 * 
-	 * @return the name of the next expected non-terminal
-	 */
-	protected String getExpectedNonTerminal() {
-		return expectedNonTerminal;
-	}
-
-	/**
-	 * Sets the name of the next expected non-terminal. Setting the name to
-	 * <code>null</code> implies that the next node is expected to be a
-	 * {@link TerminalNode}.
-	 * 
-	 * @param expectedNonTerminal
-	 *            the name of the next expected non-terminal
-	 */
-	protected void setExpectedNonTerminal(String expectedNonTerminal) {
-		this.expectedNonTerminal = expectedNonTerminal;
-	}
-
-	/**
-	 * Sets the class of the node that is expected to be visited next.
-	 * 
-	 * @param expected
-	 *            the class of the next node
-	 */
-	protected void expect(Class<? extends Node> expected) {
-		this.expected = expected;
+	protected boolean isExpected(Node node) {
+		return expected.apply(node);
 	}
 
 	@Override
@@ -138,7 +140,7 @@ public abstract class InterpreterBase implements NodeVisitor {
 	 */
 	private <T extends Node> void visitUnlessCyclicOrUnexpected(Consumer<T> consumer, T node) {
 		if (visitedPath.add(node)) {
-			if (node != null && node.getClass().isAssignableFrom(expected)) {
+			if (isExpected(node)) {
 				try {
 					consumer.accept(node);
 				} finally {
@@ -146,13 +148,39 @@ public abstract class InterpreterBase implements NodeVisitor {
 				}
 			} else {
 				String msg = "Expected node '%s', but got node '%s'.";
-				String expectedNode = expected.getSimpleName();
+				String expectedNode = expectedClass.getSimpleName();
 				String unexpectedNode = node.getClass().getSimpleName();
 				throw new InterpretingException(String.format(msg, expectedNode, unexpectedNode));
 			}
 		} else {
 			throw new CyclicNodeException(node);
 		}
+	}
+
+	/**
+	 * Tests if the specified node's type is expected.
+	 * 
+	 * @param node
+	 *            the node
+	 * @return <code>true</code> if the specified node's type is expected,
+	 *         <code>false</code> otherwise
+	 */
+	private boolean isExpectedClass(Node node) {
+		return node != null && node.getClass().isAssignableFrom(expectedClass);
+	}
+
+	/**
+	 * Tests if the specified node is a {@link NonTerminalNode} with the
+	 * expected name.
+	 * 
+	 * @param node
+	 *            the node
+	 * @return <code>true</code> if the specified node is a
+	 *         {@link NonTerminalNode} with the expected name,
+	 *         <code>false</code> otherwise
+	 */
+	private boolean isExpectedNonTerminal(Node node) {
+		return isExpectedClass(node) && expectedName.equalsIgnoreCase(((NonTerminalNode) node).getName());
 	}
 
 	/**

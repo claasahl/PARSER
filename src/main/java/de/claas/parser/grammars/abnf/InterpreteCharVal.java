@@ -37,54 +37,46 @@ public class InterpreteCharVal extends InterpreterBase {
 
 	@Override
 	protected void visitingTerminalNode(TerminalNode node) {
-			content.append(node.getTerminal());
+		content.append(node.getTerminal());
 	}
 
 	@Override
 	protected void visitingNonTerminalNode(NonTerminalNode node) {
-		if (isNonTerminalExpected(node)) {
-			switch (node.getName().toLowerCase()) {
-			case "char-val":
-				try {
-					// first child should be a double quote
-					Iterator<Node> iterator = node.iterator();
-					setExpectedNonTerminal("dquote");
-					expect(NonTerminalNode.class);
-					iterator.next().visit(this);
+		switch (node.getName().toLowerCase()) {
+		case "char-val":
+			try {
+				// first child should be a double quote
+				Iterator<Node> iterator = node.iterator();
+				expectNonTerminalNode("dquote");
+				iterator.next().visit(this);
 
-					// at least one terminal node should follow
-					setExpectedNonTerminal(null);
-					expect(TerminalNode.class);
-					Node child = null;
-					do {
-						child = iterator.next();
-						if (iterator.hasNext()) {
-							child.visit(this);
-						}
-					} while (iterator.hasNext());
+				// at least one terminal node should follow
+				expectTerminalNode();
+				Node child = null;
+				do {
+					child = iterator.next();
+					if (iterator.hasNext()) {
+						child.visit(this);
+					}
+				} while (iterator.hasNext());
 
-					// the last child should be a double quote
-					setExpectedNonTerminal("dquote");
-					expect(NonTerminalNode.class);
-					child.visit(this);
+				// the last child should be a double quote
+				expectNonTerminalNode("dquote");
+				child.visit(this);
 
-					// construct rule
-					setRule(new Terminal(content.toString()));
-				} catch (Exception e) {
-					String msg = "Unexpected structure / order of non-terminals";
-					throw new InterpretingException(msg, e);
-				}
-				break;
-			case "dquote":
-				// quotes are not part of the content
-				break;
-			default:
-				String msg = "Unexpected non-terminal: '%s'";
-				throw new InterpretingException(String.format(msg, node.getName()));
+				// construct rule
+				setRule(new Terminal(content.toString()));
+			} catch (Exception e) {
+				String msg = "Unexpected structure / order of non-terminals";
+				throw new InterpretingException(msg, e);
 			}
-		} else {
-			String msg = "Unexpected non-terminal: '%s' (expected: '%s')";
-			throw new InterpretingException(String.format(msg, node.getName(), getExpectedNonTerminal()));
+			break;
+		case "dquote":
+			// quotes are not part of the content
+			break;
+		default:
+			String msg = "Unexpected non-terminal: '%s'";
+			throw new InterpretingException(String.format(msg, node.getName()));
 		}
 	}
 

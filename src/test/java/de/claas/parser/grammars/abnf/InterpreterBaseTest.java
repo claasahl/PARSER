@@ -1,12 +1,13 @@
 package de.claas.parser.grammars.abnf;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+import de.claas.parser.Node;
 import de.claas.parser.exceptions.CyclicNodeException;
 import de.claas.parser.exceptions.InterpretingException;
 import de.claas.parser.results.IntermediateNode;
@@ -54,14 +55,15 @@ public abstract class InterpreterBaseTest<T extends InterpreterBase> extends Nod
 	@Test(expected = InterpretingException.class)
 	public void shouldHandleNonTerminalNode() {
 		T visitor = build();
-		new NonTerminalNode(visitor.getExpectedNonTerminal()).visit(visitor);
+		new NonTerminalNode("some non-terminal").visit(visitor);
 	}
 
 	@Test
 	public void shouldHandleCyclicNonTerminalNode() {
 		try {
 			T visitor = build();
-			NonTerminalNode node = new NonTerminalNode(visitor.getExpectedNonTerminal());
+			visitor.expectNonTerminalNode("expected");
+			NonTerminalNode node = new NonTerminalNode("expected");
 			node.addChild(node);
 			node.visit(visitor);
 			fail("expected InterpretingException or CyclicNodeException exception");
@@ -74,6 +76,7 @@ public abstract class InterpreterBaseTest<T extends InterpreterBase> extends Nod
 	public void shouldHandleCyclicIntermediateNode() {
 		try {
 			T visitor = build();
+			visitor.expectIntermediateNode();
 			IntermediateNode node = new IntermediateNode();
 			node.addChild(node);
 			node.visit(visitor);
@@ -84,33 +87,51 @@ public abstract class InterpreterBaseTest<T extends InterpreterBase> extends Nod
 	}
 
 	@Test
-	public void shouldHaveExpectedNonTerminal() {
+	public void shouldExpectTerminalNode() {
 		T visitor = build();
-		assertNotNull(visitor.getExpectedNonTerminal());
+		visitor.expectTerminalNode();
+		Node node = new TerminalNode("some terminal");
+		assertTrue(visitor.isExpected(node));
 	}
 
 	@Test
-	public void shouldBeExpectedNonTerminal() {
+	public void shouldNotExpectTerminalNode() {
 		T visitor = build();
-		visitor.setExpectedNonTerminal("expected");
+		visitor.expectIntermediateNode();
+		Node node = new TerminalNode("some terminal");
+		assertFalse(visitor.isExpected(node));
+	}
+
+	@Test
+	public void shouldExpectIntermediateNode() {
+		T visitor = build();
+		visitor.expectIntermediateNode();
+		Node node = new IntermediateNode();
+		assertTrue(visitor.isExpected(node));
+	}
+
+	@Test
+	public void shouldNotExpectIntermediateNode() {
+		T visitor = build();
+		visitor.expectNonTerminalNode("expected");
+		Node node = new IntermediateNode();
+		assertFalse(visitor.isExpected(node));
+	}
+
+	@Test
+	public void shouldExpectNonTerminalNode() {
+		T visitor = build();
+		visitor.expectNonTerminalNode("expected");
 		NonTerminalNode node = new NonTerminalNode("expected");
-		assertTrue(visitor.isNonTerminalExpected(node));
+		assertTrue(visitor.isExpected(node));
 	}
 
 	@Test
-	public void shouldNotBeExpectedNonTerminal() {
+	public void shouldNotExpectNonTerminalNode() {
 		T visitor = build();
-		visitor.setExpectedNonTerminal("expected");
-		NonTerminalNode node = new NonTerminalNode("unexpected");
-		assertFalse(visitor.isNonTerminalExpected(node));
-	}
-
-	@Test(expected = NullPointerException.class)
-	public void shouldRaiseNullPointerException() {
-		T visitor = build();
-		visitor.setExpectedNonTerminal("expected");
-		NonTerminalNode node = new NonTerminalNode(null);
-		assertFalse(visitor.isNonTerminalExpected(node));
+		visitor.expectTerminalNode();
+		NonTerminalNode node = new NonTerminalNode("expected");
+		assertFalse(visitor.isExpected(node));
 	}
 
 }
