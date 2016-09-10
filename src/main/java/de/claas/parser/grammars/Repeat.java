@@ -2,6 +2,7 @@ package de.claas.parser.grammars;
 
 import de.claas.parser.Grammar;
 import de.claas.parser.Node;
+import de.claas.parser.grammars.abnf.AugmentedBackusNaur;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;

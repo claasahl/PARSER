@@ -1,4 +1,4 @@
-package de.claas.parser.grammars;
+package de.claas.parser.grammars.abnf;
 
 import static org.junit.Assert.assertNotNull;
 
