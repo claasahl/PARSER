@@ -99,6 +99,33 @@ public abstract class InterpreterBase implements NodeVisitor {
 	}
 
 	/**
+	 * Notifies this interpreter that no further nodes are expected.
+	 */
+	protected void expectNothing() {
+		this.expectedName = null;
+		this.expectedClass = null;
+		this.expected = new Function<Node, Boolean>() {
+			@Override
+			public Boolean apply(Node t) {
+				return false;
+			}
+		};
+	}
+
+	/**
+	 * Notifies this interpreter that the next node is expected to be identified
+	 * by the specified {@link Function}.
+	 * 
+	 * @param expected
+	 *            the function
+	 */
+	protected void expect(Function<Node, Boolean> expected) {
+		this.expectedName = null;
+		this.expectedClass = null;
+		this.expected = expected;
+	}
+
+	/**
 	 * Tests if the specified node is expected.
 	 * 
 	 * @param node
