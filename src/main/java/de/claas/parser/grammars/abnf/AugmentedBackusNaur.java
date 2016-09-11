@@ -56,7 +56,6 @@ import de.claas.parser.rules.Terminal;
  * <li>WSP = SP / HTAB ; white space</li>
  * <li>CHAR = %x01-7F ; any 7-bit US-ASCII character, excluding NUL</li>
  * <li>CTL = %x00-1F / %x7F ; controls</li>
- * <li>LWSP = *(WSP / CRLF WSP) ; linear white space (past newline)</li>
  * <li>OCTET = %x00-FF ; 8 bits of data</li>
  * </ul>
  * The grammar has been defined as augmented Backus Naur form. Details on syntax
