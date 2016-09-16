@@ -24,7 +24,7 @@ public class Parser implements RuleVisitor {
 	public Parser(State state) {
 		this.state = state;
 	}
-	
+
 	public Node getResult() {
 		return this.result;
 	}
@@ -32,7 +32,7 @@ public class Parser implements RuleVisitor {
 	private void setResult(Node result) {
 		this.result = result;
 	}
-	
+
 	private void clearResult() {
 		this.result = null;
 	}
@@ -42,7 +42,6 @@ public class Parser implements RuleVisitor {
 		this.state.beginGroup();
 		try {
 			Node node = rule.hasChildren() ? new IntermediateNode() : null;
-			setResult(node);
 			for (Rule child : rule) {
 				if (process(child, node, null) == null) {
 					this.state.revert();
@@ -50,6 +49,7 @@ public class Parser implements RuleVisitor {
 					return;
 				}
 			}
+			setResult(node);
 		} finally {
 			this.state.endGroup();
 		}
@@ -64,14 +64,19 @@ public class Parser implements RuleVisitor {
 			int alreadyProcessedData = this.state.getProcessedData().length();
 			Rule bestRule = null;
 			for (Rule child : rule) {
-				State clonedState = new State(this.state);
-				Node node = new IntermediateNode();
-				if (process(child, node, null) != null) {
-					int newlyProcessedData = clonedState.getProcessedData().length();
-					if (newlyProcessedData >= alreadyProcessedData) {
-						alreadyProcessedData = newlyProcessedData;
-						bestRule = child;
+				this.state.beginGroup();
+				try {
+					Node node = new IntermediateNode();
+					if (process(child, node, null) != null) {
+						int newlyProcessedData = this.state.getProcessedData().length();
+						if (newlyProcessedData >= alreadyProcessedData) {
+							alreadyProcessedData = newlyProcessedData;
+							bestRule = child;
+						}
 					}
+				} finally {
+					this.state.revert();
+					this.state.endGroup();
 				}
 			}
 
@@ -146,13 +151,13 @@ public class Parser implements RuleVisitor {
 			this.state.endGroup();
 		}
 	}
-	
+
 	public static Node parse(State state, Rule rule) {
 		Parser parser = new Parser(state);
 		rule.visit(parser);
 		return parser.getResult();
 	}
-	
+
 	private Node process(Rule rule, Node onSuccess, Node onFailure) {
 		if (rule != null) {
 			rule.visit(this);
