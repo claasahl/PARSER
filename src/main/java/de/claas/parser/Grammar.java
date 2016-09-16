@@ -34,6 +34,25 @@ public class Grammar {
 	 * Parses and returns the tree of terminals and non-terminals that
 	 * represents the specified data. Any intermediate nodes (and thus
 	 * non-essential nodes) are removed. Any preceding and trailing whitespace
+	 * are removed as well. If the given data is in any way invalid, then
+	 * <code>null</code> is returned.
+	 * <p>
+	 * Calling this method is equivalent <code>tryParse(data, false)</code> (see
+	 * {@link #tryParse(String, boolean)}).
+	 * 
+	 * @param data
+	 *            the data that is being parsed
+	 * @return the tree of terminals and non-terminals that represents the
+	 *         specified data
+	 */
+	public Node tryParse(String data) {
+		return tryParse(data, false);
+	}
+
+	/**
+	 * Parses and returns the tree of terminals and non-terminals that
+	 * represents the specified data. Any intermediate nodes (and thus
+	 * non-essential nodes) are removed. Any preceding and trailing whitespace
 	 * are removed as well. If the given data is in any way invalid, then a
 	 * {@link ParsingException} is thrown.
 	 * <p>
@@ -51,6 +70,30 @@ public class Grammar {
 	 */
 	public Node parse(String data) {
 		return parse(data, false);
+	}
+
+	/**
+	 * Parses and returns the tree of terminals and non-terminals that
+	 * represents the specified data. Optionally intermediate nodes (and thus
+	 * non-essential nodes) can be removed. Also optionally, preceding and
+	 * trailing whitespace can be removed. If the given data is in any way
+	 * invalid, then <code>null</code> is returned.
+	 * 
+	 * @param data
+	 *            the data that is being parsed
+	 * @param retainIntermediateNodes
+	 *            whether {@link IntermediateNode} instances should be retained.
+	 *            Set to <code>false</code> if only non-terminal and terminal
+	 *            nodes are desired
+	 * @return the tree of terminals and non-terminals that represents the
+	 *         specified data
+	 */
+	public Node tryParse(String data, boolean retainIntermediateNodes) {
+		State state = new State(data);
+		Node node = start.process(state);
+		if (node != null && !retainIntermediateNodes)
+			node.visit(new RemoveIntermediateNodes());
+		return node;
 	}
 
 	/**
@@ -82,6 +125,4 @@ public class Grammar {
 			node.visit(new RemoveIntermediateNodes());
 		return node;
 	}
-
-	// TODO tryParse?
 }
