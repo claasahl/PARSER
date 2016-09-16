@@ -13,6 +13,7 @@ import de.claas.parser.Rule;
 import de.claas.parser.State;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.results.TerminalNode;
+import de.claas.parser.visitors.Parser;
 
 /**
  * 
@@ -49,11 +50,11 @@ public class RepetitionTest extends DecoratorTest {
 	public void shouldProcessMultipleTokens() {
 		State state = buildState("decorateddecoratedinvalid");
 		Rule rule = build(defaultChildren());
-		assertNotNull(rule.process(state));
+		assertNotNull(Parser.parse(state, rule));
 		assertEquals("decorateddecorated", state.getProcessedData());
 		assertEquals("invalid", state.getUnprocessedData());
 
-		assertNotNull(rule.process(state));
+		assertNotNull(Parser.parse(state, rule));
 		assertEquals("decorateddecorated", state.getProcessedData());
 		assertEquals("invalid", state.getUnprocessedData());
 	}
@@ -61,14 +62,14 @@ public class RepetitionTest extends DecoratorTest {
 	@Test
 	public void shouldReturnIntermediateNode() {
 		Rule rule = build(defaultChildren());
-		Node node = rule.process(processibleState());
+		Node node = Parser.parse(processibleState(), rule);
 		assertEquals(IntermediateNode.class, node.getClass());
 	}
 
 	@Test
 	public void shouldReturnAppropriateNodeTree() {
 		Rule rule = build(defaultChildren());
-		Node node = rule.process(processibleState());
+		Node node = Parser.parse(processibleState(), rule);
 
 		Iterator<Node> children = node.iterator();
 		TerminalNode child = (TerminalNode) children.next();
@@ -81,7 +82,7 @@ public class RepetitionTest extends DecoratorTest {
 		State state = buildState("rerere??");
 		Rule child = buildTestRule("re", new TerminalNode("re"));
 		Rule rule = new Repetition(child, 0, 1);
-		assertNotNull(rule.process(state));
+		assertNotNull(Parser.parse(state, rule));
 		assertEquals("re", state.getProcessedData());
 		assertEquals("rere??", state.getUnprocessedData());
 	}
@@ -91,7 +92,7 @@ public class RepetitionTest extends DecoratorTest {
 		State state = buildState("rerere??");
 		Rule child = buildTestRule("re", new TerminalNode("re"));
 		Rule rule = new Repetition(child, 2, 2);
-		assertNotNull(rule.process(state));
+		assertNotNull(Parser.parse(state, rule));
 		assertEquals("rere", state.getProcessedData());
 		assertEquals("re??", state.getUnprocessedData());
 	}
@@ -101,7 +102,7 @@ public class RepetitionTest extends DecoratorTest {
 		State state = buildState("rererererererere??");
 		Rule child = buildTestRule("re", new TerminalNode("re"));
 		Rule rule = new Repetition(child, 2, Integer.MAX_VALUE);
-		assertNotNull(rule.process(state));
+		assertNotNull(Parser.parse(state, rule));
 		assertEquals("rererererererere", state.getProcessedData());
 		assertEquals("??", state.getUnprocessedData());
 	}
@@ -111,7 +112,7 @@ public class RepetitionTest extends DecoratorTest {
 		State state = buildState("rererererererere??");
 		Rule child = buildTestRule("re", new TerminalNode("re"));
 		Rule rule = new Repetition(child, 2, 4);
-		assertNotNull(rule.process(state));
+		assertNotNull(Parser.parse(state, rule));
 		assertEquals("rererere", state.getProcessedData());
 		assertEquals("rererere??", state.getUnprocessedData());
 	}

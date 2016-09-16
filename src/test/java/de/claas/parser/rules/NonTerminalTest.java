@@ -12,6 +12,7 @@ import de.claas.parser.Rule;
 import de.claas.parser.State;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
+import de.claas.parser.visitors.Parser;
 
 /**
  * 
@@ -51,21 +52,21 @@ public class NonTerminalTest extends DecoratorTest {
 		State state = processibleState();
 		Rule rule = build(defaultChildren());
 
-		NonTerminalNode node = (NonTerminalNode) rule.process(state);
+		NonTerminalNode node = (NonTerminalNode) Parser.parse(state, rule);
 		assertEquals(DEFAULT_NAME, node.getName());
 	}
 
 	@Test
 	public void shouldReturnNonTerminalNode() {
 		Rule rule = build(defaultChildren());
-		Node node = rule.process(processibleState());
+		Node node = Parser.parse(processibleState(), rule);
 		assertEquals(NonTerminalNode.class, node.getClass());
 	}
 
 	@Test
 	public void shouldReturnAppropriateNodeTree() {
 		Rule rule = build(defaultChildren());
-		NonTerminalNode node = (NonTerminalNode) rule.process(processibleState());
+		NonTerminalNode node = (NonTerminalNode) Parser.parse(processibleState(), rule);
 
 		assertEquals(DEFAULT_NAME, node.getName());
 		Iterator<Node> children = node.iterator();

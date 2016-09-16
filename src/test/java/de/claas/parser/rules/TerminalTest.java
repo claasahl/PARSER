@@ -16,6 +16,7 @@ import de.claas.parser.Node;
 import de.claas.parser.Rule;
 import de.claas.parser.State;
 import de.claas.parser.results.TerminalNode;
+import de.claas.parser.visitors.Parser;
 
 /**
  * 
@@ -125,15 +126,15 @@ public class TerminalTest extends RuleTest {
 		State state = buildState("worldhelloworld");
 		Terminal rule = build("hello", "world", "b");
 
-		assertNotNull(rule.process(state));
+		assertNotNull(Parser.parse(state, rule));
 		assertEquals("world", state.getProcessedData());
 		assertEquals("helloworld", state.getUnprocessedData());
 
-		assertNotNull(rule.process(state));
+		assertNotNull(Parser.parse(state, rule));
 		assertEquals("worldhello", state.getProcessedData());
 		assertEquals("world", state.getUnprocessedData());
 
-		assertNotNull(rule.process(state));
+		assertNotNull(Parser.parse(state, rule));
 		assertEquals("worldhelloworld", state.getProcessedData());
 		assertEquals("", state.getUnprocessedData());
 	}
@@ -142,7 +143,7 @@ public class TerminalTest extends RuleTest {
 	public void shouldNotProcessWithoutTerminals() {
 		State state = buildState("world hello world");
 		Terminal rule = build(new String[] {});
-		assertNull(rule.process(state));
+		assertNull(Parser.parse(state, rule));
 	}
 
 	@Test
@@ -150,16 +151,16 @@ public class TerminalTest extends RuleTest {
 		State state = buildState("abxz");
 		Terminal rule = build(DEFAULT_RANGE_START, DEFAULT_RANGE_END);
 
-		assertNotNull(rule.process(state));
+		assertNotNull(Parser.parse(state, rule));
 		assertEquals("a", state.getProcessedData());
 		assertEquals("bxz", state.getUnprocessedData());
 
-		assertNotNull(rule.process(state));
-		assertNotNull(rule.process(state));
+		assertNotNull(Parser.parse(state, rule));
+		assertNotNull(Parser.parse(state, rule));
 		assertEquals("abx", state.getProcessedData());
 		assertEquals("z", state.getUnprocessedData());
 
-		assertNotNull(rule.process(state));
+		assertNotNull(Parser.parse(state, rule));
 		assertEquals("abxz", state.getProcessedData());
 		assertEquals("", state.getUnprocessedData());
 	}
@@ -168,20 +169,20 @@ public class TerminalTest extends RuleTest {
 	public void shouldNotProcessTerminalsOutsideOfRange() {
 		State state = buildState("A 0 Z");
 		Terminal rule = build(DEFAULT_RANGE_START, DEFAULT_RANGE_END);
-		assertNull(rule.process(state));
+		assertNull(Parser.parse(state, rule));
 	}
 
 	@Test
 	public void shouldReturnTerminalNode() {
 		Rule rule = build(defaultChildren());
-		Node node = rule.process(processibleState());
+		Node node = Parser.parse(processibleState(), rule);
 		assertEquals(TerminalNode.class, node.getClass());
 	}
 
 	@Test
 	public void shouldReturnAppropriateNodeTree() {
 		Rule rule = build(defaultChildren());
-		TerminalNode node = (TerminalNode) rule.process(processibleState());
+		TerminalNode node = (TerminalNode) Parser.parse(processibleState(), rule);
 		assertEquals(DEFAULT_TERMINALS[0], node.getTerminal());
 	}
 

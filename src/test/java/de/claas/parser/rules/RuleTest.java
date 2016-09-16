@@ -13,6 +13,7 @@ import org.junit.Test;
 import de.claas.parser.Node;
 import de.claas.parser.Rule;
 import de.claas.parser.State;
+import de.claas.parser.visitors.Parser;
 
 /**
  * 
@@ -195,7 +196,7 @@ public abstract class RuleTest {
 		int processingGroups = state.getGroups();
 
 		Rule rule = build(defaultChildren());
-		assertNotNull(rule.process(state));
+		assertNotNull(Parser.parse(state, rule));
 		assertTrue(state.getProcessedData().startsWith(processedPattern));
 		assertTrue(state.getProcessedData().length() >= processedPattern.length());
 		assertTrue(unprocessedPattern.endsWith(state.getUnprocessedData()));
@@ -215,7 +216,7 @@ public abstract class RuleTest {
 		int processingGroups = state.getGroups();
 
 		Rule rule = build(defaultChildren());
-		assertNull(rule.process(state));
+		assertNull(Parser.parse(state, rule));
 		assertEquals(processedPattern, state.getProcessedData());
 		assertEquals(unprocessedPattern, state.getUnprocessedData());
 		assertEquals(processingGroups, state.getGroups());
@@ -233,7 +234,7 @@ public abstract class RuleTest {
 		int processingGroups = state.getGroups();
 
 		Rule rule = build(defaultChildren());
-		assertNull(rule.process(state));
+		assertNull(Parser.parse(state, rule));
 		assertEquals(processedPattern, state.getProcessedData());
 		assertEquals(unprocessedPattern, state.getUnprocessedData());
 		assertEquals(processingGroups, state.getGroups());

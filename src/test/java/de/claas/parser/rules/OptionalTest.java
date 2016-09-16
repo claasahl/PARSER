@@ -13,6 +13,7 @@ import de.claas.parser.Rule;
 import de.claas.parser.State;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.results.TerminalNode;
+import de.claas.parser.visitors.Parser;
 
 /**
  * 
@@ -49,15 +50,15 @@ public class OptionalTest extends DecoratorTest {
 	public void shouldProcessAtMostOneToken() {
 		State state = buildState("decorateddecoratedinvalid");
 		Rule rule = build(defaultChildren());
-		assertNotNull(rule.process(state));
+		assertNotNull(Parser.parse(state, rule));
 		assertEquals("decorated", state.getProcessedData());
 		assertEquals("decoratedinvalid", state.getUnprocessedData());
 
-		assertNotNull(rule.process(state));
+		assertNotNull(Parser.parse(state, rule));
 		assertEquals("decorateddecorated", state.getProcessedData());
 		assertEquals("invalid", state.getUnprocessedData());
 
-		assertNotNull(rule.process(state));
+		assertNotNull(Parser.parse(state, rule));
 		assertEquals("decorateddecorated", state.getProcessedData());
 		assertEquals("invalid", state.getUnprocessedData());
 	}
@@ -65,14 +66,14 @@ public class OptionalTest extends DecoratorTest {
 	@Test
 	public void shouldReturnIntermediateNode() {
 		Rule rule = build(defaultChildren());
-		Node node = rule.process(processibleState());
+		Node node = Parser.parse(processibleState(), rule);
 		assertEquals(IntermediateNode.class, node.getClass());
 	}
 
 	@Test
 	public void shouldReturnAppropriateNodeTree() {
 		Rule rule = build(defaultChildren());
-		Node node = rule.process(processibleState());
+		Node node = Parser.parse(processibleState(), rule);
 
 		Iterator<Node> children = node.iterator();
 		TerminalNode child = (TerminalNode) children.next();
