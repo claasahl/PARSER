@@ -49,15 +49,6 @@ public class TestRule extends Rule {
 	}
 
 	@Override
-	public Node process(State state) {
-		if (state.process(name)) {
-			return this.output;
-		} else {
-			return null;
-		}
-	}
-
-	@Override
 	public void visit(RuleVisitor visitor) {
 		throw new IllegalStateException("should not be called");
 	}

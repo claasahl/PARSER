@@ -87,20 +87,6 @@ public abstract class Rule implements Iterable<Rule> {
 	}
 
 	/**
-	 * Tests if the given {@link State} object fulfills this rule. If successful
-	 * (i.e. state fulfills this rule), then the state is processed and a
-	 * {@link Node} (that represents the processed state) is returned. If
-	 * unsuccessful (i.e. state does not fulfills this rule), then the state
-	 * remains unchanged and <code>null</code> is returned.
-	 * 
-	 * @param state
-	 *            the state
-	 * @return the {@link Node} that represents the processed state or
-	 *         <code>null</code> if the state does not fulfill this rule
-	 */
-	public abstract Node process(State state);
-
-	/**
 	 * Instructs this rule to visit the given {@link RuleVisitor} instance.
 	 *
 	 * @param visitor

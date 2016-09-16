@@ -7,11 +7,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import de.claas.parser.Node;
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
-import de.claas.parser.State;
-import de.claas.parser.results.TerminalNode;
 
 /**
  * 
@@ -62,21 +59,6 @@ public class Terminal extends Rule {
 	 */
 	public Iterator<String> getTerminals() {
 		return terminals.iterator();
-	}
-
-	@Override
-	public Node process(State state) {
-		state.beginGroup();
-		try {
-			for (String terminal : terminals) {
-				if (state.process(terminal)) {
-					return new TerminalNode(terminal);
-				}
-			}
-			return null;
-		} finally {
-			state.endGroup();
-		}
 	}
 
 	@Override

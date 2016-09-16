@@ -1,11 +1,7 @@
 package de.claas.parser.rules;
 
-import de.claas.parser.Node;
-import de.claas.parser.Result;
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
-import de.claas.parser.State;
-import de.claas.parser.results.IntermediateNode;
 
 /**
  * 
@@ -78,27 +74,6 @@ public class Repetition extends Decorator {
 	 */
 	public int getMaximumNumberOfRepetions() {
 		return maxRepetitions;
-	}
-
-	@Override
-	public Node process(State state) {
-		state.beginGroup();
-		try {
-			Node node = new IntermediateNode();
-			for (int repetitions = 1; repetitions <= maxRepetitions; repetitions++) {
-				if (Result.get(getRule(), state, node, null) == null) {
-					if (repetitions <= minRepetitions) {
-						state.revert();
-						return null;
-					} else {
-						return node;
-					}
-				}
-			}
-			return node;
-		} finally {
-			state.endGroup();
-		}
 	}
 
 	@Override

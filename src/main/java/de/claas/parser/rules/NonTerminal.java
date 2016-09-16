@@ -1,11 +1,7 @@
 package de.claas.parser.rules;
 
-import de.claas.parser.Node;
-import de.claas.parser.Result;
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
-import de.claas.parser.State;
-import de.claas.parser.results.NonTerminalNode;
 
 /**
  * 
@@ -88,12 +84,6 @@ public class NonTerminal extends Decorator {
 	 */
 	public String getComment() {
 		return comment;
-	}
-
-	@Override
-	public Node process(State state) {
-		Node node = new NonTerminalNode(getName());
-		return Result.get(getRule(), state, node, null);
 	}
 
 	@Override
