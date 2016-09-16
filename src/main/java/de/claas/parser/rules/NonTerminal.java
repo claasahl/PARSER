@@ -14,8 +14,8 @@ import de.claas.parser.results.NonTerminalNode;
  * within a grammar. Non-terminal rules are named rules which largely make up a
  * grammar.
  * <p>
- * This rule acts like any other rule. The only difference is that it has a
- * name.
+ * This rule acts like any other rule. The only difference is that it has a name
+ * and an optional comment.
  * 
  * @author Claas Ahlrichs
  *
@@ -23,19 +23,28 @@ import de.claas.parser.results.NonTerminalNode;
 public class NonTerminal extends Decorator {
 
 	private final String name;
+	private final String comment;
 
 	/**
-	 * Constructs a new {@link NonTerminal} with the specified parameter.
+	 * 
+	 * Constructs a new {@link NonTerminal} with the specified parameters.
+	 * Calling this constructor is equivalent to calling
+	 * <code>{@link NonTerminal#NonTerminal(String, String, Rule)}</code> with
+	 * <code>null</code> as comment as and <code>null</code> as rule.
 	 * 
 	 * @param name
 	 *            the name
 	 */
 	public NonTerminal(String name) {
-		this(name, null);
+		this(name, null, null);
 	}
 
 	/**
-	 * Creates an instance with the given parameters.
+	 * 
+	 * Constructs a new {@link NonTerminal} with the specified parameters.
+	 * Calling this constructor is equivalent to calling
+	 * <code>{@link NonTerminal#NonTerminal(String, String, Rule)}</code> with
+	 * <code>null</code> as comment.
 	 * 
 	 * @param name
 	 *            the name
@@ -43,8 +52,24 @@ public class NonTerminal extends Decorator {
 	 *            the decorated rule
 	 */
 	public NonTerminal(String name, Rule rule) {
+		this(name, null, rule);
+	}
+
+	/**
+	 * 
+	 * Constructs a new {@link NonTerminal} with the specified parameters.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param comment
+	 *            the comment
+	 * @param rule
+	 *            the decorated rule
+	 */
+	public NonTerminal(String name, String comment, Rule rule) {
 		super(rule);
 		this.name = name;
+		this.comment = comment;
 	}
 
 	/**
@@ -54,6 +79,15 @@ public class NonTerminal extends Decorator {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * Returns the comment of this (non-terminal) rule.
+	 * 
+	 * @return the comment of this (non-terminal) rule
+	 */
+	public String getComment() {
+		return comment;
 	}
 
 	@Override
