@@ -33,7 +33,7 @@ public class RepetitionTest extends DecoratorTest {
 
 	@Override
 	protected Rule[] defaultChildren() {
-		return new Rule[] { buildTestRule("decorated", new TerminalNode("decorated")) };
+		return new Rule[] { new Terminal("decorated") };
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class RepetitionTest extends DecoratorTest {
 	@Test
 	public void shouldRepeatAtMostOnce() {
 		State state = buildState("rerere??");
-		Rule child = buildTestRule("re", new TerminalNode("re"));
+		Rule child = new Terminal("re");
 		Rule rule = new Repetition(child, 0, 1);
 		assertNotNull(Parser.parse(state, rule));
 		assertEquals("re", state.getProcessedData());
@@ -90,7 +90,7 @@ public class RepetitionTest extends DecoratorTest {
 	@Test
 	public void shouldRepeatExactlyTwice() {
 		State state = buildState("rerere??");
-		Rule child = buildTestRule("re", new TerminalNode("re"));
+		Rule child = new Terminal("re");
 		Rule rule = new Repetition(child, 2, 2);
 		assertNotNull(Parser.parse(state, rule));
 		assertEquals("rere", state.getProcessedData());
@@ -100,7 +100,7 @@ public class RepetitionTest extends DecoratorTest {
 	@Test
 	public void shouldRepeatAtLeastThrice() {
 		State state = buildState("rererererererere??");
-		Rule child = buildTestRule("re", new TerminalNode("re"));
+		Rule child = new Terminal("re");
 		Rule rule = new Repetition(child, 2, Integer.MAX_VALUE);
 		assertNotNull(Parser.parse(state, rule));
 		assertEquals("rererererererere", state.getProcessedData());
@@ -110,7 +110,7 @@ public class RepetitionTest extends DecoratorTest {
 	@Test
 	public void shouldRepeatWithinRange() {
 		State state = buildState("rererererererere??");
-		Rule child = buildTestRule("re", new TerminalNode("re"));
+		Rule child = new Terminal("re");
 		Rule rule = new Repetition(child, 2, 4);
 		assertNotNull(Parser.parse(state, rule));
 		assertEquals("rererere", state.getProcessedData());

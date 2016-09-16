@@ -33,7 +33,7 @@ public class OptionalTest extends DecoratorTest {
 
 	@Override
 	protected Rule[] defaultChildren() {
-		return new Rule[] { buildTestRule("decorated", new TerminalNode("decorated")) };
+		return new Rule[] { new Terminal("decorated") };
 	}
 
 	@Override

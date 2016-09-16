@@ -34,7 +34,7 @@ public class NonTerminalTest extends DecoratorTest {
 
 	@Override
 	protected Rule[] defaultChildren() {
-		return new Rule[] { buildTestRule("nonTerminal", new TerminalNode("nonTerminal")) };
+		return new Rule[] { new Terminal("nonTerminal") };
 	}
 
 	@Override

@@ -34,8 +34,7 @@ public class DisjunctionTest extends RuleTest {
 
 	@Override
 	protected Rule[] defaultChildren() {
-		return new Rule[] { buildTestRule("hello", new TerminalNode("hello")),
-				buildTestRule("world", new TerminalNode("world")) };
+		return new Rule[] { new Terminal("hello"), new Terminal("world") };
 	}
 
 	@Override

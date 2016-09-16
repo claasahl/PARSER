@@ -10,7 +10,6 @@ import java.util.Iterator;
 
 import org.junit.Test;
 
-import de.claas.parser.Node;
 import de.claas.parser.Rule;
 import de.claas.parser.State;
 import de.claas.parser.visitors.Parser;
@@ -81,25 +80,7 @@ public abstract class RuleTest {
 	protected State buildState(String pattern) {
 		return new State(pattern);
 	}
-
-	/**
-	 * Returns an instantiated {@link TestRule} class. Where appropriate, the
-	 * instance can be configured to have an arbitrary number of children. The
-	 * purpose of this function is to build {@link Rule} instances that expose
-	 * their internal state and allow for easier testing.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param output
-	 *            the node returned by {@link #process(State)}
-	 * @param children
-	 *            the children
-	 * @return an instantiated {@link TestRule} class
-	 */
-	protected Rule buildTestRule(String name, Node output, Rule... children) {
-		return new TestRule(name, output, children);
-	}
-
+	
 	@Test
 	public void shouldHaveNoChildren() {
 		Rule rule = build();
@@ -131,9 +112,9 @@ public abstract class RuleTest {
 	@Test
 	public void shouldManageChildren() {
 		Rule rule = build();
-		Rule childA = buildTestRule("A", null);
-		Rule childB = buildTestRule("B", null);
-		Rule childC = buildTestRule("C", null);
+		Rule childA = new Terminal("A");
+		Rule childB = new Terminal("B");
+		Rule childC = new Terminal("C");
 		assertTrue(rule.addChild(childA));
 		assertTrue(rule.addChild(childB));
 		assertTrue(rule.addChild(childC));
