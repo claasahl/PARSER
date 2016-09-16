@@ -49,7 +49,7 @@ public abstract class DecoratorTest extends RuleTest {
 
 	@Test
 	public void shouldHaveDecoratedRule() {
-		TestRule decorated = buildTestRule("decorated", null);
+		Rule decorated = buildTestRule("decorated", null);
 		Decorator rule = build(decorated);
 		assertNotNull(rule.getRule());
 	}
@@ -68,7 +68,7 @@ public abstract class DecoratorTest extends RuleTest {
 
 	@Test
 	public void addChildShouldBeForwardedToDecoratedRule() {
-		TestRule decorated = buildTestRule("decorated", null);
+		Rule decorated = buildTestRule("decorated", null);
 		Decorator rule = build(decorated);
 		Rule child = buildTestRule("child", null);
 
@@ -85,7 +85,7 @@ public abstract class DecoratorTest extends RuleTest {
 
 	@Test
 	public void removeChildShouldBeForwardedToDecoratedRule() {
-		TestRule decorated = buildTestRule("decorated", null);
+		Rule decorated = buildTestRule("decorated", null);
 		Decorator rule = build(decorated);
 		Rule child = buildTestRule("child", null);
 
@@ -102,7 +102,7 @@ public abstract class DecoratorTest extends RuleTest {
 
 	@Test
 	public void hasChildrenShouldBeForwardedToDecoratedRule() {
-		TestRule decorated = buildTestRule("decorated", null);
+		Rule decorated = buildTestRule("decorated", null);
 		Decorator rule = build(decorated);
 		Rule child = buildTestRule("child", null);
 
@@ -121,7 +121,7 @@ public abstract class DecoratorTest extends RuleTest {
 
 	@Test
 	public void iteratorShouldBeForwardedToDecoratedRule() {
-		TestRule decorated = buildTestRule("decorated", null);
+		Rule decorated = buildTestRule("decorated", null);
 		Decorator rule = build(decorated);
 		Rule child = buildTestRule("child", null);
 

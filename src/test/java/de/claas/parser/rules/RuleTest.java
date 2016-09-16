@@ -96,7 +96,7 @@ public abstract class RuleTest {
 	 *            the children
 	 * @return an instantiated {@link TestRule} class
 	 */
-	protected TestRule buildTestRule(String name, Node output, Rule... children) {
+	protected Rule buildTestRule(String name, Node output, Rule... children) {
 		return new TestRule(name, output, children);
 	}
 
