@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import de.claas.parser.Node;
 import de.claas.parser.Rule;
+import de.claas.parser.RuleTest;
 import de.claas.parser.State;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.results.TerminalNode;
