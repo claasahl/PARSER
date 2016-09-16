@@ -3,7 +3,6 @@ package de.claas.parser.visitors;
 import java.util.Iterator;
 
 import de.claas.parser.Node;
-import de.claas.parser.Result;
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
 import de.claas.parser.State;
@@ -45,7 +44,7 @@ public class Parser implements RuleVisitor {
 			Node node = rule.hasChildren() ? new IntermediateNode() : null;
 			setResult(node);
 			for (Rule child : rule) {
-				if (Result.get(child, this.state, node, null) == null) {
+				if (process(child, node, null) == null) {
 					this.state.revert();
 					clearResult();
 					return;
@@ -67,7 +66,7 @@ public class Parser implements RuleVisitor {
 			for (Rule child : rule) {
 				State clonedState = new State(this.state);
 				Node node = new IntermediateNode();
-				if (Result.get(child, clonedState, node, null) != null) {
+				if (process(child, node, null) != null) {
 					int newlyProcessedData = clonedState.getProcessedData().length();
 					if (newlyProcessedData >= alreadyProcessedData) {
 						alreadyProcessedData = newlyProcessedData;
@@ -80,7 +79,7 @@ public class Parser implements RuleVisitor {
 			// (i.e. not with the local copies)
 			if (bestRule != null) {
 				Node node = new IntermediateNode();
-				setResult(Result.get(bestRule, this.state, node, null));
+				setResult(process(bestRule, node, null));
 			} else {
 				this.state.revert();
 				clearResult();
@@ -93,7 +92,7 @@ public class Parser implements RuleVisitor {
 	@Override
 	public void visitNonTerminal(NonTerminal rule) {
 		Node node = new NonTerminalNode(rule.getName());
-		setResult(Result.get(rule.getRule(), this.state, node, null));
+		setResult(process(rule.getRule(), node, null));
 	}
 
 	@Override
@@ -101,7 +100,7 @@ public class Parser implements RuleVisitor {
 		this.state.beginGroup();
 		try {
 			Node node = new IntermediateNode();
-			setResult(Result.get(rule.getRule(), this.state, node, node));
+			setResult(process(rule.getRule(), node, node));
 		} finally {
 			this.state.endGroup();
 		}
@@ -113,7 +112,7 @@ public class Parser implements RuleVisitor {
 		try {
 			Node node = new IntermediateNode();
 			for (int repetitions = 1; repetitions <= rule.getMaximumNumberOfRepetions(); repetitions++) {
-				if (Result.get(rule.getRule(), this.state, node, null) == null) {
+				if (process(rule.getRule(), node, null) == null) {
 					if (repetitions <= rule.getMinimumNumberOfRepetions()) {
 						this.state.revert();
 						clearResult();
@@ -152,6 +151,18 @@ public class Parser implements RuleVisitor {
 		Parser parser = new Parser(state);
 		rule.visit(parser);
 		return parser.getResult();
+	}
+	
+	private Node process(Rule rule, Node onSuccess, Node onFailure) {
+		if (rule != null) {
+			rule.visit(this);
+			if (getResult() != null) {
+				onSuccess.addChild(getResult());
+				return onSuccess;
+			}
+			return onFailure;
+		}
+		return null;
 	}
 
 }
