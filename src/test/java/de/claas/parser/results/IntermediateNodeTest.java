@@ -5,9 +5,9 @@ import de.claas.parser.NodeTest;
 
 /**
  * 
- * The JUnit test for class {@link IntermediateNodeTest}. It is intended to
- * collect and document a set of test cases for the tested class. Please refer
- * to the individual tests for more detailed information.
+ * The JUnit test for class {@link IntermediateNode}. It is intended to collect
+ * and document a set of test cases for the tested class. Please refer to the
+ * individual tests for more detailed information.
  *
  * @author Claas Ahlrichs
  *

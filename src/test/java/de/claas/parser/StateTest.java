@@ -7,7 +7,7 @@ import org.junit.Test;
 
 /**
  * 
- * The JUnit test for class {@link StateTest}. It is intended to collect and
+ * The JUnit test for class {@link State}. It is intended to collect and
  * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
  *

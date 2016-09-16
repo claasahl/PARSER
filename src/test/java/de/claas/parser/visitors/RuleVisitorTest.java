@@ -2,10 +2,12 @@ package de.claas.parser.visitors;
 
 import org.junit.Test;
 
+import de.claas.parser.RuleVisitor;
+
 /**
  * 
- * The JUnit test for class {@link RuleVisitorTest}. It is intended to collect
- * and document a set of test cases for the tested class. Please refer to the
+ * The JUnit test for class {@link RuleVisitor}. It is intended to collect and
+ * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
  *
  * @author Claas Ahlrichs

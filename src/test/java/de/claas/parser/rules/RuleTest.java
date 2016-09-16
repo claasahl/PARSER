@@ -16,9 +16,9 @@ import de.claas.parser.visitors.Parser;
 
 /**
  * 
- * The JUnit test for class {@link RuleTest}. It is intended to collect and
- * document a set of test cases for the tested class. Please refer to the
- * individual tests for more detailed information.
+ * The JUnit test for class {@link Rule}. It is intended to collect and document
+ * a set of test cases for the tested class. Please refer to the individual
+ * tests for more detailed information.
  *
  * @author Claas Ahlrichs
  *
@@ -80,7 +80,7 @@ public abstract class RuleTest {
 	protected State buildState(String pattern) {
 		return new State(pattern);
 	}
-	
+
 	@Test
 	public void shouldHaveNoChildren() {
 		Rule rule = build();
@@ -220,19 +220,19 @@ public abstract class RuleTest {
 		assertEquals(unprocessedPattern, state.getUnprocessedData());
 		assertEquals(processingGroups, state.getGroups());
 	}
-	
+
 	@Test
 	public void implementationOfEqualsShouldHandleNull() {
 		Rule rule = build(defaultChildren());
 		assertFalse(rule.equals(null));
 	}
-	
+
 	@Test
 	public void implementationOfEqualsShouldBeReflexive() {
 		Rule rule = build(defaultChildren());
 		assertTrue(rule.equals(rule));
 	}
-	
+
 	@Test
 	public void implementationOfEqualsShouldBeSymmetric() {
 		Rule ruleA = build(defaultChildren());
@@ -240,7 +240,7 @@ public abstract class RuleTest {
 		assertTrue(ruleA.equals(ruleB));
 		assertTrue(ruleB.equals(ruleA));
 	}
-	
+
 	@Test
 	public void implementationOfEqualsShouldBeTransitive() {
 		Rule ruleA = build(defaultChildren());

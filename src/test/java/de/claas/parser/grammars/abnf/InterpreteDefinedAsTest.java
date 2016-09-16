@@ -12,7 +12,7 @@ import de.claas.parser.rules.Terminal;
 
 /**
  * 
- * The JUnit test for class {@link InterpreteDefinedAsTest}. It is intended to
+ * The JUnit test for class {@link InterpreteDefinedAs}. It is intended to
  * collect and document a set of test cases for the tested class. Please refer
  * to the individual tests for more detailed information.
  *

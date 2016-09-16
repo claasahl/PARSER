@@ -14,7 +14,7 @@ import de.claas.parser.Rule;
 
 /**
  * 
- * The JUnit test for class {@link DecoratorTest}. It is intended to collect and
+ * The JUnit test for class {@link Decorator}. It is intended to collect and
  * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
  *
@@ -27,7 +27,7 @@ public abstract class DecoratorTest extends RuleTest {
 	protected Decorator build(Rule... children) {
 		if (children.length == 0)
 			return build(new Conjunction());
-		
+
 		Decorator rule = build(children[0]);
 		for (int i = 1; i < children.length; i++) {
 			rule.addChild(children[i]);

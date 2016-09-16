@@ -20,7 +20,7 @@ import de.claas.parser.visitors.Parser;
 
 /**
  * 
- * The JUnit test for class {@link TerminalTest}. It is intended to collect and
+ * The JUnit test for class {@link Terminal}. It is intended to collect and
  * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
  *
@@ -79,25 +79,25 @@ public class TerminalTest extends RuleTest {
 	protected Terminal build(char rangeStart, char rangeEnd) {
 		return new Terminal(rangeStart, rangeEnd);
 	}
-	
+
 	@Override
 	public void shouldHaveChildren() {
 		// terminal nodes do not have children!
 		shouldNotAddChildren();
 	}
-	
+
 	@Override
 	public void shouldHaveNonEmptyIterator() {
 		// terminal nodes do not have children!
 		shouldNotAddChildren();
 	}
-	
+
 	@Override
 	public void shouldManageChildren() {
 		// terminal nodes do not have children!
 		shouldNotAddChildren();
 	}
-	
+
 	@Test
 	public void shouldNotAddChildren() {
 		Rule rule = build(new Rule[] {});
