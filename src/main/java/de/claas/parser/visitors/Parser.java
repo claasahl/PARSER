@@ -147,5 +147,11 @@ public class Parser implements RuleVisitor {
 			this.state.endGroup();
 		}
 	}
+	
+	public static Node parse(State state, Rule rule) {
+		Parser parser = new Parser(state);
+		rule.visit(parser);
+		return parser.getResult();
+	}
 
 }
