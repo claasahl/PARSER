@@ -1,11 +1,14 @@
 package de.claas.parser.visitors;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import de.claas.parser.Node;
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
 import de.claas.parser.State;
+import de.claas.parser.exceptions.CyclicRuleException;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
@@ -20,6 +23,7 @@ public class Parser implements RuleVisitor {
 
 	private final State state;
 	private Node result;
+	private final Map<Rule, Integer> visitedPath = new HashMap<>();
 
 	public Parser(State state) {
 		this.state = state;
@@ -39,98 +43,124 @@ public class Parser implements RuleVisitor {
 
 	@Override
 	public void visitConjunction(Conjunction rule) {
-		this.state.beginGroup();
-		try {
-			Node node = rule.hasChildren() ? new IntermediateNode() : null;
-			for (Rule child : rule) {
-				if (process(child, node, null) == null) {
-					this.state.revert();
-					clearResult();
-					return;
+		if (addToPath(rule)) {
+			this.state.beginGroup();
+			try {
+				Node node = rule.hasChildren() ? new IntermediateNode() : null;
+				for (Rule child : rule) {
+					if (process(child, node, null) == null) {
+						this.state.revert();
+						clearResult();
+						return;
+					}
 				}
+				setResult(node);
+			} finally {
+				this.state.endGroup();
+				removeFromPath(rule);
 			}
-			setResult(node);
-		} finally {
-			this.state.endGroup();
+		} else {
+			throw new CyclicRuleException(rule);
 		}
 	}
 
 	@Override
 	public void visitDisjunction(Disjunction rule) {
-		this.state.beginGroup();
-		try {
-			// search for "greediest" rule (i.e. the rule that processes most of
-			// the unprocessed data)
-			int alreadyProcessedData = this.state.getProcessedData().length();
-			Rule bestRule = null;
-			for (Rule child : rule) {
-				this.state.beginGroup();
-				try {
-					Node node = new IntermediateNode();
-					if (process(child, node, null) != null) {
-						int newlyProcessedData = this.state.getProcessedData().length();
-						if (newlyProcessedData >= alreadyProcessedData) {
-							alreadyProcessedData = newlyProcessedData;
-							bestRule = child;
+		if (addToPath(rule)) {
+			this.state.beginGroup();
+			try {
+				// search for "greediest" rule (i.e. the rule that processes
+				// most of
+				// the unprocessed data)
+				int alreadyProcessedData = this.state.getProcessedData().length();
+				Rule bestRule = null;
+				for (Rule child : rule) {
+					this.state.beginGroup();
+					try {
+						Node node = new IntermediateNode();
+						if (process(child, node, null) != null) {
+							int newlyProcessedData = this.state.getProcessedData().length();
+							if (newlyProcessedData >= alreadyProcessedData) {
+								alreadyProcessedData = newlyProcessedData;
+								bestRule = child;
+							}
 						}
+					} finally {
+						this.state.revert();
+						this.state.endGroup();
 					}
-				} finally {
-					this.state.revert();
-					this.state.endGroup();
 				}
-			}
 
-			// re-process the greediest rule with the "global" state object
-			// (i.e. not with the local copies)
-			if (bestRule != null) {
-				Node node = new IntermediateNode();
-				setResult(process(bestRule, node, null));
-			} else {
-				this.state.revert();
-				clearResult();
+				// re-process the greediest rule with the "global" state object
+				// (i.e. not with the local copies)
+				if (bestRule != null) {
+					Node node = new IntermediateNode();
+					setResult(process(bestRule, node, null));
+				} else {
+					this.state.revert();
+					clearResult();
+				}
+			} finally {
+				this.state.endGroup();
+				removeFromPath(rule);
 			}
-		} finally {
-			this.state.endGroup();
+		} else {
+			throw new CyclicRuleException(rule);
 		}
 	}
 
 	@Override
 	public void visitNonTerminal(NonTerminal rule) {
-		Node node = new NonTerminalNode(rule.getName());
-		setResult(process(rule.getRule(), node, null));
+		if (addToPath(rule)) {
+			Node node = new NonTerminalNode(rule.getName());
+			setResult(process(rule.getRule(), node, null));
+			removeFromPath(rule);
+		} else {
+			throw new CyclicRuleException(rule);
+		}
 	}
 
 	@Override
 	public void visitOptional(Optional rule) {
-		this.state.beginGroup();
-		try {
-			Node node = new IntermediateNode();
-			setResult(process(rule.getRule(), node, node));
-		} finally {
-			this.state.endGroup();
+		if (addToPath(rule)) {
+			this.state.beginGroup();
+			try {
+				Node node = new IntermediateNode();
+				setResult(process(rule.getRule(), node, node));
+			} finally {
+				this.state.endGroup();
+				removeFromPath(rule);
+			}
+		} else {
+			throw new CyclicRuleException(rule);
 		}
 	}
 
 	@Override
 	public void visitRepetition(Repetition rule) {
-		this.state.beginGroup();
-		try {
-			Node node = new IntermediateNode();
-			for (int repetitions = 1; repetitions <= rule.getMaximumNumberOfRepetions(); repetitions++) {
-				if (process(rule.getRule(), node, null) == null) {
-					if (repetitions <= rule.getMinimumNumberOfRepetions()) {
-						this.state.revert();
-						clearResult();
+		if (addToPath(rule)) {
+			this.state.beginGroup();
+			try {
+				Node node = new IntermediateNode();
+				for (int repetitions = 1; repetitions <= rule.getMaximumNumberOfRepetions(); repetitions++) {
+					if (process(rule.getRule(), node, null) == null) {
+						if (repetitions <= rule.getMinimumNumberOfRepetions()) {
+							this.state.revert();
+							clearResult();
+							return;
+						}
+
+						setResult(node);
 						return;
 					}
-
-					setResult(node);
-					return;
 				}
+				setResult(node);
+			} finally {
+				this.state.endGroup();
+				removeFromPath(rule);
 			}
-			setResult(node);
-		} finally {
-			this.state.endGroup();
+		} else {
+			throw new CyclicRuleException(rule);
 		}
 	}
 
@@ -150,6 +180,19 @@ public class Parser implements RuleVisitor {
 		} finally {
 			this.state.endGroup();
 		}
+	}
+
+	private boolean addToPath(Rule rule) {
+		int currentlyProcessed = this.state.getProcessedData().length();
+		Integer previouslyProcessed = this.visitedPath.put(rule, new Integer(currentlyProcessed));
+		if(previouslyProcessed != null) {
+			return currentlyProcessed > previouslyProcessed.intValue();
+		}
+		return true;
+	}
+
+	private void removeFromPath(Rule rule) {
+		this.visitedPath.remove(rule);
 	}
 
 	public static Node parse(State state, Rule rule) {
