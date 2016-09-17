@@ -32,77 +32,77 @@ public class RuleToStringTest extends RuleVisitorTest {
 
 	@Before
 	public void before() {
-		visitor = new RuleToString("  ", "\n");
+		this.visitor = new RuleToString("  ", "\n");
 	}
 
 	@Override
 	public void shouldHandleNoRule() {
-		assertEquals("", visitor.toString());
+		assertEquals("", this.visitor.toString());
 	}
 
 	@Override
 	public void shouldHandleConjunctionRule() {
 		Rule r1 = new Terminal("t");
-		new Conjunction(r1).visit(visitor);
+		new Conjunction(r1).visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
 		lines.add("Conjunction");
 		lines.add("  Terminal:t");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
+		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
 	}
 
 	@Override
 	public void shouldHandleDisjunctionRule() {
 		Rule r1 = new Terminal("t");
-		new Disjunction(r1).visit(visitor);
+		new Disjunction(r1).visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
 		lines.add("Disjunction");
 		lines.add("  Terminal:t");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
+		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
 	}
 
 	@Override
 	public void shouldHandleNonTerminalRule() {
 		Rule r1 = new Terminal("t");
-		new NonTerminal("some rule", r1).visit(visitor);
+		new NonTerminal("some rule", r1).visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
 		lines.add("NonTerminal:some rule");
 		lines.add("  Terminal:t");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
+		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
 	}
 
 	@Override
 	public void shouldHandleOptionalRule() {
 		Rule r1 = new Terminal("t");
-		new Optional(r1).visit(visitor);
+		new Optional(r1).visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
 		lines.add("Optional");
 		lines.add("  Terminal:t");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
+		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
 	}
 
 	@Override
 	public void shouldHandleRepetitionRule() {
 		Rule r1 = new Terminal("t");
-		new Repetition(r1).visit(visitor);
+		new Repetition(r1).visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
 		lines.add("Repetition");
 		lines.add("  Terminal:t");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
+		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
 	}
 
 	@Override
 	public void shouldHandleTerminalRule() {
-		new Terminal("some", "terminal").visit(visitor);
+		new Terminal("some", "terminal").visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
 		lines.add("Terminal:terminal");
 		lines.add("Terminal:some");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
+		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
 	}
 
 	@Override
@@ -139,8 +139,8 @@ public class RuleToStringTest extends RuleVisitorTest {
 			lines.add("          Terminal:" + i);
 		}
 
-		repeat.visit(visitor);
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
+		repeat.visit(this.visitor);
+		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
 	}
 
 	@Override
@@ -148,13 +148,13 @@ public class RuleToStringTest extends RuleVisitorTest {
 		Rule r0 = new Conjunction();
 		Rule r1 = new Repetition(r0);
 		r0.addChild(r1);
-		r1.visit(visitor);
+		r1.visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
 		lines.add("Repetition");
 		lines.add("  Conjunction");
 		lines.add("    Repetition");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
+		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
 	}
 
 	@Override
@@ -162,13 +162,13 @@ public class RuleToStringTest extends RuleVisitorTest {
 		Rule r0 = new Conjunction();
 		Rule r1 = new Optional(r0);
 		r0.addChild(r1);
-		r1.visit(visitor);
+		r1.visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
 		lines.add("Optional");
 		lines.add("  Conjunction");
 		lines.add("    Optional");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
+		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
 	}
 
 	@Override
@@ -176,13 +176,13 @@ public class RuleToStringTest extends RuleVisitorTest {
 		Rule r0 = new Conjunction();
 		Rule r1 = new NonTerminal("rulename", r0);
 		r0.addChild(r1);
-		r1.visit(visitor);
+		r1.visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
 		lines.add("NonTerminal:rulename");
 		lines.add("  Conjunction");
 		lines.add("    NonTerminal:rulename");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
+		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
 	}
 
 	@Override
@@ -190,26 +190,27 @@ public class RuleToStringTest extends RuleVisitorTest {
 		Rule r0 = new Conjunction();
 		Rule r1 = new Disjunction(r0);
 		r0.addChild(r1);
-		r1.visit(visitor);
+		r1.visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
 		lines.add("Disjunction");
 		lines.add("  Conjunction");
 		lines.add("    Disjunction");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
+		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
 	}
 
+	@Override
 	public void shouldHandleCyclicConjunctionRule() {
 		Rule r0 = new Conjunction();
 		Rule r1 = new Conjunction(r0);
 		r0.addChild(r1);
-		r1.visit(visitor);
+		r1.visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
 		lines.add("Conjunction");
 		lines.add("  Conjunction");
 		lines.add("    Conjunction");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", visitor.toString());
+		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
 	}
 
 }
