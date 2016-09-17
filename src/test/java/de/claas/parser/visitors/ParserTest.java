@@ -35,6 +35,13 @@ public class ParserTest extends RuleVisitorTest {
 	private static final String DATA = HELLO + WORLD;
 	private static final Rule[] CHILDREN = new Rule[] { new Terminal(HELLO), new Terminal(WORLD) };
 
+	/**
+	 * Returns an instantiated {@link Parser} class with the specified data.
+	 * 
+	 * @param data
+	 *            the data
+	 * @return an instantiated {@link Parser} class with the specified data
+	 */
 	private static Parser build(String data) {
 		return new Parser(new State(data));
 	}
@@ -57,6 +64,30 @@ public class ParserTest extends RuleVisitorTest {
 		assertEquals(expected, parser.getResult());
 	}
 
+	@Test
+	public void conjunctionShouldRequireChildren() {
+		Rule rule = new Conjunction();
+		Parser parser = build(DATA);
+		rule.visit(parser);
+		assertNull(parser.getResult());
+
+		parser = build("");
+		rule.visit(parser);
+		assertNull(parser.getResult());
+	}
+
+	@Test
+	public void conjunctionShouldFailIfAnyChildFails() {
+		Rule rule = new Conjunction(CHILDREN);
+		Parser parser = build(HELLO + "invalid");
+		rule.visit(parser);
+		assertNull(parser.getResult());
+
+		parser = build("invalid" + WORLD);
+		rule.visit(parser);
+		assertNull(parser.getResult());
+	}
+
 	@Override
 	public void shouldHandleDisjunctionRule() {
 		Rule rule = new Disjunction(CHILDREN);
@@ -65,6 +96,34 @@ public class ParserTest extends RuleVisitorTest {
 
 		Node expected = new IntermediateNode();
 		expected.addChild(new TerminalNode(HELLO));
+		assertEquals(expected, parser.getResult());
+	}
+
+	@Test
+	public void disjunctionShouldRequireChildren() {
+		Rule rule = new Disjunction();
+		Parser parser = build(DATA);
+		rule.visit(parser);
+		assertNull(parser.getResult());
+
+		parser = build("");
+		rule.visit(parser);
+		assertNull(parser.getResult());
+	}
+
+	@Test
+	public void disjunctionShouldSucceedIfAnyChildSucceeds() {
+		Rule rule = new Disjunction(CHILDREN);
+		Parser parser = build(HELLO);
+		rule.visit(parser);
+		Node expected = new IntermediateNode();
+		expected.addChild(new TerminalNode(HELLO));
+		assertEquals(expected, parser.getResult());
+
+		parser = build(WORLD);
+		rule.visit(parser);
+		expected = new IntermediateNode();
+		expected.addChild(new TerminalNode(WORLD));
 		assertEquals(expected, parser.getResult());
 	}
 
@@ -96,6 +155,24 @@ public class ParserTest extends RuleVisitorTest {
 		assertEquals(expected, parser.getResult());
 	}
 
+	@Test
+	public void optionalShouldRepeatAtMostOnc() {
+		Rule rule = new Optional(new Terminal(HELLO));
+		Parser parser = build(HELLO + HELLO + WORLD);
+		rule.visit(parser);
+		
+		Node expected = new IntermediateNode();
+		expected.addChild(new TerminalNode(HELLO));
+		assertEquals(expected, parser.getResult());
+		
+		rule.visit(parser);
+		assertEquals(expected, parser.getResult());
+		
+		rule.visit(parser);
+		expected = new IntermediateNode();
+		assertEquals(expected, parser.getResult());
+	}
+
 	@Override
 	public void shouldHandleRepetitionRule() {
 		Rule rule = new Repetition(new Disjunction(CHILDREN));
@@ -109,6 +186,79 @@ public class ParserTest extends RuleVisitorTest {
 		Node disjunction2 = new IntermediateNode();
 		disjunction2.addChild(new TerminalNode(WORLD));
 		expected.addChild(disjunction2);
+		assertEquals(expected, parser.getResult());
+	}
+
+	@Test
+	public void repetitionShouldRepeat() {
+		Rule rule = new Repetition(new Terminal("re"));
+		Parser parser = build("rererererererere??");
+		rule.visit(parser);
+		
+		Node expected = new IntermediateNode();
+		expected.addChild(new TerminalNode("re"));
+		expected.addChild(new TerminalNode("re"));
+		expected.addChild(new TerminalNode("re"));
+		expected.addChild(new TerminalNode("re"));
+		expected.addChild(new TerminalNode("re"));
+		expected.addChild(new TerminalNode("re"));
+		expected.addChild(new TerminalNode("re"));
+		expected.addChild(new TerminalNode("re"));
+		assertEquals(expected, parser.getResult());
+	}
+
+	@Test
+	public void repetitionShouldRepeatAtMostOnce() {
+		Rule rule = new Repetition(new Terminal("re"), 0, 1);
+		Parser parser = build("rerere??");
+		rule.visit(parser);
+		
+		Node expected = new IntermediateNode();
+		expected.addChild(new TerminalNode("re"));
+		assertEquals(expected, parser.getResult());
+	}
+
+	@Test
+	public void repetitionShouldRepeatExactlyTwice() {
+		Rule rule = new Repetition(new Terminal("re"), 2, 2);
+		Parser parser = build("rerere??");
+		rule.visit(parser);
+		
+		Node expected = new IntermediateNode();
+		expected.addChild(new TerminalNode("re"));
+		expected.addChild(new TerminalNode("re"));
+		assertEquals(expected, parser.getResult());
+	}
+
+	@Test
+	public void repetitionShouldRepeatAtLeastThrice() {
+		Rule rule = new Repetition(new Terminal("re"), 3, Integer.MAX_VALUE);
+		Parser parser = build("rererererererere??");
+		rule.visit(parser);
+		
+		Node expected = new IntermediateNode();
+		expected.addChild(new TerminalNode("re"));
+		expected.addChild(new TerminalNode("re"));
+		expected.addChild(new TerminalNode("re"));
+		expected.addChild(new TerminalNode("re"));
+		expected.addChild(new TerminalNode("re"));
+		expected.addChild(new TerminalNode("re"));
+		expected.addChild(new TerminalNode("re"));
+		expected.addChild(new TerminalNode("re"));
+		assertEquals(expected, parser.getResult());
+	}
+
+	@Test
+	public void repetitionShouldRepeatWithinRange() {
+		Rule rule = new Repetition(new Terminal("re"), 2, 4);
+		Parser parser = build("rererererererere??");
+		rule.visit(parser);
+		
+		Node expected = new IntermediateNode();
+		expected.addChild(new TerminalNode("re"));
+		expected.addChild(new TerminalNode("re"));
+		expected.addChild(new TerminalNode("re"));
+		expected.addChild(new TerminalNode("re"));
 		assertEquals(expected, parser.getResult());
 	}
 
@@ -129,7 +279,7 @@ public class ParserTest extends RuleVisitorTest {
 		Rule number = new NonTerminal("number", new Conjunction(new Optional(plus), new Repetition(digit, 1, 10)));
 		Parser parser = build("+321");
 		number.visit(parser);
-		
+
 		Node expected = new NonTerminalNode("number");
 		Node conjunction = new IntermediateNode();
 		Node optional = new IntermediateNode();
