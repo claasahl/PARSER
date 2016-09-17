@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import de.claas.parser.Grammar;
 import de.claas.parser.Rule;
@@ -134,7 +133,7 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 
 	@Override
 	public String toString() {
-		return printedRules.stream().collect(Collectors.joining(lineSeparator));
+		return String.join(this.lineSeparator, this.printedRules);
 	}
 
 	/**

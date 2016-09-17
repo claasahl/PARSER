@@ -8,7 +8,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.stream.Collectors;
 
 import org.junit.Test;
 
@@ -46,7 +45,7 @@ public class TerminalTest extends RuleTest {
 
 	@Override
 	protected State processibleState() {
-		return buildState(Arrays.asList(DEFAULT_TERMINALS).stream().collect(Collectors.joining()));
+		return buildState(String.join("", Arrays.asList(DEFAULT_TERMINALS)));
 	}
 
 	@Override

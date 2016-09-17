@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.Test;
 
@@ -92,7 +91,7 @@ public class AugmentedBackusNaurPrinterTest extends RuleVisitorTest {
 		List<String> lines = new ArrayList<>();
 		lines.add("repeat = ((digit *(digit)) / (*(digit) ('*') *(digit)))");
 		lines.add("digit = ('1' / '2' / '3')");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")), printedRule);
+		assertEquals(String.join("\n", lines), printedRule);
 	}
 
 	@Test(expected = CyclicRuleException.class)

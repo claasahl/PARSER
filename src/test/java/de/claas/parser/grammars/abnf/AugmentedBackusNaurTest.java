@@ -4,7 +4,6 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.Test;
 
@@ -121,7 +120,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		rules.add("OCTET          =  %x00-FF ; 8 bits of data");
 
 		Grammar grammar = build();
-		String data = rules.stream().collect(Collectors.joining("\r\n")) + "\r\n";
+		String data = String.join("\r\n", rules) + "\r\n";
 		assertNotNull(grammar.parse(data, false));
 	}
 

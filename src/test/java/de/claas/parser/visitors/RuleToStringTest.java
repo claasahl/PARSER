@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.Before;
 
@@ -48,7 +47,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 		List<String> lines = new ArrayList<>();
 		lines.add("Conjunction");
 		lines.add("  Terminal:t");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
+		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 
 	@Override
@@ -59,7 +58,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 		List<String> lines = new ArrayList<>();
 		lines.add("Disjunction");
 		lines.add("  Terminal:t");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
+		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 
 	@Override
@@ -70,7 +69,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 		List<String> lines = new ArrayList<>();
 		lines.add("NonTerminal:some rule");
 		lines.add("  Terminal:t");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
+		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 
 	@Override
@@ -81,7 +80,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 		List<String> lines = new ArrayList<>();
 		lines.add("Optional");
 		lines.add("  Terminal:t");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
+		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 
 	@Override
@@ -92,7 +91,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 		List<String> lines = new ArrayList<>();
 		lines.add("Repetition");
 		lines.add("  Terminal:t");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
+		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 
 	@Override
@@ -102,7 +101,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 		List<String> lines = new ArrayList<>();
 		lines.add("Terminal:terminal");
 		lines.add("Terminal:some");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
+		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 
 	@Override
@@ -140,7 +139,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 		}
 
 		repeat.visit(this.visitor);
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
+		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 
 	@Override
@@ -154,7 +153,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 		lines.add("Repetition");
 		lines.add("  Conjunction");
 		lines.add("    Repetition");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
+		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 
 	@Override
@@ -168,7 +167,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 		lines.add("Optional");
 		lines.add("  Conjunction");
 		lines.add("    Optional");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
+		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 
 	@Override
@@ -182,7 +181,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 		lines.add("NonTerminal:rulename");
 		lines.add("  Conjunction");
 		lines.add("    NonTerminal:rulename");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
+		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 
 	@Override
@@ -196,7 +195,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 		lines.add("Disjunction");
 		lines.add("  Conjunction");
 		lines.add("    Disjunction");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
+		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 
 	@Override
@@ -210,7 +209,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 		lines.add("Conjunction");
 		lines.add("  Conjunction");
 		lines.add("    Conjunction");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")) + "\n", this.visitor.toString());
+		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 
 }
