@@ -3,7 +3,6 @@ package de.claas.parser.grammars.abnf;
 import de.claas.parser.Grammar;
 import de.claas.parser.Node;
 import de.claas.parser.Rule;
-import de.claas.parser.grammars.Number;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
@@ -12,9 +11,10 @@ import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
 
 /**
- * The class {@link Number}. It is mainly intended for educational purposes. It
- * represents a grammar for numbers. Instances of this class parse sentences of
- * the below grammar and return the result as a tree of {@link Node} instances.
+ * The class {@link AugmentedBackusNaur}. It is mainly intended for educational
+ * purposes. It represents a grammar for grammars in augmented Backus Naur form.
+ * Instances of this class parse sentences of the below grammar and return the
+ * result as a tree of {@link Node} instances.
  * <ul>
  * <li>rulelist = 1*( rule / (*c-wsp c-nl) )</li>
  * <li>rule = rulename defined-as elements c-nl ; continues if next line starts
