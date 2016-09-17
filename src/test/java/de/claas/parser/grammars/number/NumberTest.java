@@ -1,4 +1,4 @@
-package de.claas.parser.grammars;
+package de.claas.parser.grammars.number;
 
 import org.junit.Test;
 
@@ -6,6 +6,7 @@ import de.claas.parser.Grammar;
 import de.claas.parser.GrammarTest;
 import de.claas.parser.Node;
 import de.claas.parser.exceptions.ParsingException;
+import de.claas.parser.grammars.number.Number;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 
