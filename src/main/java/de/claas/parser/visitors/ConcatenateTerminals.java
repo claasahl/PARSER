@@ -60,5 +60,11 @@ public class ConcatenateTerminals implements NodeVisitor {
 	public String toString() {
 		return this.data.toString();
 	}
+	
+	public static String concat(Node node) {
+		ConcatenateTerminals visitor = new ConcatenateTerminals();
+		node.visit(visitor);
+		return visitor.toString();
+	}
 
 }
