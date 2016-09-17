@@ -86,7 +86,7 @@ public class NumberTest extends GrammarTest<Number> {
 	 *            the number's exponential part
 	 * @return
 	 */
-	private Node generateTree(boolean minus, String integer, String frac, String e, String sign, String exp) {
+	static Node generateTree(boolean minus, String integer, String frac, String e, String sign, String exp) {
 		Node expected = new NonTerminalNode("number");
 
 		if (minus) {
