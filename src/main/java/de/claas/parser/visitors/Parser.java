@@ -83,11 +83,14 @@ public class Parser implements RuleVisitor {
 			try {
 				Node node = rule.hasChildren() ? new IntermediateNode() : null;
 				for (Rule child : rule) {
-					if (process(child, node, null) == null) {
+					child.visit(this);
+					if (getResult() == null) {
 						this.state.revert();
 						clearResult();
 						return;
 					}
+					if (node != null)
+						node.addChild(getResult());
 				}
 				setResult(node);
 			} finally {
@@ -111,8 +114,8 @@ public class Parser implements RuleVisitor {
 				for (Rule child : rule) {
 					this.state.beginGroup();
 					try {
-						Node node = new IntermediateNode();
-						if (process(child, node, null) != null) {
+						child.visit(this);
+						if (getResult() != null) {
 							int newlyProcessedData = this.state.getProcessedData().length();
 							if (newlyProcessedData >= alreadyProcessedData) {
 								alreadyProcessedData = newlyProcessedData;
@@ -128,8 +131,14 @@ public class Parser implements RuleVisitor {
 				// re-process the greediest rule with the "global" state object
 				// (i.e. not with the local copies)
 				if (bestRule != null) {
-					Node node = new IntermediateNode();
-					setResult(process(bestRule, node, null));
+					bestRule.visit(this);
+					if (getResult() != null) {
+						Node node = new IntermediateNode();
+						node.addChild(getResult());
+						setResult(node);
+					} else {
+						clearResult();
+					}
 				} else {
 					this.state.revert();
 					clearResult();
@@ -146,8 +155,14 @@ public class Parser implements RuleVisitor {
 	@Override
 	public void visitNonTerminal(NonTerminal rule) {
 		if (addToPath(rule)) {
-			Node node = new NonTerminalNode(rule.getName());
-			setResult(process(rule.getRule(), node, null));
+			rule.getRule().visit(this);
+			if (getResult() != null) {
+				Node node = new NonTerminalNode(rule.getName());
+				node.addChild(getResult());
+				setResult(node);
+			} else {
+				clearResult();
+			}
 			removeFromPath(rule);
 		} else {
 			throw new CyclicRuleException(rule);
@@ -160,7 +175,10 @@ public class Parser implements RuleVisitor {
 			this.state.beginGroup();
 			try {
 				Node node = new IntermediateNode();
-				setResult(process(rule.getRule(), node, node));
+				rule.getRule().visit(this);
+				if (getResult() != null)
+					node.addChild(getResult());
+				setResult(node);
 			} finally {
 				this.state.endGroup();
 				removeFromPath(rule);
@@ -177,7 +195,8 @@ public class Parser implements RuleVisitor {
 			try {
 				Node node = new IntermediateNode();
 				for (int repetitions = 1; repetitions <= rule.getMaximumNumberOfRepetions(); repetitions++) {
-					if (process(rule.getRule(), node, null) == null) {
+					rule.getRule().visit(this);
+					if (getResult() == null) {
 						if (repetitions <= rule.getMinimumNumberOfRepetions()) {
 							this.state.revert();
 							clearResult();
@@ -187,6 +206,7 @@ public class Parser implements RuleVisitor {
 						setResult(node);
 						return;
 					}
+					node.addChild(getResult());
 				}
 				setResult(node);
 			} finally {
@@ -246,18 +266,6 @@ public class Parser implements RuleVisitor {
 	 */
 	private void removeFromPath(Rule rule) {
 		this.visitedPath.remove(rule);
-	}
-
-	private Node process(Rule rule, Node onSuccess, Node onFailure) {
-		if (rule != null) {
-			rule.visit(this);
-			if (getResult() != null) {
-				onSuccess.addChild(getResult());
-				return onSuccess;
-			}
-			return onFailure;
-		}
-		return null;
 	}
 
 	/**
