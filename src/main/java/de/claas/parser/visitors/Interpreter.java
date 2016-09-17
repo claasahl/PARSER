@@ -17,8 +17,8 @@ import de.claas.parser.results.TerminalNode;
  * The class {@link Interpreter}. It is an implementation of the interface
  * {@link NodeVisitor}. It is intended to ...
  * <p>
- * This visitor is meant for one-time use, only. As such, it should be used to
- * visualize multiple trees.
+ * This visitor is meant for one-time use, only. As such, it should not be used
+ * to visualize multiple trees.
  *
  * @author Claas Ahlrichs
  *

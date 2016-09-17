@@ -31,8 +31,8 @@ import de.claas.parser.rules.Terminal;
  * unsuccessful (i.e. state does not fulfills this rule), then the state remains
  * unchanged and <code>null</code> is returned.
  * <p>
- * This visitor is meant for one-time use, only. As such, it should be used to
- * parse trees more than once.
+ * This visitor is meant for one-time use, only. As such, it should not be used
+ * to parse trees more than once.
  *
  * @author Claas Ahlrichs
  *
