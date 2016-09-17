@@ -19,24 +19,59 @@ import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
 
+/**
+ * 
+ * The class {@link Parser}. It is an implementation of the interface
+ * {@link RuleVisitor}. It is intended to parse data into a tree of
+ * {@link Node}s.
+ * <p>
+ * Each rule tests if the current {@link State} object fulfills it criteria. If
+ * successful (i.e. state fulfills the rule), then the state is processed and a
+ * {@link Node} (that represents the processed state) is returned. If
+ * unsuccessful (i.e. state does not fulfills this rule), then the state remains
+ * unchanged and <code>null</code> is returned.
+ *
+ * @author Claas Ahlrichs
+ *
+ */
 public class Parser implements RuleVisitor {
 
 	private final State state;
 	private Node result;
 	private final Map<Rule, Integer> visitedPath = new HashMap<>();
 
+	/**
+	 * Constructs a new {@link Parser} with the specified parameter.
+	 * 
+	 * @param state
+	 *            the state
+	 */
 	public Parser(State state) {
 		this.state = state;
 	}
 
+	/**
+	 * Returns the result.
+	 * 
+	 * @return the result
+	 */
 	public Node getResult() {
 		return this.result;
 	}
 
+	/**
+	 * Sets the result.
+	 * 
+	 * @param result
+	 *            the result
+	 */
 	private void setResult(Node result) {
 		this.result = result;
 	}
 
+	/**
+	 * Clears the result.
+	 */
 	private void clearResult() {
 		this.result = null;
 	}
@@ -70,8 +105,7 @@ public class Parser implements RuleVisitor {
 			this.state.beginGroup();
 			try {
 				// search for "greediest" rule (i.e. the rule that processes
-				// most of
-				// the unprocessed data)
+				// most of the unprocessed data)
 				int alreadyProcessedData = this.state.getProcessedData().length();
 				Rule bestRule = null;
 				for (Rule child : rule) {
@@ -182,23 +216,36 @@ public class Parser implements RuleVisitor {
 		}
 	}
 
+	/**
+	 * A helper function that adds the specified rule to the path of visited
+	 * rules (i.e. path from the root of the tree to the specified rule). The
+	 * primary rational behind this function is to test for "pointless" cycles
+	 * within the tree. Cycles are acceptable as long as they have an effect on
+	 * the processed data (i.e. data is still being processed).
+	 * 
+	 * @param rule
+	 *            the rule to add to the path
+	 * @return <code>true</code> if the specified rule was added to the path of
+	 *         visited rules, otherwise <code>false</code>
+	 */
 	private boolean addToPath(Rule rule) {
 		int currentlyProcessed = this.state.getProcessedData().length();
 		Integer previouslyProcessed = this.visitedPath.put(rule, new Integer(currentlyProcessed));
-		if(previouslyProcessed != null) {
+		if (previouslyProcessed != null) {
 			return currentlyProcessed > previouslyProcessed.intValue();
 		}
 		return true;
 	}
 
+	/**
+	 * A helper function that removes the specified rule from the path of
+	 * visited rules.
+	 * 
+	 * @param rule
+	 *            the rule to remove from the path
+	 */
 	private void removeFromPath(Rule rule) {
 		this.visitedPath.remove(rule);
-	}
-
-	public static Node parse(State state, Rule rule) {
-		Parser parser = new Parser(state);
-		rule.visit(parser);
-		return parser.getResult();
 	}
 
 	private Node process(Rule rule, Node onSuccess, Node onFailure) {
@@ -211,6 +258,22 @@ public class Parser implements RuleVisitor {
 			return onFailure;
 		}
 		return null;
+	}
+
+	/**
+	 * A convenience function that parses the specified state with the specified
+	 * rule.
+	 * 
+	 * @param state
+	 *            the state
+	 * @param rule
+	 *            the rule
+	 * @return the result
+	 */
+	public static Node parse(State state, Rule rule) {
+		Parser parser = new Parser(state);
+		rule.visit(parser);
+		return parser.getResult();
 	}
 
 }
