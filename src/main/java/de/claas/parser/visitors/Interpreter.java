@@ -1,6 +1,8 @@
 package de.claas.parser.visitors;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -50,17 +52,25 @@ public abstract class Interpreter<R> implements NodeVisitor {
 
 	/**
 	 * Notifies this interpreter that the next node is expected to be a
-	 * {@link NonTerminalNode} with the specified name.
+	 * {@link NonTerminalNode} with the specified name or any of the alternative
+	 * names.
 	 * 
 	 * @param name
 	 *            the name
+	 * @param alternatives
+	 *            the alternative names
 	 */
-	protected void expectNonTerminalNode(String name) {
+	protected void expectNonTerminalNode(String name, String... alternatives) {
 		this.expected = new Function<Node, Boolean>() {
 			@Override
 			public Boolean apply(Node node) {
+				List<String> names = new ArrayList<>();
+				names.add(name.toUpperCase());
+				for (String alternative : alternatives) {
+					names.add(alternative.toUpperCase());
+				}
 				return Boolean.valueOf(node != null && node.getClass().isAssignableFrom(NonTerminalNode.class)
-						&& name.equalsIgnoreCase(((NonTerminalNode) node).getName()));
+						&& names.contains(((NonTerminalNode) node).getName().toUpperCase()));
 			}
 
 			@Override
