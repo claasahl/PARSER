@@ -36,7 +36,7 @@ public class TerminalNode extends Node {
 	 * @return the terminal symbol that this node represents
 	 */
 	public String getTerminal() {
-		return terminal;
+		return this.terminal;
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class TerminalNode extends Node {
 		if (obj != null && TerminalNode.class.isAssignableFrom(obj.getClass())) {
 			boolean equality = true;
 			TerminalNode node = (TerminalNode) obj;
-			equality &= terminal.equals(node.terminal);
+			equality &= this.terminal.equals(node.terminal);
 			equality &= super.equals(obj);
 			return equality;
 		}

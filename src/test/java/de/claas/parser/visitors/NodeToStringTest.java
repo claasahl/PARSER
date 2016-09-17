@@ -29,30 +29,30 @@ public class NodeToStringTest extends NodeVisitorTest {
 
 	@Before
 	public void before() {
-		visitor = new NodeToString("  ", "\n");
+		this.visitor = new NodeToString("  ", "\n");
 	}
 
 	@Override
 	public void shouldHandleNoNode() {
-		assertEquals("", visitor.toString());
+		assertEquals("", this.visitor.toString());
 	}
 
 	@Override
 	public void shouldHandleTerminalNode() {
-		new TerminalNode("terminal").visit(visitor);
-		assertEquals("TerminalNode:terminal\n", visitor.toString());
+		new TerminalNode("terminal").visit(this.visitor);
+		assertEquals("TerminalNode:terminal\n", this.visitor.toString());
 	}
 
 	@Override
 	public void shouldHandleIntermediateNode() {
-		new IntermediateNode().visit(visitor);
-		assertEquals("IntermediateNode\n", visitor.toString());
+		new IntermediateNode().visit(this.visitor);
+		assertEquals("IntermediateNode\n", this.visitor.toString());
 	}
 
 	@Override
 	public void shouldHandleNonTerminalNode() {
-		new NonTerminalNode("root").visit(visitor);
-		assertEquals("NonTerminalNode:root\n", visitor.toString());
+		new NonTerminalNode("root").visit(this.visitor);
+		assertEquals("NonTerminalNode:root\n", this.visitor.toString());
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class NodeToStringTest extends NodeVisitorTest {
 		Node n1 = new NonTerminalNode("root");
 		n1.addChild(i1);
 		n1.addChild(i2);
-		n1.visit(visitor);
+		n1.visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
 		lines.add("NonTerminalNode:root");
@@ -77,31 +77,31 @@ public class NodeToStringTest extends NodeVisitorTest {
 		lines.add("    TerminalNode:t2");
 		lines.add("  IntermediateNode");
 		lines.add("    TerminalNode:t3");
-		assertEquals(join(lines), visitor.toString());
+		assertEquals(join(lines), this.visitor.toString());
 	}
 
 	@Override
 	public void shouldHandleCyclicNonTerminalNode() {
 		NonTerminalNode node = new NonTerminalNode("root");
 		node.addChild(node);
-		node.visit(visitor);
+		node.visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
 		lines.add("NonTerminalNode:root");
 		lines.add("  NonTerminalNode:root");
-		assertEquals(join(lines), visitor.toString());
+		assertEquals(join(lines), this.visitor.toString());
 	}
 
 	@Override
 	public void shouldHandleCyclicIntermediateNode() {
 		IntermediateNode node = new IntermediateNode();
 		node.addChild(node);
-		node.visit(visitor);
+		node.visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
 		lines.add("IntermediateNode");
 		lines.add("  IntermediateNode");
-		assertEquals(join(lines), visitor.toString());
+		assertEquals(join(lines), this.visitor.toString());
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class NodeToStringTest extends NodeVisitorTest {
 	 *            the lines / strings that need to be joined
 	 * @return the specified lines as one joined string
 	 */
-	private String join(List<String> lines) {
+	private static String join(List<String> lines) {
 		return lines.stream().collect(Collectors.joining("\n")) + "\n";
 	}
 
