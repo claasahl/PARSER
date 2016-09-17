@@ -30,6 +30,9 @@ import de.claas.parser.rules.Terminal;
  * {@link Node} (that represents the processed state) is returned. If
  * unsuccessful (i.e. state does not fulfills this rule), then the state remains
  * unchanged and <code>null</code> is returned.
+ * <p>
+ * This visitor is meant for one-time use, only. As such, it should be used to
+ * parse trees more than once.
  *
  * @author Claas Ahlrichs
  *
