@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.Before;
 
@@ -113,7 +112,7 @@ public class NodeToStringTest extends NodeVisitorTest {
 	 * @return the specified lines as one joined string
 	 */
 	private static String join(List<String> lines) {
-		return lines.stream().collect(Collectors.joining("\n")) + "\n";
+		return String.join("\n", lines) + "\n";
 	}
 
 }
