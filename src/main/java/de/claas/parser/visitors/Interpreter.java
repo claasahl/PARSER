@@ -17,7 +17,8 @@ import de.claas.parser.results.TerminalNode;
 /**
  * 
  * The class {@link Interpreter}. It is an implementation of the interface
- * {@link NodeVisitor}. It is intended to ...
+ * {@link NodeVisitor}. It is intended to basic tools and convenience functions
+ * for interpreting {@link Node}-trees (i.e. the output of {@link Parser}).
  * <p>
  * This visitor is meant for one-time use, only. As such, it should not be used
  * to visualize multiple trees.
@@ -151,10 +152,62 @@ public abstract class Interpreter<R> implements NodeVisitor {
 		visitUnlessCyclicOrUnexpected(node, this::getNonTerminal);
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link TerminalNode}-nodes. The returned function is assumed to adhere to
+	 * the following contract: If successful (i.e. node can be interpreted),
+	 * then a result (that represents the node) is returned. If unsuccessful
+	 * (i.e. node cannot be interpreted), then either <code>null</code> is
+	 * returned or an {@link InterpretingException} is thrown.
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the result that represents the node or <code>null</code> if the
+	 *         node cannot be interpreted to a valid result
+	 * @throws InterpretingException
+	 *             if the node cannot be interpreted, but the node should have
+	 *             yielded a valid result
+	 */
 	public abstract Function<TerminalNode, R> getTerminal(TerminalNode node);
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link IntermediateNode}-nodes. The returned function is assumed to
+	 * adhere to the following contract: If successful (i.e. node and its
+	 * descendants can be interpreted), then a result (that represents the node
+	 * and its descendants) is returned. If unsuccessful (i.e. node cannot be
+	 * interpreted), then either <code>null</code> is returned or an
+	 * {@link InterpretingException} is thrown.
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the result that represents the node and its descendants or
+	 *         <code>null</code> if the node cannot be interpreted to a valid
+	 *         result
+	 * @throws InterpretingException
+	 *             if the node cannot be interpreted, but the node should have
+	 *             yielded a valid result
+	 */
 	public abstract Function<IntermediateNode, R> getIntermediate(IntermediateNode node);
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes. The returned function is assumed to adhere
+	 * to the following contract: If successful (i.e. node and its descendants
+	 * can be interpreted), then a result (that represents the node and its
+	 * descendants) is returned. If unsuccessful (i.e. node cannot be
+	 * interpreted), then either <code>null</code> is returned or an
+	 * {@link InterpretingException} is thrown.
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the result that represents the node and its descendants or
+	 *         <code>null</code> if the node cannot be interpreted to a valid
+	 *         result
+	 * @throws InterpretingException
+	 *             if the node cannot be interpreted, but the node should have
+	 *             yielded a valid result
+	 */
 	public abstract Function<NonTerminalNode, R> getNonTerminal(NonTerminalNode node);
 
 	/**

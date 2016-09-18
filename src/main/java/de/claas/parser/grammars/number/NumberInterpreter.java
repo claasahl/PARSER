@@ -14,13 +14,17 @@ import de.claas.parser.visitors.Interpreter;
 /**
  * 
  * The class {@link NumberInterpreter}. It is an implementation of the interface
- * {@link Interpreter}. It is intended to ...
+ * {@link Interpreter}. It is intended to interpret {@link Node}-trees that
+ * correspond to the {@link Number} grammar.
  *
  * @author Claas Ahlrichs
  *
  */
 public class NumberInterpreter extends Interpreter<java.lang.Number> {
 
+	/**
+	 * Constructs a new {@link NumberInterpreter} with default parameters.
+	 */
 	public NumberInterpreter() {
 		expectNonTerminalNode("number");
 	}
@@ -59,6 +63,14 @@ public class NumberInterpreter extends Interpreter<java.lang.Number> {
 		}
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "number".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the number that the specified node represents
+	 */
 	private java.lang.Number visitNumber(NonTerminalNode node) {
 		java.lang.Number sign = new Integer(1);
 		java.lang.Number integer = null;
@@ -107,6 +119,15 @@ public class NumberInterpreter extends Interpreter<java.lang.Number> {
 			return new Integer(integer.intValue() * sign.intValue());
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "plus" or "minus".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the sign of a number (i.e. plus is represented by <code>+1</code>
+	 *         and minus is represented by <code>-1</code>)
+	 */
 	private java.lang.Number visitSign(NonTerminalNode node) {
 		String sign = ConcatenateTerminals.concat(node);
 		switch (sign) {
@@ -119,6 +140,14 @@ public class NumberInterpreter extends Interpreter<java.lang.Number> {
 		}
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "frac".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the fractional part of a number
+	 */
 	private java.lang.Number visitFraction(NonTerminalNode node) {
 		if (!node.hasChildren())
 			return null;
@@ -127,6 +156,14 @@ public class NumberInterpreter extends Interpreter<java.lang.Number> {
 		return new Double("0" + digits);
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "exp".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the exponential part of a number
+	 */
 	private java.lang.Number visitExponent(NonTerminalNode node) {
 		if (!node.hasChildren())
 			return null;
@@ -150,11 +187,27 @@ public class NumberInterpreter extends Interpreter<java.lang.Number> {
 		return new Double(Math.pow(10.0, new Integer(number.intValue() * sign.intValue()).doubleValue()));
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "integer" or "digit".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the integer part of a number
+	 */
 	private java.lang.Number visitDigits(NonTerminalNode node) {
 		String digits = ConcatenateTerminals.concat(node);
 		return new Integer(digits);
 	}
 
+	/**
+	 * Called by this interpreter with the intention of skipping the next
+	 * specified {@link NonTerminalNode}-nodes.
+	 * 
+	 * @param node
+	 *            the node
+	 * @return <code>null</code>
+	 */
 	private java.lang.Number skip(NonTerminalNode node) {
 		return null;
 	}
