@@ -29,7 +29,7 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 
 	@Before
 	public void before() {
-		visitor = new RemoveIntermediateNodes();
+		this.visitor = new RemoveIntermediateNodes();
 	}
 
 	@Test
@@ -37,7 +37,7 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 		Node n1 = new NonTerminalNode("n1");
 		Node n2 = new TerminalNode("n2");
 		n1.addChild(n2);
-		n1.visit(visitor);
+		n1.visit(this.visitor);
 
 		assertTrue(n1.hasChildren());
 		for (Node child : n1) {
@@ -53,7 +53,7 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 		Node n3 = new TerminalNode("n3");
 		n1.addChild(n2);
 		n2.addChild(n3);
-		n1.visit(visitor);
+		n1.visit(this.visitor);
 
 		assertTrue(n1.hasChildren());
 		for (Node child : n1) {
@@ -73,7 +73,7 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 		n3.addChild(n4);
 		Node n5 = new TerminalNode("n5");
 		n1.addChild(n5);
-		n1.visit(visitor);
+		n1.visit(this.visitor);
 
 		Iterator<Node> iterator = n1.iterator();
 		assertEquals(n4, iterator.next());
@@ -90,7 +90,7 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 	@Override
 	public void shouldHandleTerminalNode() {
 		Node node = new TerminalNode("terminal");
-		node.visit(visitor);
+		node.visit(this.visitor);
 
 		assertFalse(node.hasChildren());
 	}
@@ -98,7 +98,7 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 	@Override
 	public void shouldHandleIntermediateNode() {
 		Node node = new IntermediateNode();
-		node.visit(visitor);
+		node.visit(this.visitor);
 
 		assertFalse(node.hasChildren());
 	}
@@ -106,7 +106,7 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 	@Override
 	public void shouldHandleNonTerminalNode() {
 		Node node = new NonTerminalNode("root");
-		node.visit(visitor);
+		node.visit(this.visitor);
 
 		assertFalse(node.hasChildren());
 	}
@@ -124,7 +124,7 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 		Node node = new NonTerminalNode("root");
 		node.addChild(i1);
 		node.addChild(i2);
-		node.visit(visitor);
+		node.visit(this.visitor);
 
 		Iterator<Node> iterator = node.iterator();
 		assertEquals(t1, iterator.next());
@@ -136,7 +136,7 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 	public void shouldHandleCyclicNonTerminalNode() {
 		NonTerminalNode node = new NonTerminalNode("root");
 		node.addChild(node);
-		node.visit(visitor);
+		node.visit(this.visitor);
 
 		assertTrue(node.hasChildren());
 		for (Node child : node) {
@@ -151,7 +151,7 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 		IntermediateNode node = new IntermediateNode();
 		node.addChild(node);
 		root.addChild(node);
-		root.visit(visitor);
+		root.visit(this.visitor);
 
 		assertFalse(root.hasChildren());
 	}
