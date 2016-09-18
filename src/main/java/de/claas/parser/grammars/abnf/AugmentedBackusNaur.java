@@ -33,8 +33,11 @@ import de.claas.parser.rules.Terminal;
  * <li>element = rulename / group / option / char-val / num-val / prose-val</li>
  * <li>group = "(" *c-wsp alternation *c-wsp ")"</li>
  * <li>option = "[" *c-wsp alternation *c-wsp "]"</li>
- * <li>char-val = DQUOTE *(%x20-21 / %x23-7E) DQUOTE ; quoted string of SP and
- * VCHAR without DQUOTE</li>
+ * <li>char-val = case-insensitive-string / case-sensitive-string</li>
+ * <li>case-insensitive-string = [ "%i" ] quoted-string</li>
+ * <li>case-sensitive-string = "%s" quoted-string</li>
+ * <li>quoted-string = DQUOTE *(%x20-21 / %x23-7E) DQUOTE ; quoted string of SP
+ * and VCHAR without DQUOTE</li>
  * <li>num-val = "%" (bin-val / dec-val / hex-val)</li>
  * <li>bin-val = "b" 1*BIT [ 1*("." 1*BIT) / ("-" 1*BIT) ] ; series of
  * concatenated bit values or single ONEOF range</li>
@@ -158,11 +161,22 @@ public class AugmentedBackusNaur extends Grammar {
 		// num-val = "%" (bin-val / dec-val / hex-val)
 		NonTerminal numVal = new NonTerminal("num-val", new Conjunction(p, new Disjunction(binVal, decVal, hexVal)));
 
-		// char-val = DQUOTE *(%x20-21 / %x23-7E) DQUOTE ; quoted string of SP
-		// and VCHAR without DQUOTE
-		NonTerminal charVal = new NonTerminal("char-val", new Conjunction(dQuote, new Repetition(
+		// quoted-string = DQUOTE *(%x20-21 / %x23-7E) DQUOTE ; quoted string of
+		// SP and VCHAR without DQUOTE
+		NonTerminal quotedString = new NonTerminal("quoted-string", new Conjunction(dQuote, new Repetition(
 				new Disjunction(new Terminal((char) 0x20, (char) 0x21), new Terminal((char) 0x23, (char) 0x7e))),
 				dQuote));
+
+		// case-insensitive-string = [ "%i" ] quoted-string
+		NonTerminal caseInsensitiveString = new NonTerminal("case-insensitive-string",
+				new Conjunction(new Optional(new Terminal("%i")), quotedString));
+
+		// case-sensitive-string = "%s" quoted-string
+		NonTerminal caseSensitiveString = new NonTerminal("case-sensitive-string",
+				new Conjunction(new Terminal("%s"), quotedString));
+
+		// char-val = case-insensitive-string / case-sensitive-string
+		NonTerminal charVal = new NonTerminal("char-val", new Disjunction(caseInsensitiveString, caseSensitiveString));
 
 		// option = "[" *c-wsp alternation *c-wsp "]"
 		NonTerminal option = new NonTerminal("option",
