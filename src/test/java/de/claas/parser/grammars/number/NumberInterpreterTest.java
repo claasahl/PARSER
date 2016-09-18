@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import de.claas.parser.Node;
+import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.visitors.InterpreterTest;
 
 /**
@@ -21,6 +22,11 @@ public class NumberInterpreterTest extends InterpreterTest<java.lang.Number> {
 	@Override
 	protected NumberInterpreter build() {
 		return new NumberInterpreter();
+	}
+	
+	@Override
+	protected NonTerminalNode getNonTerminalNode() {
+		return new NonTerminalNode("number");
 	}
 
 	@Override
