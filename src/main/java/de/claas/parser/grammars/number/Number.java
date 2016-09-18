@@ -26,9 +26,9 @@ import de.claas.parser.rules.Terminal;
  * <li>plus = %x2B ; +</li>
  * <li>zero = %x30 ; 0</li>
  * </ul>
- * The grammar has been defined as augmented Backus Naur form. Details on syntax
- * and grammar can be found in
- * <a href="https://www.ietf.org/rfc/rfc2234.txt">RFC 2234</a>.
+ * The grammar has been written in augmented Backus Naur form (ABNF), as
+ * specified in <a href="https://www.ietf.org/rfc/rfc5234.txt">RFC 5234</a> and
+ * updated by <a href="https://www.ietf.org/rfc/rfc7405.txt">RFC 7405</a>.
  * 
  * @author Claas Ahlrichs
  *

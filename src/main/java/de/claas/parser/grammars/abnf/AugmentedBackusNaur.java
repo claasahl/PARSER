@@ -54,13 +54,10 @@ import de.claas.parser.rules.Terminal;
  * <li>SP = %x20</li>
  * <li>VCHAR = %x21-7E ; visible (printing) characters</li>
  * <li>WSP = SP / HTAB ; white space</li>
- * <li>CHAR = %x01-7F ; any 7-bit US-ASCII character, excluding NUL</li>
- * <li>CTL = %x00-1F / %x7F ; controls</li>
- * <li>OCTET = %x00-FF ; 8 bits of data</li>
  * </ul>
- * The grammar has been defined as augmented Backus Naur form. Details on syntax
- * and grammar can be found in
- * <a href="https://www.ietf.org/rfc/rfc2234.txt">RFC 2234</a>.
+ * The grammar has been written in augmented Backus Naur form (ABNF), as
+ * specified in <a href="https://www.ietf.org/rfc/rfc5234.txt">RFC 5234</a> and
+ * updated by <a href="https://www.ietf.org/rfc/rfc7405.txt">RFC 7405</a>.
  * 
  * @author Claas Ahlrichs
  *
