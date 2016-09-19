@@ -52,15 +52,16 @@ public class State {
 	 *         processed and <code>false</code> otherwise
 	 */
 	public boolean process(String token) {
-		if (data.startsWith(token, offset)) {
-			offset += token.length();
-			if (!steps.isEmpty())
-				steps.push(steps.pop() + token.length());
+		if (this.data.startsWith(token, this.offset)) {
+			this.offset += token.length();
+			if (!this.steps.isEmpty()) {
+				int sum = this.steps.pop().intValue() + token.length();
+				this.steps.push(new Integer(sum));
+			}
 
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
@@ -73,7 +74,7 @@ public class State {
 	 * @return the unprocessed data of this state
 	 */
 	public String getUnprocessedData() {
-		return data.substring(offset);
+		return this.data.substring(this.offset);
 	}
 
 	/**
@@ -86,7 +87,7 @@ public class State {
 	 * @return the processed data of this state
 	 */
 	public String getProcessedData() {
-		return data.substring(0, offset);
+		return this.data.substring(0, this.offset);
 	}
 
 	/**
@@ -100,7 +101,7 @@ public class State {
 	 * @return the data that is being processed by this state
 	 */
 	public String getData() {
-		return data;
+		return this.data;
 	}
 
 	/**
@@ -110,7 +111,7 @@ public class State {
 	 * {@link #endGroup()}.
 	 */
 	public void beginGroup() {
-		steps.push(0);
+		this.steps.push(new Integer(0));
 	}
 
 	/**
@@ -120,11 +121,11 @@ public class State {
 	 * closed, but the previous one as well.
 	 */
 	public void endGroup() {
-		if (steps.size() >= 2) {
-			int sum = steps.pop() + steps.pop();
-			steps.push(sum);
-		} else if (!steps.isEmpty()) {
-			steps.pop();
+		if (this.steps.size() >= 2) {
+			int sum = this.steps.pop().intValue() + this.steps.pop().intValue();
+			this.steps.push(new Integer(sum));
+		} else if (!this.steps.isEmpty()) {
+			this.steps.pop();
 		}
 	}
 
@@ -134,7 +135,7 @@ public class State {
 	 * @return the (current) number of processing groups
 	 */
 	public int getGroups() {
-		return steps.size();
+		return this.steps.size();
 	}
 
 	/**
@@ -147,8 +148,8 @@ public class State {
 	 * ending groups.
 	 */
 	public void revert() {
-		offset -= steps.pop();
-		steps.push(0);
+		this.offset -= this.steps.pop().intValue();
+		this.steps.push(new Integer(0));
 	}
 
 }
