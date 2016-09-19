@@ -2,8 +2,6 @@ package de.claas.parser.rules;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
@@ -11,12 +9,9 @@ import java.util.Iterator;
 
 import org.junit.Test;
 
-import de.claas.parser.Node;
 import de.claas.parser.Rule;
 import de.claas.parser.RuleTest;
 import de.claas.parser.State;
-import de.claas.parser.results.TerminalNode;
-import de.claas.parser.visitors.Parser;
 
 /**
  * 
@@ -30,8 +25,6 @@ import de.claas.parser.visitors.Parser;
 public class TerminalTest extends RuleTest {
 
 	private static final String[] DEFAULT_TERMINALS = { "a", "b" };
-	private static final char DEFAULT_RANGE_START = 'a';
-	private static final char DEFAULT_RANGE_END = 'z';
 
 	@Override
 	protected Rule build(Rule... children) {
@@ -64,20 +57,6 @@ public class TerminalTest extends RuleTest {
 	 */
 	protected Terminal build(String... terminals) {
 		return new Terminal(terminals);
-	}
-
-	/**
-	 * Returns an {@link Terminal} class that was instantiated with the given
-	 * parameters.
-	 * 
-	 * @param rangeStart
-	 *            first character that this rule represents (inclusive)
-	 * @param rangeEnd
-	 *            last character that this rule represents (inclusive)
-	 * @return an instantiated {@link Terminal} class
-	 */
-	protected Terminal build(char rangeStart, char rangeEnd) {
-		return new Terminal(rangeStart, rangeEnd);
 	}
 
 	@Override
@@ -119,71 +98,6 @@ public class TerminalTest extends RuleTest {
 		assertEquals("hello", iterator.next());
 		assertEquals("world", iterator.next());
 		assertFalse(iterator.hasNext());
-	}
-
-	@Test
-	public void shouldProcessAnyOfTheTerminals() {
-		State state = buildState("worldhelloworld");
-		Terminal rule = build("hello", "world", "b");
-
-		assertNotNull(Parser.parse(state, rule));
-		assertEquals("world", state.getProcessedData());
-		assertEquals("helloworld", state.getUnprocessedData());
-
-		assertNotNull(Parser.parse(state, rule));
-		assertEquals("worldhello", state.getProcessedData());
-		assertEquals("world", state.getUnprocessedData());
-
-		assertNotNull(Parser.parse(state, rule));
-		assertEquals("worldhelloworld", state.getProcessedData());
-		assertEquals("", state.getUnprocessedData());
-	}
-
-	@Test
-	public void shouldNotProcessWithoutTerminals() {
-		State state = buildState("world hello world");
-		Terminal rule = build(new String[] {});
-		assertNull(Parser.parse(state, rule));
-	}
-
-	@Test
-	public void shouldProcessRangeBasedTerminals() {
-		State state = buildState("abxz");
-		Terminal rule = build(DEFAULT_RANGE_START, DEFAULT_RANGE_END);
-
-		assertNotNull(Parser.parse(state, rule));
-		assertEquals("a", state.getProcessedData());
-		assertEquals("bxz", state.getUnprocessedData());
-
-		assertNotNull(Parser.parse(state, rule));
-		assertNotNull(Parser.parse(state, rule));
-		assertEquals("abx", state.getProcessedData());
-		assertEquals("z", state.getUnprocessedData());
-
-		assertNotNull(Parser.parse(state, rule));
-		assertEquals("abxz", state.getProcessedData());
-		assertEquals("", state.getUnprocessedData());
-	}
-
-	@Test
-	public void shouldNotProcessTerminalsOutsideOfRange() {
-		State state = buildState("A 0 Z");
-		Terminal rule = build(DEFAULT_RANGE_START, DEFAULT_RANGE_END);
-		assertNull(Parser.parse(state, rule));
-	}
-
-	@Test
-	public void shouldReturnTerminalNode() {
-		Rule rule = build(defaultChildren());
-		Node node = Parser.parse(processibleState(), rule);
-		assertEquals(TerminalNode.class, node.getClass());
-	}
-
-	@Test
-	public void shouldReturnAppropriateNodeTree() {
-		Rule rule = build(defaultChildren());
-		TerminalNode node = (TerminalNode) Parser.parse(processibleState(), rule);
-		assertEquals(DEFAULT_TERMINALS[0], node.getTerminal());
 	}
 
 }

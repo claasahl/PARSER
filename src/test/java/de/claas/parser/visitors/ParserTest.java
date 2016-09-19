@@ -160,14 +160,14 @@ public class ParserTest extends RuleVisitorTest {
 		Rule rule = new Optional(new Terminal(HELLO));
 		Parser parser = build(HELLO + HELLO + WORLD);
 		rule.visit(parser);
-		
+
 		Node expected = new IntermediateNode();
 		expected.addChild(new TerminalNode(HELLO));
 		assertEquals(expected, parser.getResult());
-		
+
 		rule.visit(parser);
 		assertEquals(expected, parser.getResult());
-		
+
 		rule.visit(parser);
 		expected = new IntermediateNode();
 		assertEquals(expected, parser.getResult());
@@ -194,7 +194,7 @@ public class ParserTest extends RuleVisitorTest {
 		Rule rule = new Repetition(new Terminal("re"));
 		Parser parser = build("rererererererere??");
 		rule.visit(parser);
-		
+
 		Node expected = new IntermediateNode();
 		expected.addChild(new TerminalNode("re"));
 		expected.addChild(new TerminalNode("re"));
@@ -212,7 +212,7 @@ public class ParserTest extends RuleVisitorTest {
 		Rule rule = new Repetition(new Terminal("re"), 0, 1);
 		Parser parser = build("rerere??");
 		rule.visit(parser);
-		
+
 		Node expected = new IntermediateNode();
 		expected.addChild(new TerminalNode("re"));
 		assertEquals(expected, parser.getResult());
@@ -223,7 +223,7 @@ public class ParserTest extends RuleVisitorTest {
 		Rule rule = new Repetition(new Terminal("re"), 2, 2);
 		Parser parser = build("rerere??");
 		rule.visit(parser);
-		
+
 		Node expected = new IntermediateNode();
 		expected.addChild(new TerminalNode("re"));
 		expected.addChild(new TerminalNode("re"));
@@ -235,7 +235,7 @@ public class ParserTest extends RuleVisitorTest {
 		Rule rule = new Repetition(new Terminal("re"), 3, Integer.MAX_VALUE);
 		Parser parser = build("rererererererere??");
 		rule.visit(parser);
-		
+
 		Node expected = new IntermediateNode();
 		expected.addChild(new TerminalNode("re"));
 		expected.addChild(new TerminalNode("re"));
@@ -253,7 +253,7 @@ public class ParserTest extends RuleVisitorTest {
 		Rule rule = new Repetition(new Terminal("re"), 2, 4);
 		Parser parser = build("rererererererere??");
 		rule.visit(parser);
-		
+
 		Node expected = new IntermediateNode();
 		expected.addChild(new TerminalNode("re"));
 		expected.addChild(new TerminalNode("re"));
@@ -270,6 +270,65 @@ public class ParserTest extends RuleVisitorTest {
 
 		Node expected = new TerminalNode(DATA);
 		assertEquals(expected, parser.getResult());
+	}
+
+	@Test
+	public void terminalShouldSucceedIfAnyTerminalMatches() {
+		Terminal rule = new Terminal(HELLO, WORLD, "b");
+		Parser parser = build(HELLO);
+		rule.visit(parser);
+		Node expected = new TerminalNode(HELLO);
+		assertEquals(expected, parser.getResult());
+
+		parser = build(WORLD);
+		rule.visit(parser);
+		expected = new TerminalNode(WORLD);
+		assertEquals(expected, parser.getResult());
+
+		parser = build("b");
+		rule.visit(parser);
+		expected = new TerminalNode("b");
+		assertEquals(expected, parser.getResult());
+	}
+
+	@Test
+	public void terminalShouldFailWithoutTerminals() {
+		Terminal rule = new Terminal();
+		Parser parser = build(HELLO + WORLD);
+		rule.visit(parser);
+		assertNull(parser.getResult());
+	}
+
+	@Test
+	public void terminalShouldSucceedIfTerminalsAreWithinRange() {
+		Terminal rule = new Terminal('a', 'z');
+		Parser parser = build("a");
+		rule.visit(parser);
+		Node expected = new TerminalNode("a");
+		assertEquals(expected, parser.getResult());
+
+		parser = build("b");
+		rule.visit(parser);
+		expected = new TerminalNode("b");
+		assertEquals(expected, parser.getResult());
+
+		parser = build("x");
+		rule.visit(parser);
+		expected = new TerminalNode("x");
+		assertEquals(expected, parser.getResult());
+
+		parser = build("z");
+		rule.visit(parser);
+		expected = new TerminalNode("z");
+		assertEquals(expected, parser.getResult());
+	}
+
+	@Test
+	public void terminalShouldFailIfTerminalsAreOutsideOfRange() {
+		Terminal rule = new Terminal('a', 'z');
+		Parser parser = build("A");
+		rule.visit(parser);
+		assertNull(parser.getResult());
 	}
 
 	@Override
