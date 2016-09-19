@@ -44,7 +44,7 @@ public abstract class RuleTest {
 	 * Returns the default children for this rule. These children are used in
 	 * combination with the states returned by {@link #processibleState()} and
 	 * {@link #unprocessibleState()} in order to test whether the general
-	 * contract of {@link Rule#process(State)} is maintained.
+	 * contract of {@link Rule#process(boolean, State)} is maintained.
 	 * 
 	 * @return the default children for this rule
 	 */
