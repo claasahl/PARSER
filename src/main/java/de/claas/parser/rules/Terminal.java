@@ -25,21 +25,42 @@ import de.claas.parser.RuleVisitor;
  */
 public class Terminal extends Rule {
 
+	private final boolean caseSensitive;
 	private final List<String> terminals;
 
 	/**
-	 * Constructs a new {@link Terminal} with the specified parameters.
+	 * 
+	 * Constructs a new {@link Terminal} with default parameters. Calling this
+	 * constructor is equivalent to calling
+	 * <code>{@link Terminal#Terminal(boolean, String...)}</code> with case
+	 * sensitivity.
 	 * 
 	 * @param terminals
 	 *            the terminal symbols
 	 */
 	public Terminal(String... terminals) {
+		this(true, terminals);
+	}
+
+	/**
+	 * Constructs a new {@link Terminal} with the specified parameters.
+	 * 
+	 * @param caseSensitive
+	 *            whether the terminals are case sensitive
+	 * @param terminals
+	 *            the terminal symbols
+	 */
+	public Terminal(boolean caseSensitive, String... terminals) {
+		this.caseSensitive = caseSensitive;
 		this.terminals = Arrays.asList(terminals);
 		Collections.sort(this.terminals, Collections.reverseOrder(new TerminalLengthComparator()));
 	}
 
 	/**
-	 * Creates an instances with the given parameters.
+	 * Constructs a new {@link Terminal} with default parameters. Calling this
+	 * constructor is equivalent to calling
+	 * <code>{@link Terminal#Terminal(boolean, char, char)}</code> with case
+	 * sensitivity.
 	 * 
 	 * @param rangeStart
 	 *            first character that this rule represents (inclusive)
@@ -47,6 +68,21 @@ public class Terminal extends Rule {
 	 *            last character that this rule represents (inclusive)
 	 */
 	public Terminal(char rangeStart, char rangeEnd) {
+		this(true, rangeStart, rangeEnd);
+	}
+
+	/**
+	 * Constructs a new {@link Terminal} with the specified parameters.
+	 * 
+	 * @param caseSensitive
+	 *            whether the terminals are case sensitive
+	 * @param rangeStart
+	 *            first character that this rule represents (inclusive)
+	 * @param rangeEnd
+	 *            last character that this rule represents (inclusive)
+	 */
+	public Terminal(boolean caseSensitive, char rangeStart, char rangeEnd) {
+		this.caseSensitive = caseSensitive;
 		this.terminals = new ArrayList<>();
 		for (int character = rangeStart; character <= rangeEnd; character++)
 			this.terminals.add("" + (char) character);
@@ -59,6 +95,16 @@ public class Terminal extends Rule {
 	 */
 	public Iterator<String> getTerminals() {
 		return this.terminals.iterator();
+	}
+
+	/**
+	 * Whether the terminals are case sensitive or not.
+	 * 
+	 * @return <code>true</code> if the terminals are case sensitive, otherwise
+	 *         <code>false</code>
+	 */
+	public boolean isCaseSensitive() {
+		return this.caseSensitive;
 	}
 
 	@Override
@@ -81,6 +127,7 @@ public class Terminal extends Rule {
 		if (obj != null && Terminal.class.isAssignableFrom(obj.getClass())) {
 			boolean equality = true;
 			Terminal rule = (Terminal) obj;
+			equality &= this.caseSensitive == rule.caseSensitive;
 			equality &= this.terminals.equals(rule.terminals);
 			equality &= super.equals(obj);
 			return equality;
