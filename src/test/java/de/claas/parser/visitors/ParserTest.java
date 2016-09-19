@@ -304,7 +304,7 @@ public class ParserTest extends RuleVisitorTest {
 		Terminal rule = new Terminal(false, "hello");
 		Parser parser = build("HELLO");
 		rule.visit(parser);
-		Node expected = new TerminalNode("HELLO");
+		Node expected = new TerminalNode("hello");
 		assertEquals(expected, parser.getResult());
 	}
 
@@ -345,7 +345,7 @@ public class ParserTest extends RuleVisitorTest {
 		Terminal rule = new Terminal(false, 'a', 'z');
 		Parser parser = build("A");
 		rule.visit(parser);
-		Node expected = new TerminalNode("A");
+		Node expected = new TerminalNode("a");
 		assertEquals(expected, parser.getResult());
 	}
 
