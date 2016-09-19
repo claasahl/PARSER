@@ -58,7 +58,7 @@ public class Terminal extends Rule {
 	 * @return the terminal symbols that this rule represents
 	 */
 	public Iterator<String> getTerminals() {
-		return terminals.iterator();
+		return this.terminals.iterator();
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class Terminal extends Rule {
 		if (obj != null && Terminal.class.isAssignableFrom(obj.getClass())) {
 			boolean equality = true;
 			Terminal rule = (Terminal) obj;
-			equality &= terminals.equals(rule.terminals);
+			equality &= this.terminals.equals(rule.terminals);
 			equality &= super.equals(obj);
 			return equality;
 		}
@@ -99,6 +99,13 @@ public class Terminal extends Rule {
 	 *
 	 */
 	private static class TerminalLengthComparator implements Comparator<String> {
+
+		/**
+		 * Constructs a new {@link TerminalLengthComparator} with default
+		 * parameters.
+		 */
+		public TerminalLengthComparator() {
+		}
 
 		@Override
 		public int compare(String terminalA, String terminalB) {
