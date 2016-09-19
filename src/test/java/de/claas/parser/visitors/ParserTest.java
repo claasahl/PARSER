@@ -298,6 +298,15 @@ public class ParserTest extends RuleVisitorTest {
 		rule.visit(parser);
 		assertNull(parser.getResult());
 	}
+	
+	@Test
+	public void terminalShouldHaveCaseInsenstiveTerminals() {
+		Terminal rule = new Terminal(false, "hello");
+		Parser parser = build("HELLO");
+		rule.visit(parser);
+		Node expected = new TerminalNode("HELLO");
+		assertEquals(expected, parser.getResult());
+	}
 
 	@Test
 	public void terminalShouldSucceedIfTerminalsAreWithinRange() {
@@ -329,6 +338,15 @@ public class ParserTest extends RuleVisitorTest {
 		Parser parser = build("A");
 		rule.visit(parser);
 		assertNull(parser.getResult());
+	}
+	
+	@Test
+	public void terminalShouldHaveCaseInsenstiveRange() {
+		Terminal rule = new Terminal(false, 'a', 'z');
+		Parser parser = build("A");
+		rule.visit(parser);
+		Node expected = new TerminalNode("A");
+		assertEquals(expected, parser.getResult());
 	}
 
 	@Override
