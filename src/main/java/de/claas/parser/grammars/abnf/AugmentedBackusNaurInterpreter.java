@@ -20,6 +20,7 @@ import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
 import de.claas.parser.visitors.ConcatenateTerminals;
 import de.claas.parser.visitors.Interpreter;
+import de.claas.parser.visitors.UpdateNonTerminalReferences;
 
 public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 
@@ -113,6 +114,10 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			expectNonTerminalNode("c-nl");
 			child.visit(this);
 		}
+		
+		// update references to NonTerminals
+		if(firstRule != null)
+			firstRule.visit(new UpdateNonTerminalReferences(this.rules.values()));
 		return firstRule;
 	}
 
