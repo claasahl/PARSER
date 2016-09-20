@@ -32,14 +32,14 @@ public class Terminal extends Rule {
 	 * 
 	 * Constructs a new {@link Terminal} with default parameters. Calling this
 	 * constructor is equivalent to calling
-	 * <code>{@link Terminal#Terminal(boolean, String...)}</code> with case
+	 * <code>{@link Terminal#Terminal(boolean, String...)}</code> without case
 	 * sensitivity.
 	 * 
 	 * @param terminals
 	 *            the terminal symbols
 	 */
 	public Terminal(String... terminals) {
-		this(true, terminals);
+		this(false, terminals);
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class Terminal extends Rule {
 	/**
 	 * Constructs a new {@link Terminal} with default parameters. Calling this
 	 * constructor is equivalent to calling
-	 * <code>{@link Terminal#Terminal(boolean, char, char)}</code> with case
+	 * <code>{@link Terminal#Terminal(boolean, char, char)}</code> without case
 	 * sensitivity.
 	 * 
 	 * @param rangeStart
@@ -68,7 +68,7 @@ public class Terminal extends Rule {
 	 *            last character that this rule represents (inclusive)
 	 */
 	public Terminal(char rangeStart, char rangeEnd) {
-		this(true, rangeStart, rangeEnd);
+		this(false, rangeStart, rangeEnd);
 	}
 
 	/**
