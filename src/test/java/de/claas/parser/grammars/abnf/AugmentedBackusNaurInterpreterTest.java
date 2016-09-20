@@ -120,20 +120,12 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 
 	@Test
 	public void shouldBeTerminal() {
-		Rule rule = new Terminal(true, "hello world");
+		Rule rule = new Terminal("hello world");
 		NonTerminal expected = new NonTerminal("rule", rule);
 
 		AugmentedBackusNaurInterpreter interpreter = build();
 		Node grammar = AugmentedBackusNaurTest.generateNodes(expected);
 		grammar.visit(interpreter);
-		{
-			RuleToString r1 = new RuleToString();
-			expected.visit(r1);
-			RuleToString r2 = new RuleToString();
-			interpreter.getResult().visit(r2);
-			assertEquals(r1.toString(), r2.toString());
-		}
-
 		assertEquals(expected, interpreter.getResult());
 	}
 

@@ -16,6 +16,7 @@ import de.claas.parser.results.TerminalNode;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
 import de.claas.parser.visitors.ConcatenateTerminals;
@@ -114,9 +115,9 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			expectNonTerminalNode("c-nl");
 			child.visit(this);
 		}
-		
+
 		// update references to NonTerminals
-		if(firstRule != null)
+		if (firstRule != null)
 			firstRule.visit(new UpdateNonTerminalReferences(this.rules.values()));
 		return firstRule;
 	}
@@ -184,6 +185,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 	}
 
 	private Rule visitAlternation(NonTerminalNode node) {
+		boolean createdDisjunction = false;
 		Rule rule = null;
 		Iterator<Node> children = node.iterator();
 		Node child = children.hasNext() ? children.next() : null;
@@ -191,7 +193,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		expectNonTerminalNode("concatenation");
 		if (child != null) {
 			child.visit(this);
-			rule = new Disjunction(getResult());
+			rule = getResult();
 			child = children.hasNext() ? children.next() : null;
 		}
 
@@ -221,6 +223,10 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			expectNonTerminalNode("concatenation");
 			if (child != null) {
 				child.visit(this);
+				if (!createdDisjunction) {
+					rule = new Disjunction(rule);
+					createdDisjunction = true;
+				}
 				rule.addChild(getResult());
 				child = children.hasNext() ? children.next() : null;
 			}
@@ -230,6 +236,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 	}
 
 	private Rule visitConcatenation(NonTerminalNode node) {
+		boolean createdConjunction = false;
 		Rule rule = null;
 		Iterator<Node> children = node.iterator();
 		Node child = children.hasNext() ? children.next() : null;
@@ -237,7 +244,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		expectNonTerminalNode("repetition");
 		if (child != null) {
 			child.visit(this);
-			rule = new Conjunction(getResult());
+			rule = getResult();
 			child = children.hasNext() ? children.next() : null;
 		}
 
@@ -251,9 +258,14 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			expectNonTerminalNode("repetition");
 			if (child != null) {
 				child.visit(this);
+				if (!createdConjunction) {
+					rule = new Conjunction(rule);
+					createdConjunction = true;
+				}
 				rule.addChild(getResult());
 				child = children.hasNext() ? children.next() : null;
 			}
+
 		}
 
 		return rule;
@@ -277,7 +289,10 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		expectNonTerminalNode("element");
 		if (child != null) {
 			child.visit(this);
-			rule = new Repetition(getResult(), minRepetitions, maxRepetitions);
+			if (minRepetitions == 1 && maxRepetitions == 1)
+				rule = getResult();
+			else
+				rule = new Repetition(getResult(), minRepetitions, maxRepetitions);
 			child = children.hasNext() ? children.next() : null;
 		}
 		return rule;
@@ -397,7 +412,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		expectNonTerminalNode("alternation");
 		if (child != null) {
 			child.visit(this);
-			rule = getResult();
+			rule = new Optional(getResult());
 			child = children.hasNext() ? children.next() : null;
 		}
 
