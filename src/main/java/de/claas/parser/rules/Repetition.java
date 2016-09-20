@@ -63,7 +63,7 @@ public class Repetition extends Decorator {
 	 * @return the minimum number of repetitions
 	 */
 	public int getMinimumNumberOfRepetions() {
-		return minRepetitions;
+		return this.minRepetitions;
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class Repetition extends Decorator {
 	 * @return the maximum number of repetitions
 	 */
 	public int getMaximumNumberOfRepetions() {
-		return maxRepetitions;
+		return this.maxRepetitions;
 	}
 
 	@Override
@@ -86,8 +86,8 @@ public class Repetition extends Decorator {
 		if (obj != null && Repetition.class.isAssignableFrom(obj.getClass())) {
 			boolean equality = true;
 			Repetition rule = (Repetition) obj;
-			equality &= minRepetitions == rule.minRepetitions;
-			equality &= maxRepetitions == rule.maxRepetitions;
+			equality &= this.minRepetitions == rule.minRepetitions;
+			equality &= this.maxRepetitions == rule.maxRepetitions;
 			equality &= super.equals(obj);
 			return equality;
 		}

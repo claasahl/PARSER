@@ -54,7 +54,7 @@ public abstract class Rule implements Iterable<Rule> {
 	 *         <code>false</code> otherwise
 	 */
 	public boolean addChild(Rule rule) {
-		return rule != null ? children.add(rule) : false;
+		return rule != null ? this.children.add(rule) : false;
 	}
 
 	/**
@@ -67,7 +67,7 @@ public abstract class Rule implements Iterable<Rule> {
 	 *         <code>false</code> otherwise
 	 */
 	public boolean removeChild(Rule rule) {
-		return children.remove(rule);
+		return this.children.remove(rule);
 	}
 
 	/**
@@ -78,12 +78,12 @@ public abstract class Rule implements Iterable<Rule> {
 	 *         otherwise
 	 */
 	public boolean hasChildren() {
-		return !children.isEmpty();
+		return !this.children.isEmpty();
 	}
 
 	@Override
 	public Iterator<Rule> iterator() {
-		return children.iterator();
+		return this.children.iterator();
 	}
 
 	/**
@@ -98,7 +98,7 @@ public abstract class Rule implements Iterable<Rule> {
 	public boolean equals(Object obj) {
 		if (obj != null && Rule.class.isAssignableFrom(obj.getClass())) {
 			Rule rule = (Rule) obj;
-			return children.equals(rule.children);
+			return this.children.equals(rule.children);
 		}
 		return false;
 	}
