@@ -228,7 +228,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		assertNotNull(grammar.parse(data, false));
 	}
 
-	private static Node generateNodes(NonTerminal... actualRules) {
+	static Node generateNodes(NonTerminal... actualRules) {
 		Set<String> visitedRules = new HashSet<>();
 		Node rulelist = new NonTerminalNode("rulelist");
 		for (NonTerminal actualRule : actualRules) {
