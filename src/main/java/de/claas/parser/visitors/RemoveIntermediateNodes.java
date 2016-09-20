@@ -2,6 +2,7 @@ package de.claas.parser.visitors;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
@@ -37,10 +38,10 @@ public class RemoveIntermediateNodes implements NodeVisitor {
 
 	@Override
 	public void visitIntermediateNode(IntermediateNode node) {
-		if (visitedPath.add(node) && !parents.isEmpty()) {
+		if (this.visitedPath.add(node) && !this.parents.isEmpty()) {
 			// enumerate all siblings
-			Node parent = parents.peek();
-			ArrayList<Node> siblings = new ArrayList<>();
+			Node parent = this.parents.peek();
+			List<Node> siblings = new ArrayList<>();
 			for (Node n : parent) {
 				siblings.add(n);
 			}
@@ -68,14 +69,14 @@ public class RemoveIntermediateNodes implements NodeVisitor {
 				n.visit(this);
 			}
 
-			visitedPath.remove(node);
+			this.visitedPath.remove(node);
 		}
 	}
 
 	@Override
 	public void visitNonTerminaNode(NonTerminalNode node) {
-		if (visitedPath.add(node)) {
-			parents.push(node);
+		if (this.visitedPath.add(node)) {
+			this.parents.push(node);
 			ArrayList<Node> tmp = new ArrayList<>();
 			for (Node n : node) {
 				tmp.add(n);
@@ -83,8 +84,8 @@ public class RemoveIntermediateNodes implements NodeVisitor {
 			for (Node n : tmp) {
 				n.visit(this);
 			}
-			parents.pop();
-			visitedPath.remove(node);
+			this.parents.pop();
+			this.visitedPath.remove(node);
 		}
 	}
 
