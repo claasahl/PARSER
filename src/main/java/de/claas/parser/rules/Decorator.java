@@ -39,17 +39,17 @@ public abstract class Decorator extends Rule {
 	}
 
 	@Override
-	public boolean addChild(Rule rule) {
+	public boolean addChild(Rule child) {
 		if (this.rule == null)
 			throw new IllegalStateException(MISSING_RULE);
-		return this.rule.addChild(rule);
+		return this.rule.addChild(child);
 	}
 
 	@Override
-	public boolean removeChild(Rule rule) {
+	public boolean removeChild(Rule child) {
 		if (this.rule == null)
 			throw new IllegalStateException(MISSING_RULE);
-		return this.rule.removeChild(rule);
+		return this.rule.removeChild(child);
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public abstract class Decorator extends Rule {
 	 * @return the decorated rule
 	 */
 	public Rule getRule() {
-		return rule;
+		return this.rule;
 	}
 
 	/**
@@ -95,11 +95,11 @@ public abstract class Decorator extends Rule {
 	public boolean equals(Object obj) {
 		if (obj != null && Decorator.class.isAssignableFrom(obj.getClass())) {
 			boolean equality = true;
-			Decorator rule = (Decorator) obj;
+			Decorator decorator = (Decorator) obj;
 			if (this.rule == null)
-				equality &= rule.rule == null;
+				equality &= decorator.rule == null;
 			else
-				equality &= this.rule.equals(rule.getRule());
+				equality &= this.rule.equals(decorator.getRule());
 			equality &= super.equals(obj);
 			return equality;
 		}

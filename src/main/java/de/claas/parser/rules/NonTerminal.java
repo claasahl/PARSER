@@ -74,7 +74,7 @@ public class NonTerminal extends Decorator {
 	 * @return the name of this (non-terminal) rule
 	 */
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class NonTerminal extends Decorator {
 	 * @return the comment of this (non-terminal) rule
 	 */
 	public String getComment() {
-		return comment;
+		return this.comment;
 	}
 
 	@Override
@@ -96,7 +96,7 @@ public class NonTerminal extends Decorator {
 		if (obj != null && NonTerminal.class.isAssignableFrom(obj.getClass())) {
 			boolean equality = true;
 			NonTerminal rule = (NonTerminal) obj;
-			equality &= name.equals(rule.name);
+			equality &= this.name.equals(rule.name);
 			equality &= super.equals(obj);
 			return equality;
 		}
