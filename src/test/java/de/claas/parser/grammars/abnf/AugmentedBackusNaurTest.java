@@ -149,6 +149,28 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
 	}
+	
+	@Test
+	public void shouldHandleCaseSensitiveCharVal() {
+		Grammar grammar = build();
+		Node actual = grammar.parse("rule = %s\"helLO\"\r\n", false);
+
+		Rule hello = new Terminal(true, "helLO");
+		NonTerminal rule = new NonTerminal("rule", hello);
+		Node expected = generateNodes(rule);
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void shouldHandleCaseInsensitiveCharVal() {
+		Grammar grammar = build();
+		Node actual = grammar.parse("rule = \"helLO\"\r\n", false);
+
+		Rule hello = new Terminal(false, "helLO");
+		NonTerminal rule = new NonTerminal("rule", hello);
+		Node expected = generateNodes(rule);
+		assertEquals(expected, actual);
+	}
 
 	@Test
 	public void shouldHandleIncrementalAlternatives() {
@@ -325,7 +347,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 				}
 
 				String terminal = terminals.next();
-				Node concatenation = generateConcatenation(new Terminal(terminal));
+				Node concatenation = generateConcatenation(new Terminal(rule.isCaseSensitive(), terminal));
 				alternation.addChild(concatenation);
 				firstTerminal = false;
 			}
