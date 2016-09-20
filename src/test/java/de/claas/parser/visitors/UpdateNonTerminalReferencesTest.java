@@ -240,4 +240,22 @@ public class UpdateNonTerminalReferencesTest extends RuleVisitorTest {
 		assertEquals(expected, actual);
 	}
 
+	@Test
+	public void shouldUpdateNestedNonTerminals() {
+		NonTerminal rule = new NonTerminal(this.NON_TERMINAL);
+		NonTerminal incomplete = new NonTerminal("incomplete", rule);
+		this.rules.put("incomplete", incomplete);
+		
+		Rule actual = new Conjunction();
+		actual.addChild(incomplete);
+		RuleVisitor visitor = build(this.rules.values());
+		actual.visit(visitor);
+
+		NonTerminal complete = new NonTerminal("incomplete");
+		complete.setRule(this.rules.get(this.NON_TERMINAL));
+		Rule expected = new Conjunction();
+		expected.addChild(complete);
+		assertEquals(expected, actual);
+	}
+
 }

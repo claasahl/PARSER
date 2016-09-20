@@ -81,9 +81,7 @@ public class UpdateNonTerminalReferences implements RuleVisitor {
 		if (this.visitedPath.add(rule)) {
 			if (rule.getRule() == null)
 				rule.setRule(this.rules.get(rule.getName()).getRule());
-			for (Rule child : rule) {
-				child.visit(this);
-			}
+			rule.getRule().visit(this);
 			this.visitedPath.remove(rule);
 		}
 	}
