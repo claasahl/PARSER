@@ -42,31 +42,31 @@ public class RemoveIntermediateNodes implements NodeVisitor {
 			// enumerate all siblings
 			Node parent = this.parents.peek();
 			List<Node> siblings = new ArrayList<>();
-			for (Node n : parent) {
-				siblings.add(n);
+			for (Node child : parent) {
+				siblings.add(child);
 			}
 
 			// remove all siblings
-			for (Node n : siblings) {
-				parent.removeChild(n);
+			for (Node child : siblings) {
+				parent.removeChild(child);
 			}
 
 			// add all siblings (preserving order)
-			for (Node n : siblings) {
-				if (n == node) {
+			for (Node child : siblings) {
+				if (node.equals(child)) {
 					for (Node c : node) {
-						if (c != node) {
+						if (!node.equals(c)) {
 							parent.addChild(c);
 						}
 					}
 				} else {
-					parent.addChild(n);
+					parent.addChild(child);
 				}
 			}
 
 			// ... now visit all children
-			for (Node n : node) {
-				n.visit(this);
+			for (Node child : node) {
+				child.visit(this);
 			}
 
 			this.visitedPath.remove(node);
