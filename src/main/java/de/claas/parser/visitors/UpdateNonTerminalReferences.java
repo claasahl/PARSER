@@ -18,7 +18,11 @@ import de.claas.parser.rules.Terminal;
 /**
  * 
  * The class {@link UpdateNonTerminalReferences}. It is an implementation of the
- * interface {@link }. It is intended to ...
+ * interface {@link RuleVisitor}. It is intended to updated "broken" references
+ * to {@link NonTerminal}s (i.e. {@link NonTerminal}s that do not have an
+ * associated rule; {@link NonTerminal#getRule()} returns <code>null</code>).
+ * This visitor will look for "broken" {@link NonTerminal}s and update their
+ * associated rule, which is determined by a pool of known {@link NonTerminal}s.
  *
  * @author Claas Ahlrichs
  *
@@ -28,12 +32,26 @@ public class UpdateNonTerminalReferences implements RuleVisitor {
 	private final Set<Rule> visitedPath = new HashSet<>();
 	private final Map<String, NonTerminal> rules = new HashMap<>();
 
+	/**
+	 * Constructs a new {@link UpdateNonTerminalReferences} with the specified
+	 * parameters.
+	 * 
+	 * @param rules
+	 *            the pool of known {@link NonTerminal}s
+	 */
 	public UpdateNonTerminalReferences(NonTerminal... rules) {
 		for (NonTerminal rule : rules) {
 			this.rules.put(rule.getName(), rule);
 		}
 	}
 
+	/**
+	 * Constructs a new {@link UpdateNonTerminalReferences} with the specified
+	 * parameter.
+	 * 
+	 * @param rules
+	 *            the pool of known {@link NonTerminal}s
+	 */
 	public UpdateNonTerminalReferences(Collection<NonTerminal> rules) {
 		for (NonTerminal rule : rules) {
 			this.rules.put(rule.getName(), rule);
@@ -66,7 +84,7 @@ public class UpdateNonTerminalReferences implements RuleVisitor {
 			for (Rule child : rule) {
 				child.visit(this);
 			}
-			this.visitedPath.remove(rule);	
+			this.visitedPath.remove(rule);
 		}
 	}
 
