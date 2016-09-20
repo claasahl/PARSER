@@ -53,7 +53,7 @@ public abstract class Node implements Iterable<Node> {
 	 *         <code>false</code> otherwise
 	 */
 	public boolean addChild(Node node) {
-		return node != null ? children.add(node) : false;
+		return node != null ? this.children.add(node) : false;
 	}
 
 	/**
@@ -66,7 +66,7 @@ public abstract class Node implements Iterable<Node> {
 	 *         <code>false</code> otherwise
 	 */
 	public boolean removeChild(Node node) {
-		return children.remove(node);
+		return this.children.remove(node);
 	}
 
 	/**
@@ -77,12 +77,12 @@ public abstract class Node implements Iterable<Node> {
 	 *         otherwise
 	 */
 	public boolean hasChildren() {
-		return !children.isEmpty();
+		return !this.children.isEmpty();
 	}
 
 	@Override
 	public Iterator<Node> iterator() {
-		return children.iterator();
+		return this.children.iterator();
 	}
 
 	/**
@@ -97,7 +97,7 @@ public abstract class Node implements Iterable<Node> {
 	public boolean equals(Object obj) {
 		if (obj != null && Node.class.isAssignableFrom(obj.getClass())) {
 			Node node = (Node) obj;
-			return children.equals(node.children);
+			return this.children.equals(node.children);
 		}
 		return false;
 	}
