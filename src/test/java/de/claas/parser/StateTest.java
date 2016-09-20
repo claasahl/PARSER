@@ -1,8 +1,7 @@
 package de.claas.parser;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
@@ -47,8 +46,8 @@ public class StateTest {
 	@Test
 	public void shouldRevertNothing() {
 		State state = buildState("hello world");
-		assertTrue(state.process(true, "hello"));
-		assertTrue(state.process(true, " "));
+		assertEquals("hello", state.process(true, "hello"));
+		assertEquals(" ", state.process(true, " "));
 		assertEquals("hello ", state.getProcessedData());
 		assertEquals("world", state.getUnprocessedData());
 		state.beginGroup();
@@ -61,10 +60,10 @@ public class StateTest {
 	public void shouldRevertLastGroup() {
 		State state = buildState("hello world");
 		state.beginGroup();
-		assertTrue(state.process(true, "hello"));
+		assertEquals("hello", state.process(true, "hello"));
 		state.beginGroup();
-		assertTrue(state.process(true, " "));
-		assertTrue(state.process(true, "world"));
+		assertEquals(" ", state.process(true, " "));
+		assertEquals("world", state.process(true, "world"));
 		assertEquals("hello world", state.getProcessedData());
 		assertEquals("", state.getUnprocessedData());
 		state.revert();
@@ -76,8 +75,8 @@ public class StateTest {
 	public void shouldRevertEverything() {
 		State state = buildState("hello world");
 		state.beginGroup();
-		assertTrue(state.process(true, "hello"));
-		assertTrue(state.process(true, " "));
+		assertEquals("hello", state.process(true, "hello"));
+		assertEquals(" ", state.process(true, " "));
 		assertEquals("hello ", state.getProcessedData());
 		assertEquals("world", state.getUnprocessedData());
 		state.revert();
@@ -89,21 +88,21 @@ public class StateTest {
 	public void shouldBeCaseSensitive() {
 		State state = buildState("helLO");
 		state.beginGroup();
-		assertFalse(state.process(true, "HELLO"));
+		assertNull(state.process(true, "HELLO"));
 		state.revert();
-		assertFalse(state.process(true, "hello"));
+		assertNull(state.process(true, "hello"));
 		state.revert();
-		assertTrue(state.process(true, "helLO"));
+		assertEquals("helLO", state.process(true, "helLO"));
 	}
 
 	@Test
 	public void shouldBeCaseInsensitive() {
 		State state = buildState("helLO");
 		state.beginGroup();
-		assertTrue(state.process(false, "HELLO"));
+		assertEquals("helLO", state.process(false, "HELLO"));
 		state.revert();
-		assertTrue(state.process(false, "hello"));
+		assertEquals("helLO", state.process(false, "hello"));
 		state.revert();
-		assertTrue(state.process(false, "helLO"));
+		assertEquals("helLO", state.process(false, "helLO"));
 	}
 }

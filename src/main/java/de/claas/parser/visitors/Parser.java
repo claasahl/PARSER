@@ -228,8 +228,9 @@ public class Parser implements RuleVisitor {
 			Iterator<String> terminals = rule.getTerminals();
 			while (terminals.hasNext()) {
 				String terminal = terminals.next();
-				if (this.state.process(rule.isCaseSensitive(), terminal)) {
-					setResult(new TerminalNode(terminal));
+				String token = this.state.process(rule.isCaseSensitive(), terminal);
+				if (token != null) {
+					setResult(new TerminalNode(token));
 					return;
 				}
 			}

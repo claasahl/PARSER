@@ -304,7 +304,7 @@ public class ParserTest extends RuleVisitorTest {
 		Terminal rule = new Terminal(false, "hello");
 		Parser parser = build("HELLO");
 		rule.visit(parser);
-		Node expected = new TerminalNode("hello");
+		Node expected = new TerminalNode("HELLO");
 		assertEquals(expected, parser.getResult());
 	}
 
@@ -334,7 +334,7 @@ public class ParserTest extends RuleVisitorTest {
 
 	@Test
 	public void terminalShouldFailIfTerminalsAreOutsideOfRange() {
-		Terminal rule = new Terminal('a', 'z');
+		Terminal rule = new Terminal(true, 'a', 'z');
 		Parser parser = build("A");
 		rule.visit(parser);
 		assertNull(parser.getResult());
@@ -345,7 +345,7 @@ public class ParserTest extends RuleVisitorTest {
 		Terminal rule = new Terminal(false, 'a', 'z');
 		Parser parser = build("A");
 		rule.visit(parser);
-		Node expected = new TerminalNode("a");
+		Node expected = new TerminalNode("A");
 		assertEquals(expected, parser.getResult());
 	}
 

@@ -54,19 +54,19 @@ public class State {
 	 * @return <code>true</code> if the specified token was successfully
 	 *         processed and <code>false</code> otherwise
 	 */
-	public boolean process(boolean caseSensitive, String token) {
+	public String process(boolean caseSensitive, String token) {
 		String localData = caseSensitive ? this.data : this.data.toLowerCase();
 		String localToken = caseSensitive ? token : token.toLowerCase();
 		if (localData.startsWith(localToken, this.offset)) {
+			String actualToken = this.data.substring(this.offset, this.offset + localToken.length());
 			this.offset += localToken.length();
 			if (!this.steps.isEmpty()) {
 				int sum = this.steps.pop().intValue() + localToken.length();
 				this.steps.push(new Integer(sum));
 			}
-
-			return true;
+			return actualToken;
 		}
-		return false;
+		return null;
 	}
 
 	/**

@@ -120,7 +120,7 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 
 	@Test
 	public void shouldBeTerminal() {
-		Rule rule = new Terminal("hello world");
+		Rule rule = new Terminal(true, "hello world");
 		NonTerminal expected = new NonTerminal("rule", rule);
 
 		AugmentedBackusNaurInterpreter interpreter = build();

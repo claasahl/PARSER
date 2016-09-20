@@ -422,10 +422,13 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 			String terminal = terminals.next();
 
 			Node charVal = new NonTerminalNode("char-val");
-			Node caseInsensitiveAtring = new NonTerminalNode("case-insensitive-string");
-			charVal.addChild(caseInsensitiveAtring);
+			String name = rule.isCaseSensitive() ? "case-sensitive-string" : "case-insensitive-string";
+			Node caseString = new NonTerminalNode(name);
+			charVal.addChild(caseString);
+			if(rule.isCaseSensitive())
+				caseString.addChild(new TerminalNode("%s"));
 			Node quotedString = new NonTerminalNode("quoted-string");
-			caseInsensitiveAtring.addChild(quotedString);
+			caseString.addChild(quotedString);
 
 			Node dQuote = new NonTerminalNode("dQuote");
 			dQuote.addChild(new TerminalNode("\""));
