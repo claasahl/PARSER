@@ -1,0 +1,94 @@
+package de.claas.parser.visitors;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import de.claas.parser.Rule;
+import de.claas.parser.RuleVisitor;
+import de.claas.parser.rules.Conjunction;
+import de.claas.parser.rules.Disjunction;
+import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.Optional;
+import de.claas.parser.rules.Repetition;
+import de.claas.parser.rules.Terminal;
+
+/**
+ * 
+ * The class {@link UpdateNonTerminalReferences}. It is an implementation of the
+ * interface {@link }. It is intended to ...
+ *
+ * @author Claas Ahlrichs
+ *
+ */
+public class UpdateNonTerminalReferences implements RuleVisitor {
+
+	private final Set<Rule> visitedPath = new HashSet<>();
+	private final Map<String, NonTerminal> rules = new HashMap<>();
+
+	public UpdateNonTerminalReferences(NonTerminal... rules) {
+		for (NonTerminal rule : rules) {
+			this.rules.put(rule.getName(), rule);
+		}
+	}
+
+	public UpdateNonTerminalReferences(Collection<NonTerminal> rules) {
+		for (NonTerminal rule : rules) {
+			this.rules.put(rule.getName(), rule);
+		}
+	}
+
+	@Override
+	public void visitConjunction(Conjunction rule) {
+		if (this.visitedPath.add(rule)) {
+			for (Rule child : rule)
+				child.visit(this);
+			this.visitedPath.remove(rule);
+		}
+	}
+
+	@Override
+	public void visitDisjunction(Disjunction rule) {
+		if (this.visitedPath.add(rule)) {
+			for (Rule child : rule)
+				child.visit(this);
+			this.visitedPath.remove(rule);
+		}
+	}
+
+	@Override
+	public void visitNonTerminal(NonTerminal rule) {
+		if (this.visitedPath.add(rule)) {
+			if (rule.getRule() == null)
+				rule.setRule(this.rules.get(rule.getName()).getRule());
+			for (Rule child : rule) {
+				child.visit(this);
+			}
+			this.visitedPath.remove(rule);	
+		}
+	}
+
+	@Override
+	public void visitOptional(Optional rule) {
+		if (this.visitedPath.add(rule)) {
+			rule.getRule().visit(this);
+			this.visitedPath.remove(rule);
+		}
+	}
+
+	@Override
+	public void visitRepetition(Repetition rule) {
+		if (this.visitedPath.add(rule)) {
+			rule.getRule().visit(this);
+			this.visitedPath.remove(rule);
+		}
+	}
+
+	@Override
+	public void visitTerminal(Terminal rule) {
+		// nothing to be done
+	}
+
+}
