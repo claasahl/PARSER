@@ -22,10 +22,24 @@ import de.claas.parser.rules.Terminal;
 import de.claas.parser.visitors.Interpreter;
 import de.claas.parser.visitors.UpdateNonTerminalReferences;
 
+/**
+ * 
+ * The class {@link AugmentedBackusNaurInterpreter}. It is an implementation of
+ * the interface {@link Interpreter}. It is intended to interpret
+ * {@link Node}-trees that correspond to the {@link AugmentedBackusNaur}
+ * grammar.
+ *
+ * @author Claas Ahlrichs
+ *
+ */
 public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 
 	private final Map<String, NonTerminal> rules = new HashMap<>();
 
+	/**
+	 * Constructs a new {@link AugmentedBackusNaurInterpreter} with default
+	 * parameters.
+	 */
 	public AugmentedBackusNaurInterpreter() {
 		expectNonTerminalNode("rulelist");
 	}
@@ -311,11 +325,11 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		int starIndex = repeat.indexOf('*');
 		if (starIndex >= 0) {
 			String min = repeat.substring(0, starIndex);
-			String max = repeat.substring(starIndex+1);
+			String max = repeat.substring(starIndex + 1);
 			int minRepetitions = !min.isEmpty() ? new Integer(min).intValue() : 0;
 			int maxRepetitions = !max.isEmpty() ? new Integer(max).intValue() : Integer.MAX_VALUE;
 			rule = new Repetition(null, minRepetitions, maxRepetitions);
-		} else if(!repeat.isEmpty()){
+		} else if (!repeat.isEmpty()) {
 			int repetitions = new Integer(repeat).intValue();
 			rule = new Repetition(null, repetitions, repetitions);
 		} else {
