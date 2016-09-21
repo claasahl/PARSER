@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 
 import de.claas.parser.Node;
 import de.claas.parser.Rule;
@@ -310,19 +309,16 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 	private Rule visitRepeat(NonTerminalNode node) {
 		Rule rule = null;
 		String repeat = ConcatenateTerminals.concat(node);
-		String[] repetitions = repeat.split(Pattern.quote("*"));
-		if (repetitions.length == 0) {
-			int minRepetitions = 0;
-			int maxRepetitions = Integer.MAX_VALUE;
+		int starIndex = repeat.indexOf('*');
+		if (starIndex >= 0) {
+			String min = repeat.substring(0, starIndex);
+			String max = repeat.substring(starIndex+1);
+			int minRepetitions = !min.isEmpty() ? new Integer(min).intValue() : 0;
+			int maxRepetitions = !max.isEmpty() ? new Integer(max).intValue() : Integer.MAX_VALUE;
 			rule = new Repetition(null, minRepetitions, maxRepetitions);
-		} else if (repetitions.length == 1 && !repetitions[0].isEmpty()) {
-			int minRepetitions = new Integer(repetitions[0]).intValue();
-			int maxRepetitions = new Integer(repetitions[0]).intValue();
-			rule = new Repetition(null, minRepetitions, maxRepetitions);
-		} else if (repetitions.length == 2) {
-			int minRepetitions = !repetitions[0].isEmpty() ? new Integer(repetitions[0]).intValue() : 0;
-			int maxRepetitions = !repetitions[1].isEmpty() ? new Integer(repetitions[1]).intValue() : Integer.MAX_VALUE;
-			rule = new Repetition(null, minRepetitions, maxRepetitions);
+		} else if(!repeat.isEmpty()){
+			int repetitions = new Integer(repeat).intValue();
+			rule = new Repetition(null, repetitions, repetitions);
 		} else {
 			throw new InterpretingException("Invalid 'repeat'-rule: " + repeat);
 		}
@@ -601,7 +597,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 						digits.append(bit);
 						child = children.hasNext() ? children.next() : null;
 					}
-					terminals.add("" + (char)Integer.parseInt(digits.toString(), radix));
+					terminals.add("" + (char) Integer.parseInt(digits.toString(), radix));
 
 					expectTerminalNode();
 					if (child != null) {
