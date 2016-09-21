@@ -80,6 +80,7 @@ public class AugmentedBackusNaur extends Grammar {
 	 * @return the above described grammar
 	 */
 	private static NonTerminal grammar() {
+		int max = Integer.MAX_VALUE;
 		Terminal dash = new Terminal("-");
 		Terminal eq = new Terminal("=", "=/");
 		Terminal c = new Terminal(";");
@@ -129,7 +130,7 @@ public class AugmentedBackusNaur extends Grammar {
 		NonTerminal cWSP = new NonTerminal("c-wsp", new Disjunction(wsp, new Conjunction(cNL, wsp)));
 
 		// hex-val = "x" 1*HEXDIG [ 1*("." 1*HEXDIG) / ("-" 1*HEXDIG) ]
-		Rule rule31 = new Repetition(hexdig, 1, Integer.MAX_VALUE);
+		Rule rule31 = new Repetition(hexdig, 1, max);
 		NonTerminal hexVal = new NonTerminal("hex-val",
 				new Conjunction(xNum, rule31,
 						new Optional(new Disjunction(
@@ -142,7 +143,7 @@ public class AugmentedBackusNaur extends Grammar {
 				new Disjunction(new Terminal((char) 0x20, (char) 0x3d), new Terminal((char) 0x3f, (char) 0x7e))), rrr));
 
 		// dec-val = "d" 1*DIGIT [ 1*("." 1*DIGIT) / ("-" 1*DIGIT) ]
-		Rule rule32 = new Repetition(digit, 1, Integer.MAX_VALUE);
+		Rule rule32 = new Repetition(digit, 1, max);
 		NonTerminal decVal = new NonTerminal("dec-val",
 				new Conjunction(dNum, rule32,
 						new Optional(new Disjunction(
@@ -151,7 +152,7 @@ public class AugmentedBackusNaur extends Grammar {
 
 		// bin-val = "b" 1*BIT [ 1*("." 1*BIT) / ("-" 1*BIT) ] ; series of
 		// concatenated bit values or single ONEOF range
-		Rule rule33 = new Repetition(bit, 1, Integer.MAX_VALUE);
+		Rule rule33 = new Repetition(bit, 1, max);
 		NonTerminal binVal = new NonTerminal("bin-val",
 				new Conjunction(bNum, rule33,
 						new Optional(new Disjunction(
@@ -191,16 +192,15 @@ public class AugmentedBackusNaur extends Grammar {
 				new Disjunction(tmpRulename, group, option, charVal, numVal, proseVal));
 
 		// repeat = 1*DIGIT / (*DIGIT "*" *DIGIT)
-		NonTerminal repeat = new NonTerminal("repeat",
-				new Disjunction(new Conjunction(new Repetition(digit), s, new Repetition(digit)),
-						new Repetition(digit, 1, Integer.MAX_VALUE)));
+		NonTerminal repeat = new NonTerminal("repeat", new Disjunction(
+				new Conjunction(new Repetition(digit), s, new Repetition(digit)), new Repetition(digit, 1, max)));
 
 		// repetition = [repeat] element
 		NonTerminal repetition = new NonTerminal("repetition", new Conjunction(new Optional(repeat), element));
 
 		// concatenation = repetition *(1*c-wsp repetition)
 		NonTerminal concatenation = new NonTerminal("concatenation",
-				new Conjunction(repetition, new Repetition(new Conjunction(cWSP, new Repetition(cWSP), repetition))));
+				new Conjunction(repetition, new Repetition(new Conjunction(new Repetition(cWSP, 1, max), repetition))));
 
 		// alternation = concatenation *(*c-wsp "/" *c-wsp concatenation)
 		NonTerminal alternation = new NonTerminal("alternation", new Conjunction(concatenation,
@@ -226,7 +226,7 @@ public class AugmentedBackusNaur extends Grammar {
 
 		// rulelist = 1*( rule / (*c-wsp c-nl) )
 		Rule rule34 = new Disjunction(rule, new Conjunction(new Repetition(cWSP), cNL));
-		NonTerminal ruleList = new NonTerminal("rulelist", new Conjunction(rule34, new Repetition(rule34)));
+		NonTerminal ruleList = new NonTerminal("rulelist", new Repetition(rule34, 1, max));
 		return ruleList;
 	}
 
