@@ -42,7 +42,8 @@ public class ParserTest extends RuleVisitorTest {
 	 *            the data
 	 * @return an instantiated {@link Parser} class with the specified data
 	 */
-	private static Parser build(String data) {
+	@SuppressWarnings("static-method")
+	private Parser build(String data) {
 		return new Parser(new State(data));
 	}
 

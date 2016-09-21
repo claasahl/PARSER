@@ -14,7 +14,7 @@ import de.claas.parser.results.TerminalNode;
  * 
  * The class {@link ConcatenateTerminals}. It is an implementation of the
  * interface {@link NodeVisitor}. It is intended to collect and concatenate
- * terminal symbols of the {@link Node} tree, that is being visited.
+ * terminal symbols of the {@link Node} tree, that are being visited.
  * <p>
  * This visitor is meant for one-time use, only. As such, it should not be used
  * to visualize multiple trees.
@@ -59,12 +59,6 @@ public class ConcatenateTerminals implements NodeVisitor {
 	@Override
 	public String toString() {
 		return this.data.toString();
-	}
-	
-	public static String concat(Node node) {
-		ConcatenateTerminals visitor = new ConcatenateTerminals();
-		node.visit(visitor);
-		return visitor.toString();
 	}
 
 }

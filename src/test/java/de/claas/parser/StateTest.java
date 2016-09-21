@@ -23,6 +23,7 @@ public class StateTest {
 	 *            the pattern
 	 * @return an instantiated {@link State} class with the specified pattern
 	 */
+	@SuppressWarnings("static-method")
 	protected State buildState(String pattern) {
 		return new State(pattern);
 	}

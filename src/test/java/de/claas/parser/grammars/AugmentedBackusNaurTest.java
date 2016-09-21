@@ -1,5 +1,6 @@
 package de.claas.parser.grammars;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
@@ -14,7 +15,6 @@ import de.claas.parser.Grammar;
 import de.claas.parser.GrammarTest;
 import de.claas.parser.Node;
 import de.claas.parser.Rule;
-import de.claas.parser.grammars.AugmentedBackusNaur;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 import de.claas.parser.rules.Conjunction;

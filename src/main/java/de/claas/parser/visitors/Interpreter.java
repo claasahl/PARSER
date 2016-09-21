@@ -217,7 +217,8 @@ public abstract class Interpreter<R> implements NodeVisitor {
 	 * @param node
 	 *            the node
 	 * @param get
-	 *            TODO
+	 *            a helper function for determining the actual consumer for the
+	 *            specified node
 	 * 
 	 * @throws InterpretingException
 	 *             if the specified node is unexpected
@@ -261,6 +262,22 @@ public abstract class Interpreter<R> implements NodeVisitor {
 				return String.format("Expected node type '%s'.", expectedClass.getSimpleName());
 			}
 		};
+	}
+
+	/**
+	 * A convenience function for concatenating terminal symbols of a
+	 * {@link Node} tree. It returns a string that represents all visited
+	 * {@link TerminalNode}s within the specified tree of {@link Node}s
+	 * 
+	 * @param node
+	 *            root of the tree of nodes
+	 * @return string that represents all visited {@link TerminalNode}s within
+	 *         the specified tree of {@link Node}s
+	 */
+	protected static String concatTerminals(Node node) {
+		ConcatenateTerminals visitor = new ConcatenateTerminals();
+		node.visit(visitor);
+		return visitor.toString();
 	}
 
 }

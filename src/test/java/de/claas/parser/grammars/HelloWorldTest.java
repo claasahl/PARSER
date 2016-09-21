@@ -1,5 +1,7 @@
 package de.claas.parser.grammars;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import de.claas.parser.Grammar;
@@ -74,7 +76,7 @@ public class HelloWorldTest extends GrammarTest<HelloWorld> {
 	 *            the word for "world" in the specified language
 	 * @return a tree of nodes for the specified language
 	 */
-	private Node generateTree(String language, String hello, String world) {
+	private static Node generateTree(String language, String hello, String world) {
 		Node t1 = new TerminalNode(hello);
 		Node t2 = new TerminalNode(" ");
 		Node t3 = new TerminalNode(world);

@@ -39,12 +39,13 @@ public class UpdateNonTerminalReferencesTest extends RuleVisitorTest {
 	 * Returns an instantiated {@link UpdateNonTerminalReferences} class with
 	 * the given {@link NonTerminal}s.
 	 *
-	 * @param rules
+	 * @param rules1
 	 *            the {@link NonTerminal}s
 	 * @return an instantiated {@link UpdateNonTerminalReferences} class
 	 */
-	private static RuleVisitor build(Collection<NonTerminal> rules) {
-		return new UpdateNonTerminalReferences(rules);
+	@SuppressWarnings("static-method")
+	private RuleVisitor build(Collection<NonTerminal> rules1) {
+		return new UpdateNonTerminalReferences(rules1);
 	}
 
 	@Before

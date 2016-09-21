@@ -8,7 +8,6 @@ import de.claas.parser.exceptions.InterpretingException;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
-import de.claas.parser.visitors.ConcatenateTerminals;
 import de.claas.parser.visitors.Interpreter;
 
 /**
@@ -129,7 +128,7 @@ public class NumberInterpreter extends Interpreter<java.lang.Number> {
 	 *         and minus is represented by <code>-1</code>)
 	 */
 	private java.lang.Number visitSign(NonTerminalNode node) {
-		String sign = ConcatenateTerminals.concat(node);
+		String sign = concatTerminals(node);
 		switch (sign) {
 		case "+":
 			return new Integer(1);
@@ -152,7 +151,7 @@ public class NumberInterpreter extends Interpreter<java.lang.Number> {
 		if (!node.hasChildren())
 			return null;
 
-		String digits = ConcatenateTerminals.concat(node);
+		String digits = concatTerminals(node);
 		return new Double("0" + digits);
 	}
 
@@ -196,7 +195,7 @@ public class NumberInterpreter extends Interpreter<java.lang.Number> {
 	 * @return the integer part of a number
 	 */
 	private java.lang.Number visitDigits(NonTerminalNode node) {
-		String digits = ConcatenateTerminals.concat(node);
+		String digits = concatTerminals(node);
 		return new Integer(digits);
 	}
 

@@ -272,20 +272,4 @@ public class Parser implements RuleVisitor {
 		this.visitedPath.remove(rule);
 	}
 
-	/**
-	 * A convenience function that parses the specified state with the specified
-	 * rule.
-	 * 
-	 * @param state
-	 *            the state
-	 * @param rule
-	 *            the rule
-	 * @return the result
-	 */
-	public static Node parse(State state, Rule rule) {
-		Parser parser = new Parser(state);
-		rule.visit(parser);
-		return parser.getResult();
-	}
-
 }
