@@ -55,6 +55,7 @@ public class TerminalTest extends RuleTest {
 	 *
 	 * @return an instantiated {@link Terminal} class
 	 */
+	@SuppressWarnings("static-method")
 	protected Terminal build(String... terminals) {
 		return new Terminal(terminals);
 	}
