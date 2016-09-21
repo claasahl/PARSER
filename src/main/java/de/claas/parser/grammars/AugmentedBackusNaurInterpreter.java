@@ -1,4 +1,4 @@
-package de.claas.parser.grammars.abnf;
+package de.claas.parser.grammars;
 
 import java.util.ArrayList;
 import java.util.HashMap;

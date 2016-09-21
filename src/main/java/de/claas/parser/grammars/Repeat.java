@@ -5,8 +5,6 @@ import java.util.List;
 
 import de.claas.parser.Grammar;
 import de.claas.parser.Node;
-import de.claas.parser.grammars.abnf.AugmentedBackusNaur;
-import de.claas.parser.grammars.abnf.AugmentedBackusNaurInterpreter;
 import de.claas.parser.rules.NonTerminal;
 
 /**

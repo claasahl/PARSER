@@ -1,10 +1,11 @@
-package de.claas.parser.grammars.number;
+package de.claas.parser.grammars;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
 import de.claas.parser.Node;
+import de.claas.parser.grammars.NumberInterpreter;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.visitors.InterpreterTest;
 

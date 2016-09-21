@@ -1,4 +1,4 @@
-package de.claas.parser.grammars.abnf;
+package de.claas.parser.grammars;
 
 import de.claas.parser.Grammar;
 import de.claas.parser.Node;

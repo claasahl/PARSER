@@ -1,4 +1,4 @@
-package de.claas.parser.grammars.abnf;
+package de.claas.parser.grammars;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import de.claas.parser.Node;
 import de.claas.parser.Rule;
+import de.claas.parser.grammars.AugmentedBackusNaurInterpreter;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;

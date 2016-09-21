@@ -1,4 +1,4 @@
-package de.claas.parser.grammars.number;
+package de.claas.parser.grammars;
 
 import java.util.Iterator;
 import java.util.function.Function;
