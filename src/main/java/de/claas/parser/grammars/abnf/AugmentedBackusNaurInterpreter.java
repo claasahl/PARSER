@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 import de.claas.parser.Node;
 import de.claas.parser.Rule;
@@ -94,6 +95,12 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 	}
 
 	private Rule visitRulelist(NonTerminalNode node) {
+		if (!node.hasChildren()) {
+			String msg = "At least one rule is required!";
+			throw new InterpretingException(msg);
+		}
+		
+		
 		Rule firstRule = null;
 		Iterator<Node> children = node.iterator();
 		while (children.hasNext()) {
@@ -284,6 +291,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			Repetition dummy = (Repetition) getResult();
 			minRepetitions = dummy.getMinimumNumberOfRepetions();
 			maxRepetitions = dummy.getMaximumNumberOfRepetions();
+			child = children.hasNext() ? children.next() : null;
 		}
 
 		expectNonTerminalNode("element");
@@ -301,14 +309,18 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 	private Rule visitRepeat(NonTerminalNode node) {
 		Rule rule = null;
 		String repeat = ConcatenateTerminals.concat(node);
-		String[] repetitions = repeat.split("*");
-		if (repetitions.length == 1 && !repetitions[0].isEmpty()) {
+		String[] repetitions = repeat.split(Pattern.quote("*"));
+		if (repetitions.length == 0) {
+			int minRepetitions = 0;
+			int maxRepetitions = Integer.MAX_VALUE;
+			rule = new Repetition(null, minRepetitions, maxRepetitions);
+		} else if (repetitions.length == 1 && !repetitions[0].isEmpty()) {
 			int minRepetitions = new Integer(repetitions[0]).intValue();
 			int maxRepetitions = new Integer(repetitions[0]).intValue();
 			rule = new Repetition(null, minRepetitions, maxRepetitions);
 		} else if (repetitions.length == 2) {
 			int minRepetitions = !repetitions[0].isEmpty() ? new Integer(repetitions[0]).intValue() : 0;
-			int maxRepetitions = !repetitions[0].isEmpty() ? new Integer(repetitions[1]).intValue() : Integer.MAX_VALUE;
+			int maxRepetitions = !repetitions[1].isEmpty() ? new Integer(repetitions[1]).intValue() : Integer.MAX_VALUE;
 			rule = new Repetition(null, minRepetitions, maxRepetitions);
 		} else {
 			throw new InterpretingException("Invalid 'repeat'-rule: " + repeat);
