@@ -173,6 +173,105 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 	}
 
 	@Test
+	public void shouldHandleSingleBinaryValue() {
+		Grammar grammar = build();
+		Node actual = grammar.parse("rule = %b010101\r\n", false);
+
+		Rule value = new Terminal(false, "010101");
+		NonTerminal rule = new NonTerminal("rule", value);
+		Node expected = generateNodes(rule);
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void shouldHandleMultipleBinaryValues() {
+		Grammar grammar = build();
+		Node actual = grammar.parse("rule = %b01.11.00\r\n", false);
+
+		Rule value = new Terminal(false, "01", "11", "00");
+		NonTerminal rule = new NonTerminal("rule", value);
+		Node expected = generateNodes(rule);
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void shouldHandleRangeOfBinaryValues() {
+		Grammar grammar = build();
+		Node actual = grammar.parse("rule = %b01-11\r\n", false);
+
+		Rule value = new Terminal(false, "01", "10", "11");
+		NonTerminal rule = new NonTerminal("rule", value);
+		Node expected = generateNodes(rule);
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void shouldHandleSingleDecimalValue() {
+		Grammar grammar = build();
+		Node actual = grammar.parse("rule = %d123\r\n", false);
+
+		Rule value = new Terminal(false, "123");
+		NonTerminal rule = new NonTerminal("rule", value);
+		Node expected = generateNodes(rule);
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void shouldHandleMultipleDecimalValues() {
+		Grammar grammar = build();
+		Node actual = grammar.parse("rule = %d12.3\r\n", false);
+
+		Rule value = new Terminal(false, "12", "3");
+		NonTerminal rule = new NonTerminal("rule", value);
+		Node expected = generateNodes(rule);
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void shouldHandleRangeOfDecimalValues() {
+		Grammar grammar = build();
+		Node actual = grammar.parse("rule = %d2-4\r\n", false);
+
+		Rule value = new Terminal(false, "2", "3", "4");
+		NonTerminal rule = new NonTerminal("rule", value);
+		Node expected = generateNodes(rule);
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void shouldHandleSingleHexValue() {
+		Grammar grammar = build();
+		Node actual = grammar.parse("rule = %xFF\r\n", false);
+
+		Rule value = new Terminal(false, "FF");
+		NonTerminal rule = new NonTerminal("rule", value);
+		Node expected = generateNodes(rule);
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void shouldHandleMultipleHexValues() {
+		Grammar grammar = build();
+		Node actual = grammar.parse("rule = %xA.BB\r\n", false);
+
+		Rule value = new Terminal(false, "A", "BB");
+		NonTerminal rule = new NonTerminal("rule", value);
+		Node expected = generateNodes(rule);
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void shouldHandleRangeOfHexValues() {
+		Grammar grammar = build();
+		Node actual = grammar.parse("rule = %xFE-FF\r\n", false);
+
+		Rule value = new Terminal(false, "FE", "FF");
+		NonTerminal rule = new NonTerminal("rule", value);
+		Node expected = generateNodes(rule);
+		assertEquals(expected, actual);
+	}
+
+	@Test
 	public void shouldHandleIncrementalAlternatives() {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = \"hel\"\r\nrule =/ \"lo\"\r\n", false);
