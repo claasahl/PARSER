@@ -16,6 +16,7 @@ public class State {
 
 	private final Stack<Integer> steps;
 	private final String data;
+	private final String dataUpperCase;
 	private int offset = 0;
 
 	/**
@@ -28,6 +29,7 @@ public class State {
 		this.steps = new Stack<>();
 		this.steps.addAll(state.steps);
 		this.data = state.data;
+		this.dataUpperCase = state.dataUpperCase;
 		this.offset = state.offset;
 	}
 
@@ -40,6 +42,7 @@ public class State {
 	public State(String data) {
 		this.steps = new Stack<>();
 		this.data = data;
+		this.dataUpperCase = data.toUpperCase();
 	}
 
 	/**
@@ -55,8 +58,8 @@ public class State {
 	 *         processed and <code>false</code> otherwise
 	 */
 	public String process(boolean caseSensitive, String token) {
-		String localData = caseSensitive ? this.data : this.data.toLowerCase();
-		String localToken = caseSensitive ? token : token.toLowerCase();
+		String localData = caseSensitive ? this.data : this.dataUpperCase;
+		String localToken = caseSensitive ? token : token.toUpperCase();
 		if (localData.startsWith(localToken, this.offset)) {
 			String actualToken = this.data.substring(this.offset, this.offset + localToken.length());
 			this.offset += localToken.length();
