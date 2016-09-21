@@ -54,7 +54,7 @@ public class NonTerminalNode extends Node {
 		if (obj != null && NonTerminalNode.class.isAssignableFrom(obj.getClass())) {
 			boolean equality = true;
 			NonTerminalNode node = (NonTerminalNode) obj;
-			equality &= name.equals(node.name);
+			equality &= this.name.equals(node.name);
 			equality &= super.equals(obj);
 			return equality;
 		}

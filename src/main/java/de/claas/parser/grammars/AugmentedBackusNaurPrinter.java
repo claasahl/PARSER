@@ -72,10 +72,10 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 
 	@Override
 	public void visitConjunction(Conjunction rule) {
-		if (visitedPath.add(rule)) {
+		if (this.visitedPath.add(rule)) {
 			for (Rule child : rule)
 				child.visit(this);
-			visitedPath.remove(rule);
+			this.visitedPath.remove(rule);
 		} else {
 			throw new CyclicRuleException(rule);
 		}
@@ -83,10 +83,10 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 
 	@Override
 	public void visitDisjunction(Disjunction rule) {
-		if (visitedPath.add(rule)) {
+		if (this.visitedPath.add(rule)) {
 			for (Rule child : rule)
 				child.visit(this);
-			visitedPath.remove(rule);
+			this.visitedPath.remove(rule);
 		} else {
 			throw new CyclicRuleException(rule);
 		}
@@ -94,13 +94,13 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 
 	@Override
 	public void visitNonTerminal(NonTerminal rule) {
-		if (visitedPath.add(rule)) {
-			if (visitedNonTerminals.add(rule)) {
+		if (this.visitedPath.add(rule)) {
+			if (this.visitedNonTerminals.add(rule)) {
 				String printedRule = new NonTerminalPrinter(rule).toString();
-				printedRules.add(printedRule);
+				this.printedRules.add(printedRule);
 				rule.getRule().visit(this);
 			}
-			visitedPath.remove(rule);
+			this.visitedPath.remove(rule);
 		} else {
 			// non terminal rule has already been printed
 		}
@@ -108,9 +108,9 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 
 	@Override
 	public void visitOptional(Optional rule) {
-		if (visitedPath.add(rule)) {
+		if (this.visitedPath.add(rule)) {
 			rule.getRule().visit(this);
-			visitedPath.remove(rule);
+			this.visitedPath.remove(rule);
 		} else {
 			throw new CyclicRuleException(rule);
 		}
@@ -118,9 +118,9 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 
 	@Override
 	public void visitRepetition(Repetition rule) {
-		if (visitedPath.add(rule)) {
+		if (this.visitedPath.add(rule)) {
 			rule.getRule().visit(this);
-			visitedPath.remove(rule);
+			this.visitedPath.remove(rule);
 		} else {
 			throw new CyclicRuleException(rule);
 		}
@@ -166,16 +166,16 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 
 		@Override
 		public void visitConjunction(Conjunction rule) {
-			if (visitedPath.add(rule)) {
-				stringBuilder.append("(");
+			if (this.visitedPath.add(rule)) {
+				this.stringBuilder.append("(");
 				Iterator<Rule> children = rule.iterator();
 				while (children.hasNext()) {
 					children.next().visit(this);
 					if (children.hasNext())
-						stringBuilder.append(" ");
+						this.stringBuilder.append(" ");
 				}
-				stringBuilder.append(")");
-				visitedPath.remove(rule);
+				this.stringBuilder.append(")");
+				this.visitedPath.remove(rule);
 			} else {
 				throw new CyclicRuleException(rule);
 			}
@@ -183,16 +183,16 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 
 		@Override
 		public void visitDisjunction(Disjunction rule) {
-			if (visitedPath.add(rule)) {
-				stringBuilder.append("(");
+			if (this.visitedPath.add(rule)) {
+				this.stringBuilder.append("(");
 				Iterator<Rule> children = rule.iterator();
 				while (children.hasNext()) {
 					children.next().visit(this);
 					if (children.hasNext())
-						stringBuilder.append(" / ");
+						this.stringBuilder.append(" / ");
 				}
-				stringBuilder.append(")");
-				visitedPath.remove(rule);
+				this.stringBuilder.append(")");
+				this.visitedPath.remove(rule);
 			} else {
 				throw new CyclicRuleException(rule);
 			}
@@ -200,28 +200,28 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 
 		@Override
 		public void visitNonTerminal(NonTerminal rule) {
-			if (visitedPath.add(rule)) {
-				if (stringBuilder.length() > 0) {
-					stringBuilder.append(rule.getName());
+			if (this.visitedPath.add(rule)) {
+				if (this.stringBuilder.length() > 0) {
+					this.stringBuilder.append(rule.getName());
 				} else {
-					stringBuilder.append(rule.getName());
-					stringBuilder.append(" = ");
+					this.stringBuilder.append(rule.getName());
+					this.stringBuilder.append(" = ");
 					rule.getRule().visit(this);
 				}
-				visitedPath.remove(rule);
+				this.visitedPath.remove(rule);
 			} else {
-				stringBuilder.append(rule.getName());
+				this.stringBuilder.append(rule.getName());
 			}
 		}
 
 		@Override
 		public void visitOptional(Optional rule) {
-			if (visitedPath.add(rule)) {
-				stringBuilder.append("*1");
-				stringBuilder.append("(");
+			if (this.visitedPath.add(rule)) {
+				this.stringBuilder.append("*1");
+				this.stringBuilder.append("(");
 				rule.getRule().visit(this);
-				stringBuilder.append(")");
-				visitedPath.remove(rule);
+				this.stringBuilder.append(")");
+				this.visitedPath.remove(rule);
 			} else {
 				throw new CyclicRuleException(rule);
 			}
@@ -229,12 +229,12 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 
 		@Override
 		public void visitRepetition(Repetition rule) {
-			if (visitedPath.add(rule)) {
-				stringBuilder.append("*");
-				stringBuilder.append("(");
+			if (this.visitedPath.add(rule)) {
+				this.stringBuilder.append("*");
+				this.stringBuilder.append("(");
 				rule.getRule().visit(this);
-				stringBuilder.append(")");
-				visitedPath.remove(rule);
+				this.stringBuilder.append(")");
+				this.visitedPath.remove(rule);
 			} else {
 				throw new CyclicRuleException(rule);
 			}
@@ -242,33 +242,34 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 
 		@Override
 		public void visitTerminal(Terminal rule) {
-			stringBuilder.append("(");
+			this.stringBuilder.append("(");
 			Iterator<String> terminals = rule.getTerminals();
 			while (terminals.hasNext()) {
 				String terminal = terminals.next();
 				if (terminal.length() == 1) {
 					char character = terminal.charAt(0);
 					if (Character.isISOControl(character)) {
-						stringBuilder.append(String.format("x%02X", (int) character));
+						this.stringBuilder.append("x");
+						this.stringBuilder.append(Integer.toHexString(character));
 					} else {
-						stringBuilder.append("'");
-						stringBuilder.append(terminal);
-						stringBuilder.append("'");
+						this.stringBuilder.append("'");
+						this.stringBuilder.append(terminal);
+						this.stringBuilder.append("'");
 					}
 				} else {
-					stringBuilder.append("'");
-					stringBuilder.append(terminal);
-					stringBuilder.append("'");
+					this.stringBuilder.append("'");
+					this.stringBuilder.append(terminal);
+					this.stringBuilder.append("'");
 				}
 				if (terminals.hasNext())
-					stringBuilder.append(" / ");
+					this.stringBuilder.append(" / ");
 			}
-			stringBuilder.append(")");
+			this.stringBuilder.append(")");
 		}
 
 		@Override
 		public String toString() {
-			return stringBuilder.toString();
+			return this.stringBuilder.toString();
 		}
 	}
 }
