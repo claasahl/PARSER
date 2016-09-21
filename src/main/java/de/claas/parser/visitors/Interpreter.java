@@ -264,4 +264,20 @@ public abstract class Interpreter<R> implements NodeVisitor {
 		};
 	}
 
+	/**
+	 * A convenience function for concatenating terminal symbols of a
+	 * {@link Node} tree. It returns a string that represents all visited
+	 * {@link TerminalNode}s within the specified tree of {@link Node}s
+	 * 
+	 * @param node
+	 *            root of the tree of nodes
+	 * @return string that represents all visited {@link TerminalNode}s within
+	 *         the specified tree of {@link Node}s
+	 */
+	protected static String concatTerminals(Node node) {
+		ConcatenateTerminals visitor = new ConcatenateTerminals();
+		node.visit(visitor);
+		return visitor.toString();
+	}
+
 }

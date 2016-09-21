@@ -19,7 +19,6 @@ import de.claas.parser.rules.NonTerminal;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
-import de.claas.parser.visitors.ConcatenateTerminals;
 import de.claas.parser.visitors.Interpreter;
 import de.claas.parser.visitors.UpdateNonTerminalReferences;
 
@@ -139,14 +138,14 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		expectNonTerminalNode("rulename");
 		if (child != null) {
 			child.visit(this);
-			ruleName = ConcatenateTerminals.concat(child);
+			ruleName = concatTerminals(child);
 			child = children.hasNext() ? children.next() : null;
 		}
 
 		expectNonTerminalNode("defined-as");
 		if (child != null) {
 			child.visit(this);
-			String definedAs = ConcatenateTerminals.concat(child);
+			String definedAs = concatTerminals(child);
 			alternative = "/=".equalsIgnoreCase(definedAs);
 			child = children.hasNext() ? children.next() : null;
 		}
@@ -213,7 +212,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 
 			expectTerminalNode();
 			if (child != null) {
-				String slash = ConcatenateTerminals.concat(child);
+				String slash = concatTerminals(child);
 				if (!"/".equals(slash)) {
 					String msg = String.format("Expected forward slash '/', but got '%s'", slash);
 					throw new InterpretingException(msg);
@@ -308,7 +307,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 
 	private Rule visitRepeat(NonTerminalNode node) {
 		Rule rule = null;
-		String repeat = ConcatenateTerminals.concat(node);
+		String repeat = concatTerminals(node);
 		int starIndex = repeat.indexOf('*');
 		if (starIndex >= 0) {
 			String min = repeat.substring(0, starIndex);
@@ -332,7 +331,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 
 		expectNonTerminalNode("rulename");
 		if (child != null && isExpected(child)) {
-			String ruleName = ConcatenateTerminals.concat(child);
+			String ruleName = concatTerminals(child);
 			if (!this.rules.containsKey(ruleName)) {
 				this.rules.put(ruleName, new NonTerminal(ruleName));
 			}
@@ -357,7 +356,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 
 		expectTerminalNode();
 		if (child != null) {
-			String bracket = ConcatenateTerminals.concat(child);
+			String bracket = concatTerminals(child);
 			if (!"(".equals(bracket)) {
 				String msg = String.format("Expected opening bracket '(', but got '%s'", bracket);
 				throw new InterpretingException(msg);
@@ -386,7 +385,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 
 		expectTerminalNode();
 		if (child != null) {
-			String bracket = ConcatenateTerminals.concat(child);
+			String bracket = concatTerminals(child);
 			if (!")".equals(bracket)) {
 				String msg = String.format("Expected closing bracket ')', but got '%s'", bracket);
 				throw new InterpretingException(msg);
@@ -404,7 +403,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 
 		expectTerminalNode();
 		if (child != null) {
-			String bracket = ConcatenateTerminals.concat(child);
+			String bracket = concatTerminals(child);
 			if (!"[".equals(bracket)) {
 				String msg = String.format("Expected opening bracket '[', but got '%s'", bracket);
 				throw new InterpretingException(msg);
@@ -433,7 +432,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 
 		expectTerminalNode();
 		if (child != null) {
-			String bracket = ConcatenateTerminals.concat(child);
+			String bracket = concatTerminals(child);
 			if (!"]".equals(bracket)) {
 				String msg = String.format("Expected closing bracket ']', but got '%s'", bracket);
 				throw new InterpretingException(msg);
@@ -465,7 +464,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 
 		expectTerminalNode();
 		if (child != null && isExpected(child)) {
-			String marker = ConcatenateTerminals.concat(child);
+			String marker = concatTerminals(child);
 			if (!"%i".equals(marker)) {
 				String msg = String.format("Expected case insensitivity marker '%i', but got '%s'", marker);
 				throw new InterpretingException(msg);
@@ -475,7 +474,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 
 		expectNonTerminalNode("quoted-string");
 		if (child != null) {
-			String quotedString = ConcatenateTerminals.concat(child);
+			String quotedString = concatTerminals(child);
 			if (quotedString.startsWith("\"") && quotedString.endsWith("\"")) {
 				int length = quotedString.length();
 				String quote = quotedString.substring(1, length - 1);
@@ -495,7 +494,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 
 		expectTerminalNode();
 		if (child != null) {
-			String marker = ConcatenateTerminals.concat(child);
+			String marker = concatTerminals(child);
 			if (!"%s".equals(marker)) {
 				String msg = String.format("Expected case sensitivity marker '%s', but got '%s'", marker);
 				throw new InterpretingException(msg);
@@ -505,7 +504,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 
 		expectNonTerminalNode("quoted-string");
 		if (child != null) {
-			String quotedString = ConcatenateTerminals.concat(child);
+			String quotedString = concatTerminals(child);
 			if (quotedString.startsWith("\"") && quotedString.endsWith("\"")) {
 				int length = quotedString.length();
 				String quote = quotedString.substring(1, length - 1);
@@ -525,7 +524,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 
 		expectTerminalNode();
 		if (child != null) {
-			String marker = ConcatenateTerminals.concat(child);
+			String marker = concatTerminals(child);
 			if (!"%".equals(marker)) {
 				String msg = String.format("Expected number marker '%%', but got '%s'", marker);
 				throw new InterpretingException(msg);
@@ -563,7 +562,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 
 		expectTerminalNode();
 		if (child != null) {
-			String marker = ConcatenateTerminals.concat(child);
+			String marker = concatTerminals(child);
 			if (!expectedMarker.equals(marker)) {
 				String msg = String.format("Expected number marker '%s', but got '%s'", expectedMarker, marker);
 				throw new InterpretingException(msg);
@@ -575,7 +574,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		expectNonTerminalNode(expectedNonTerminal);
 		while (child != null && isExpected(child)) {
 			child.visit(this);
-			String bit = ConcatenateTerminals.concat(child);
+			String bit = concatTerminals(child);
 			digits.append(bit);
 			child = children.hasNext() ? children.next() : null;
 		}
@@ -584,7 +583,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 
 		expectTerminalNode();
 		if (child != null) {
-			String marker = ConcatenateTerminals.concat(child);
+			String marker = concatTerminals(child);
 			child = children.hasNext() ? children.next() : null;
 			if (".".equals(marker)) {
 				rangeStart = -1;
@@ -593,7 +592,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 					expectNonTerminalNode(expectedNonTerminal);
 					while (child != null && isExpected(child)) {
 						child.visit(this);
-						String bit = ConcatenateTerminals.concat(child);
+						String bit = concatTerminals(child);
 						digits.append(bit);
 						child = children.hasNext() ? children.next() : null;
 					}
@@ -601,7 +600,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 
 					expectTerminalNode();
 					if (child != null) {
-						String point = ConcatenateTerminals.concat(child);
+						String point = concatTerminals(child);
 						if (!".".equals(point)) {
 							String msg = String.format("Expected '.', but got '%s'", point);
 							throw new InterpretingException(msg);
@@ -615,7 +614,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 				expectNonTerminalNode(expectedNonTerminal);
 				while (child != null && isExpected(child)) {
 					child.visit(this);
-					String bit = ConcatenateTerminals.concat(child);
+					String bit = concatTerminals(child);
 					digits.append(bit);
 					child = children.hasNext() ? children.next() : null;
 				}
@@ -637,7 +636,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 	private Rule visitProseVal(NonTerminalNode node) {
 		Rule rule = null;
 
-		String quotedString = ConcatenateTerminals.concat(node);
+		String quotedString = concatTerminals(node);
 		if (quotedString.startsWith("<") && quotedString.endsWith(">")) {
 			int length = quotedString.length();
 			String quote = quotedString.substring(1, length - 1);
