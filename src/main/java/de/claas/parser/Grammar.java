@@ -91,10 +91,13 @@ public class Grammar {
 	 */
 	public Node tryParse(String data, boolean retainIntermediateNodes) {
 		State state = new State(data);
-		Node node = Parser.parse(state, this.start);
-		if (node != null && !retainIntermediateNodes)
-			node.visit(new RemoveIntermediateNodes());
-		return node;
+		Parser parser = new Parser(state);
+		this.start.visit(parser);
+		
+		Node result = parser.getResult();
+		if (result != null && !retainIntermediateNodes)
+			result.visit(new RemoveIntermediateNodes());
+		return result;
 	}
 
 	/**
@@ -119,11 +122,14 @@ public class Grammar {
 	 */
 	public Node parse(String data, boolean retainIntermediateNodes) {
 		State state = new State(data);
-		Node node = Parser.parse(state, this.start);
-		if (node == null || !state.getUnprocessedData().isEmpty())
+		Parser parser = new Parser(state);
+		this.start.visit(parser);
+		
+		Node result = parser.getResult();
+		if (result == null || !state.getUnprocessedData().isEmpty())
 			throw new ParsingException("Could not process all tokens.");
 		if (!retainIntermediateNodes)
-			node.visit(new RemoveIntermediateNodes());
-		return node;
+			result.visit(new RemoveIntermediateNodes());
+		return result;
 	}
 }
