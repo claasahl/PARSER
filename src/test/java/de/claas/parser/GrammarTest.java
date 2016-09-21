@@ -1,9 +1,5 @@
 package de.claas.parser;
 
-import org.junit.Assert;
-
-import de.claas.parser.visitors.NodeToString;
-
 /**
  * 
  * The JUnit test for class {@link Grammar}. It is intended to collect and
@@ -22,21 +18,5 @@ public abstract class GrammarTest<R extends Grammar> {
 	 * @return an instantiated {@link Grammar} class
 	 */
 	protected abstract R build();
-
-	/**
-	 * A convenience method for asserting the equality of nodes.
-	 * 
-	 * @param expected
-	 *            the expected tree of nodes
-	 * @param actual
-	 *            the actual tree of nodes
-	 */
-	protected static void assertEquals(Node expected, Node actual) {
-		NodeToString exp = new NodeToString();
-		expected.visit(exp);
-		NodeToString act = new NodeToString();
-		actual.visit(act);
-		Assert.assertEquals(exp.toString(), act.toString());
-	}
 
 }

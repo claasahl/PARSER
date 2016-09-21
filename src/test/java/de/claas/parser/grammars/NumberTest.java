@@ -1,15 +1,15 @@
 package de.claas.parser.grammars;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import de.claas.parser.Grammar;
 import de.claas.parser.GrammarTest;
 import de.claas.parser.Node;
 import de.claas.parser.exceptions.ParsingException;
-import de.claas.parser.grammars.Number;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
-
 /**
  * 
  * The JUnit test for class {@link Number}. It is intended to collect and

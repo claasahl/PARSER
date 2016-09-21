@@ -1,5 +1,7 @@
 package de.claas.parser.grammars;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import de.claas.parser.Grammar;
