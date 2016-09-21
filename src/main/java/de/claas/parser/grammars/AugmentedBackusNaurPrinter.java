@@ -43,31 +43,23 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 	 * 
 	 * Constructs a new {@link AugmentedBackusNaurPrinter} with default
 	 * parameters. Calling this constructor is equivalent to calling
-	 * <code>{@link #AugmentedBackusNaurPrinter(NonTerminal, String)}</code>
-	 * with the system's line separator (property {@literal line.separator}).
-	 * 
-	 * @param rule
-	 *            the (non terminal) rule
+	 * <code>{@link #AugmentedBackusNaurPrinter(String)}</code> with the
+	 * system's line separator (property {@literal line.separator}).
 	 */
-	public AugmentedBackusNaurPrinter(NonTerminal rule) {
-		this(rule, System.getProperty("line.separator", DEFAULT_LINE_NEWLINE));
+	public AugmentedBackusNaurPrinter() {
+		this(System.getProperty("line.separator", DEFAULT_LINE_NEWLINE));
 	}
 
 	/**
 	 * Constructs a new {@link AugmentedBackusNaurPrinter} with the specified
-	 * parameters. The specified (non terminal) rule is assumed to represent the
-	 * grammar's root-rule and it is stringified (i.e. turned into a string).
-	 * The line separator is appended to every stringified {@link NonTerminal}
-	 * rule.
+	 * parameters. The line separator is appended to every visited / stringified
+	 * {@link NonTerminal} rule.
 	 * 
-	 * @param rule
-	 *            the (non terminal) rule
 	 * @param lineSeparator
 	 *            the line separator
 	 */
-	public AugmentedBackusNaurPrinter(NonTerminal rule, String lineSeparator) {
+	public AugmentedBackusNaurPrinter(String lineSeparator) {
 		this.lineSeparator = lineSeparator;
-		rule.visit(this);
 	}
 
 	@Override
