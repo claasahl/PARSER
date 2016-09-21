@@ -1,13 +1,13 @@
 package de.claas.parser.grammars.number;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.claas.parser.Grammar;
 import de.claas.parser.Node;
-import de.claas.parser.rules.Conjunction;
-import de.claas.parser.rules.Disjunction;
+import de.claas.parser.grammars.abnf.AugmentedBackusNaur;
+import de.claas.parser.grammars.abnf.AugmentedBackusNaurInterpreter;
 import de.claas.parser.rules.NonTerminal;
-import de.claas.parser.rules.Optional;
-import de.claas.parser.rules.Repetition;
-import de.claas.parser.rules.Terminal;
 
 /**
  * The class {@link Number}. It is mainly intended for educational purposes. It
@@ -16,12 +16,12 @@ import de.claas.parser.rules.Terminal;
  * <ul>
  * <li>number = [ minus ] integer [ frac ] [ exp ]</li>
  * <li>decimal-point = %x2E ; .</li>
- * <li>DIGIT1-9 = %x31-39 ; 1-9</li>
- * <li>DIGIT = %x30-39 ; 0-9</li>
+ * <li>digit1-9 = %x31-39 ; 1-9</li>
+ * <li>digit = %x30-39 ; 0-9</li>
  * <li>e = %x65 / %x45 ; e E</li>
- * <li>exp = e [ minus / plus ] +DIGIT</li>
- * <li>frac = decimal-point +DIGIT</li>
- * <li>integer = zero / ( DIGIT1-9 *DIGIT )</li>
+ * <li>exp = e [ minus / plus ] 1*digit</li>
+ * <li>frac = decimal-point 1*digit</li>
+ * <li>integer = zero / ( digit1-9 *digit )</li>
  * <li>minus = %x2D ; -</li>
  * <li>plus = %x2B ; +</li>
  * <li>zero = %x30 ; 0</li>
@@ -48,22 +48,24 @@ public class Number extends Grammar {
 	 * @return the above described grammar
 	 */
 	private static NonTerminal grammar() {
-		NonTerminal minus = new NonTerminal("minus", new Terminal("-"));
-		NonTerminal plus = new NonTerminal("plus", new Terminal("+"));
-		NonTerminal zero = new NonTerminal("zero", new Terminal("0"));
-		NonTerminal e = new NonTerminal("e", new Terminal("e", "E"));
-		NonTerminal decimalPoint = new NonTerminal("decimal-point", new Terminal("."));
-		NonTerminal digit = new NonTerminal("digit", new Terminal('0', '9'));
-		NonTerminal digit19 = new NonTerminal("digit1-9", new Terminal('1', '9'));
-		NonTerminal exp = new NonTerminal("exp", new Conjunction(e, new Optional(new Disjunction(plus, minus)),
-				new Repetition(digit, 1, Integer.MAX_VALUE)));
-		NonTerminal frac = new NonTerminal("frac",
-				new Conjunction(decimalPoint, new Repetition(digit, 1, Integer.MAX_VALUE)));
-		NonTerminal integer = new NonTerminal("integer",
-				new Disjunction(zero, new Conjunction(digit19, new Repetition(digit))));
-		NonTerminal number = new NonTerminal("number",
-				new Conjunction(new Optional(minus), integer, new Optional(frac), new Optional(exp)));
-		return number;
+		List<String> lines = new ArrayList<>();
+		lines.add("number = [ minus ] integer [ frac ] [ exp ]");
+		lines.add("decimal-point = %x2E ; .");
+		lines.add("digit1-9 = %x31-39 ; 1-9");
+		lines.add("digit = %x30-39 ; 0-9");
+		lines.add("e = %x65 / %x45 ; e E");
+		lines.add("exp = e [ minus / plus ] 1*digit");
+		lines.add("frac = decimal-point 1*digit");
+		lines.add("integer = zero / ( digit1-9 *digit )");
+		lines.add("minus = %x2D ; -");
+		lines.add("plus = %x2B ; +");
+		lines.add("zero = %x30 ; 0");
+		
+		String data = String.join("\r\n", lines) + "\r\n";
+		Node grammar = new AugmentedBackusNaur().parse(data);
+		AugmentedBackusNaurInterpreter interpreter = new AugmentedBackusNaurInterpreter();
+		grammar.visit(interpreter);
+		return (NonTerminal) interpreter.getResult();
 	}
 
 }
