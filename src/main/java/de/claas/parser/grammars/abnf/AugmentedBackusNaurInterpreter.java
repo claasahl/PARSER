@@ -88,6 +88,8 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		case "c-wsp":
 		case "c-nl":
 		case "bit":
+		case "digit":
+		case "hexdig":
 			return this::skip;
 		default:
 			return null;
@@ -99,8 +101,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			String msg = "At least one rule is required!";
 			throw new InterpretingException(msg);
 		}
-		
-		
+
 		Rule firstRule = null;
 		Iterator<Node> children = node.iterator();
 		while (children.hasNext()) {
@@ -583,11 +584,12 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			child = children.hasNext() ? children.next() : null;
 		}
 		rangeStart = Integer.parseInt(digits.toString(), radix);
-		terminals.add(digits.toString());
+		terminals.add("" + (char) rangeStart);
 
 		expectTerminalNode();
 		if (child != null) {
 			String marker = ConcatenateTerminals.concat(child);
+			child = children.hasNext() ? children.next() : null;
 			if (".".equals(marker)) {
 				rangeStart = -1;
 				do {
@@ -599,7 +601,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 						digits.append(bit);
 						child = children.hasNext() ? children.next() : null;
 					}
-					terminals.add(digits.toString());
+					terminals.add("" + (char)Integer.parseInt(digits.toString(), radix));
 
 					expectTerminalNode();
 					if (child != null) {
@@ -631,7 +633,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 
 		if (rangeStart >= 0 && rangeEnd >= rangeStart) {
 			for (int number = rangeStart; number <= rangeEnd; number++)
-				terminals.add(Integer.toString(number, radix));
+				terminals.add("" + (char) number);
 		}
 		return new Terminal(true, terminals.toArray(new String[0]));
 	}
