@@ -68,26 +68,26 @@ public class NodeToString implements NodeVisitor {
 	@Override
 	public void visitIntermediateNode(IntermediateNode node) {
 		appendNode(node, null);
-		if (visitedPath.add(node)) {
+		if (this.visitedPath.add(node)) {
 			incrementLevel();
 			for (Node n : node) {
 				n.visit(this);
 			}
 			decrementLevel();
-			visitedPath.remove(node);
+			this.visitedPath.remove(node);
 		}
 	}
 
 	@Override
 	public void visitNonTerminaNode(NonTerminalNode node) {
 		appendNode(node, node.getName());
-		if (visitedPath.add(node)) {
+		if (this.visitedPath.add(node)) {
 			incrementLevel();
 			for (Node n : node) {
 				n.visit(this);
 			}
 			decrementLevel();
-			visitedPath.remove(node);
+			this.visitedPath.remove(node);
 		}
 	}
 
@@ -95,14 +95,14 @@ public class NodeToString implements NodeVisitor {
 	 * Increments the level / indentation for the next node.
 	 */
 	private void incrementLevel() {
-		levels.incrementAndGet();
+		this.levels.incrementAndGet();
 	}
 
 	/**
 	 * Decrements the level / indentation for the next node.
 	 */
 	private void decrementLevel() {
-		levels.decrementAndGet();
+		this.levels.decrementAndGet();
 	}
 
 	/**
@@ -117,17 +117,17 @@ public class NodeToString implements NodeVisitor {
 	 *            the postfix
 	 */
 	private void appendNode(Node node, String postfix) {
-		builder.append(new String(new byte[levels.get()]).replaceAll("\0", levelSeparator));
-		builder.append(node.getClass().getSimpleName());
+		this.builder.append(new String(new byte[this.levels.get()]).replaceAll("\0", this.levelSeparator));
+		this.builder.append(node.getClass().getSimpleName());
 		if (postfix != null) {
-			builder.append(":");
-			builder.append(postfix);
+			this.builder.append(":");
+			this.builder.append(postfix);
 		}
-		builder.append(lineSeparator);
+		this.builder.append(this.lineSeparator);
 	}
 
 	@Override
 	public String toString() {
-		return builder.toString();
+		return this.builder.toString();
 	}
 }
