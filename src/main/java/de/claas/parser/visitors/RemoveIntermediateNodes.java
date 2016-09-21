@@ -2,6 +2,7 @@ package de.claas.parser.visitors;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
@@ -37,45 +38,45 @@ public class RemoveIntermediateNodes implements NodeVisitor {
 
 	@Override
 	public void visitIntermediateNode(IntermediateNode node) {
-		if (visitedPath.add(node) && !parents.isEmpty()) {
+		if (this.visitedPath.add(node) && !this.parents.isEmpty()) {
 			// enumerate all siblings
-			Node parent = parents.peek();
-			ArrayList<Node> siblings = new ArrayList<>();
-			for (Node n : parent) {
-				siblings.add(n);
+			Node parent = this.parents.peek();
+			List<Node> siblings = new ArrayList<>();
+			for (Node child : parent) {
+				siblings.add(child);
 			}
 
 			// remove all siblings
-			for (Node n : siblings) {
-				parent.removeChild(n);
+			for (Node child : siblings) {
+				parent.removeChild(child);
 			}
 
 			// add all siblings (preserving order)
-			for (Node n : siblings) {
-				if (n == node) {
+			for (Node child : siblings) {
+				if (node.equals(child)) {
 					for (Node c : node) {
-						if (c != node) {
+						if (!node.equals(c)) {
 							parent.addChild(c);
 						}
 					}
 				} else {
-					parent.addChild(n);
+					parent.addChild(child);
 				}
 			}
 
 			// ... now visit all children
-			for (Node n : node) {
-				n.visit(this);
+			for (Node child : node) {
+				child.visit(this);
 			}
 
-			visitedPath.remove(node);
+			this.visitedPath.remove(node);
 		}
 	}
 
 	@Override
 	public void visitNonTerminaNode(NonTerminalNode node) {
-		if (visitedPath.add(node)) {
-			parents.push(node);
+		if (this.visitedPath.add(node)) {
+			this.parents.push(node);
 			ArrayList<Node> tmp = new ArrayList<>();
 			for (Node n : node) {
 				tmp.add(n);
@@ -83,8 +84,8 @@ public class RemoveIntermediateNodes implements NodeVisitor {
 			for (Node n : tmp) {
 				n.visit(this);
 			}
-			parents.pop();
-			visitedPath.remove(node);
+			this.parents.pop();
+			this.visitedPath.remove(node);
 		}
 	}
 

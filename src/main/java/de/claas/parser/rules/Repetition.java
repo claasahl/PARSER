@@ -1,11 +1,7 @@
 package de.claas.parser.rules;
 
-import de.claas.parser.Node;
-import de.claas.parser.Result;
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
-import de.claas.parser.State;
-import de.claas.parser.results.IntermediateNode;
 
 /**
  * 
@@ -67,7 +63,7 @@ public class Repetition extends Decorator {
 	 * @return the minimum number of repetitions
 	 */
 	public int getMinimumNumberOfRepetions() {
-		return minRepetitions;
+		return this.minRepetitions;
 	}
 
 	/**
@@ -77,28 +73,7 @@ public class Repetition extends Decorator {
 	 * @return the maximum number of repetitions
 	 */
 	public int getMaximumNumberOfRepetions() {
-		return maxRepetitions;
-	}
-
-	@Override
-	public Node process(State state) {
-		state.beginGroup();
-		try {
-			Node node = new IntermediateNode();
-			for (int repetitions = 1; repetitions <= maxRepetitions; repetitions++) {
-				if (Result.get(getRule(), state, node, null) == null) {
-					if (repetitions <= minRepetitions) {
-						state.revert();
-						return null;
-					} else {
-						return node;
-					}
-				}
-			}
-			return node;
-		} finally {
-			state.endGroup();
-		}
+		return this.maxRepetitions;
 	}
 
 	@Override
@@ -111,8 +86,8 @@ public class Repetition extends Decorator {
 		if (obj != null && Repetition.class.isAssignableFrom(obj.getClass())) {
 			boolean equality = true;
 			Repetition rule = (Repetition) obj;
-			equality &= minRepetitions == rule.minRepetitions;
-			equality &= maxRepetitions == rule.maxRepetitions;
+			equality &= this.minRepetitions == rule.minRepetitions;
+			equality &= this.maxRepetitions == rule.maxRepetitions;
 			equality &= super.equals(obj);
 			return equality;
 		}

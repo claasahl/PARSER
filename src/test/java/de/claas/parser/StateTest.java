@@ -1,13 +1,13 @@
 package de.claas.parser;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
 /**
  * 
- * The JUnit test for class {@link StateTest}. It is intended to collect and
+ * The JUnit test for class {@link State}. It is intended to collect and
  * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
  *
@@ -46,8 +46,8 @@ public class StateTest {
 	@Test
 	public void shouldRevertNothing() {
 		State state = buildState("hello world");
-		assertTrue(state.process("hello"));
-		assertTrue(state.process(" "));
+		assertEquals("hello", state.process(true, "hello"));
+		assertEquals(" ", state.process(true, " "));
 		assertEquals("hello ", state.getProcessedData());
 		assertEquals("world", state.getUnprocessedData());
 		state.beginGroup();
@@ -60,10 +60,10 @@ public class StateTest {
 	public void shouldRevertLastGroup() {
 		State state = buildState("hello world");
 		state.beginGroup();
-		assertTrue(state.process("hello"));
+		assertEquals("hello", state.process(true, "hello"));
 		state.beginGroup();
-		assertTrue(state.process(" "));
-		assertTrue(state.process("world"));
+		assertEquals(" ", state.process(true, " "));
+		assertEquals("world", state.process(true, "world"));
 		assertEquals("hello world", state.getProcessedData());
 		assertEquals("", state.getUnprocessedData());
 		state.revert();
@@ -75,12 +75,34 @@ public class StateTest {
 	public void shouldRevertEverything() {
 		State state = buildState("hello world");
 		state.beginGroup();
-		assertTrue(state.process("hello"));
-		assertTrue(state.process(" "));
+		assertEquals("hello", state.process(true, "hello"));
+		assertEquals(" ", state.process(true, " "));
 		assertEquals("hello ", state.getProcessedData());
 		assertEquals("world", state.getUnprocessedData());
 		state.revert();
 		assertEquals("", state.getProcessedData());
 		assertEquals("hello world", state.getUnprocessedData());
+	}
+
+	@Test
+	public void shouldBeCaseSensitive() {
+		State state = buildState("helLO");
+		state.beginGroup();
+		assertNull(state.process(true, "HELLO"));
+		state.revert();
+		assertNull(state.process(true, "hello"));
+		state.revert();
+		assertEquals("helLO", state.process(true, "helLO"));
+	}
+
+	@Test
+	public void shouldBeCaseInsensitive() {
+		State state = buildState("helLO");
+		state.beginGroup();
+		assertEquals("helLO", state.process(false, "HELLO"));
+		state.revert();
+		assertEquals("helLO", state.process(false, "hello"));
+		state.revert();
+		assertEquals("helLO", state.process(false, "helLO"));
 	}
 }

@@ -11,13 +11,18 @@ import java.util.Iterator;
 import org.junit.Test;
 
 import de.claas.parser.Rule;
+import de.claas.parser.RuleTest;
 
 /**
  * 
- * The JUnit test for class {@link DecoratorTest}. It is intended to collect and
+ * The JUnit test for class {@link Decorator}. It is intended to collect and
  * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
- *
+ * <p>
+ * The tested class is abstract or an interface. Consequently, this JUnit test
+ * provides a set of test cases that apply to all concrete implementations of
+ * the tested class.
+ * 
  * @author Claas Ahlrichs
  *
  */
@@ -26,14 +31,13 @@ public abstract class DecoratorTest extends RuleTest {
 	@Override
 	protected Decorator build(Rule... children) {
 		if (children.length == 0)
-			return build(buildTestRule("decorated", null));
-		else {
-			Decorator rule = build(children[0]);
-			for (int i = 1; i < children.length; i++) {
-				rule.addChild(children[i]);
-			}
-			return rule;
+			return build(new Conjunction());
+
+		Decorator rule = build(children[0]);
+		for (int i = 1; i < children.length; i++) {
+			rule.addChild(children[i]);
 		}
+		return rule;
 	}
 
 	/**
@@ -49,7 +53,7 @@ public abstract class DecoratorTest extends RuleTest {
 
 	@Test
 	public void shouldHaveDecoratedRule() {
-		TestRule decorated = buildTestRule("decorated", null);
+		Rule decorated = new Conjunction();
 		Decorator rule = build(decorated);
 		assertNotNull(rule.getRule());
 	}
@@ -68,9 +72,9 @@ public abstract class DecoratorTest extends RuleTest {
 
 	@Test
 	public void addChildShouldBeForwardedToDecoratedRule() {
-		TestRule decorated = buildTestRule("decorated", null);
+		Rule decorated = new Conjunction();
 		Decorator rule = build(decorated);
-		Rule child = buildTestRule("child", null);
+		Rule child = new Terminal("child");
 
 		assertFalse(decorated.hasChildren());
 		assertTrue(rule.addChild(child));
@@ -85,9 +89,9 @@ public abstract class DecoratorTest extends RuleTest {
 
 	@Test
 	public void removeChildShouldBeForwardedToDecoratedRule() {
-		TestRule decorated = buildTestRule("decorated", null);
+		Rule decorated = new Conjunction();
 		Decorator rule = build(decorated);
-		Rule child = buildTestRule("child", null);
+		Rule child = new Terminal("child");
 
 		assertTrue(decorated.addChild(child));
 		assertTrue(rule.removeChild(child));
@@ -102,9 +106,9 @@ public abstract class DecoratorTest extends RuleTest {
 
 	@Test
 	public void hasChildrenShouldBeForwardedToDecoratedRule() {
-		TestRule decorated = buildTestRule("decorated", null);
+		Rule decorated = new Conjunction();
 		Decorator rule = build(decorated);
-		Rule child = buildTestRule("child", null);
+		Rule child = new Terminal("child");
 
 		assertFalse(decorated.hasChildren());
 		assertFalse(rule.hasChildren());
@@ -121,9 +125,9 @@ public abstract class DecoratorTest extends RuleTest {
 
 	@Test
 	public void iteratorShouldBeForwardedToDecoratedRule() {
-		TestRule decorated = buildTestRule("decorated", null);
+		Rule decorated = new Conjunction();
 		Decorator rule = build(decorated);
-		Rule child = buildTestRule("child", null);
+		Rule child = new Terminal("child");
 
 		assertFalse(decorated.iterator().hasNext());
 		assertFalse(rule.iterator().hasNext());

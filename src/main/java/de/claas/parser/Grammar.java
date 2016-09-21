@@ -3,6 +3,7 @@ package de.claas.parser;
 import de.claas.parser.exceptions.ParsingException;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.visitors.Parser;
 import de.claas.parser.visitors.RemoveIntermediateNodes;
 
 /**
@@ -90,7 +91,7 @@ public class Grammar {
 	 */
 	public Node tryParse(String data, boolean retainIntermediateNodes) {
 		State state = new State(data);
-		Node node = start.process(state);
+		Node node = Parser.parse(state, this.start);
 		if (node != null && !retainIntermediateNodes)
 			node.visit(new RemoveIntermediateNodes());
 		return node;
@@ -118,7 +119,7 @@ public class Grammar {
 	 */
 	public Node parse(String data, boolean retainIntermediateNodes) {
 		State state = new State(data);
-		Node node = start.process(state);
+		Node node = Parser.parse(state, this.start);
 		if (node == null || !state.getUnprocessedData().isEmpty())
 			throw new ParsingException("Could not process all tokens.");
 		if (!retainIntermediateNodes)

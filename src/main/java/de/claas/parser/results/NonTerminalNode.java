@@ -36,7 +36,7 @@ public class NonTerminalNode extends Node {
 	 * @return the name of this (non-terminal) node
 	 */
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	@Override

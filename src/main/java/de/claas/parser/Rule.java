@@ -54,7 +54,7 @@ public abstract class Rule implements Iterable<Rule> {
 	 *         <code>false</code> otherwise
 	 */
 	public boolean addChild(Rule rule) {
-		return rule != null ? children.add(rule) : false;
+		return rule != null ? this.children.add(rule) : false;
 	}
 
 	/**
@@ -67,7 +67,7 @@ public abstract class Rule implements Iterable<Rule> {
 	 *         <code>false</code> otherwise
 	 */
 	public boolean removeChild(Rule rule) {
-		return children.remove(rule);
+		return this.children.remove(rule);
 	}
 
 	/**
@@ -78,27 +78,13 @@ public abstract class Rule implements Iterable<Rule> {
 	 *         otherwise
 	 */
 	public boolean hasChildren() {
-		return !children.isEmpty();
+		return !this.children.isEmpty();
 	}
 
 	@Override
 	public Iterator<Rule> iterator() {
-		return children.iterator();
+		return this.children.iterator();
 	}
-
-	/**
-	 * Tests if the given {@link State} object fulfills this rule. If successful
-	 * (i.e. state fulfills this rule), then the state is processed and a
-	 * {@link Node} (that represents the processed state) is returned. If
-	 * unsuccessful (i.e. state does not fulfills this rule), then the state
-	 * remains unchanged and <code>null</code> is returned.
-	 * 
-	 * @param state
-	 *            the state
-	 * @return the {@link Node} that represents the processed state or
-	 *         <code>null</code> if the state does not fulfill this rule
-	 */
-	public abstract Node process(State state);
 
 	/**
 	 * Instructs this rule to visit the given {@link RuleVisitor} instance.
@@ -112,7 +98,7 @@ public abstract class Rule implements Iterable<Rule> {
 	public boolean equals(Object obj) {
 		if (obj != null && Rule.class.isAssignableFrom(obj.getClass())) {
 			Rule rule = (Rule) obj;
-			return children.equals(rule.children);
+			return this.children.equals(rule.children);
 		}
 		return false;
 	}

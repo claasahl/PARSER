@@ -16,6 +16,7 @@ public class State {
 
 	private final Stack<Integer> steps;
 	private final String data;
+	private final String dataUpperCase;
 	private int offset = 0;
 
 	/**
@@ -28,6 +29,7 @@ public class State {
 		this.steps = new Stack<>();
 		this.steps.addAll(state.steps);
 		this.data = state.data;
+		this.dataUpperCase = state.dataUpperCase;
 		this.offset = state.offset;
 	}
 
@@ -40,27 +42,34 @@ public class State {
 	public State(String data) {
 		this.steps = new Stack<>();
 		this.data = data;
+		this.dataUpperCase = data.toUpperCase();
 	}
 
 	/**
 	 * Returns <code>true</code> if the specified token was successfully
 	 * processed. Otherwise, <code>false</code> is returned.
 	 * 
+	 * @param caseSensitive
+	 *            whether the token is case sensitive (or not)
 	 * @param token
 	 *            the token
+	 * 
 	 * @return <code>true</code> if the specified token was successfully
 	 *         processed and <code>false</code> otherwise
 	 */
-	public boolean process(String token) {
-		if (data.startsWith(token, offset)) {
-			offset += token.length();
-			if (!steps.isEmpty())
-				steps.push(steps.pop() + token.length());
-
-			return true;
-		} else {
-			return false;
+	public String process(boolean caseSensitive, String token) {
+		String localData = caseSensitive ? this.data : this.dataUpperCase;
+		String localToken = caseSensitive ? token : token.toUpperCase();
+		if (localData.startsWith(localToken, this.offset)) {
+			String actualToken = this.data.substring(this.offset, this.offset + localToken.length());
+			this.offset += localToken.length();
+			if (!this.steps.isEmpty()) {
+				int sum = this.steps.pop().intValue() + localToken.length();
+				this.steps.push(new Integer(sum));
+			}
+			return actualToken;
 		}
+		return null;
 	}
 
 	/**
@@ -73,7 +82,7 @@ public class State {
 	 * @return the unprocessed data of this state
 	 */
 	public String getUnprocessedData() {
-		return data.substring(offset);
+		return this.data.substring(this.offset);
 	}
 
 	/**
@@ -86,7 +95,7 @@ public class State {
 	 * @return the processed data of this state
 	 */
 	public String getProcessedData() {
-		return data.substring(0, offset);
+		return this.data.substring(0, this.offset);
 	}
 
 	/**
@@ -100,7 +109,7 @@ public class State {
 	 * @return the data that is being processed by this state
 	 */
 	public String getData() {
-		return data;
+		return this.data;
 	}
 
 	/**
@@ -110,7 +119,7 @@ public class State {
 	 * {@link #endGroup()}.
 	 */
 	public void beginGroup() {
-		steps.push(0);
+		this.steps.push(new Integer(0));
 	}
 
 	/**
@@ -120,11 +129,11 @@ public class State {
 	 * closed, but the previous one as well.
 	 */
 	public void endGroup() {
-		if (steps.size() >= 2) {
-			int sum = steps.pop() + steps.pop();
-			steps.push(sum);
-		} else if (!steps.isEmpty()) {
-			steps.pop();
+		if (this.steps.size() >= 2) {
+			int sum = this.steps.pop().intValue() + this.steps.pop().intValue();
+			this.steps.push(new Integer(sum));
+		} else if (!this.steps.isEmpty()) {
+			this.steps.pop();
 		}
 	}
 
@@ -134,7 +143,7 @@ public class State {
 	 * @return the (current) number of processing groups
 	 */
 	public int getGroups() {
-		return steps.size();
+		return this.steps.size();
 	}
 
 	/**
@@ -147,8 +156,8 @@ public class State {
 	 * ending groups.
 	 */
 	public void revert() {
-		offset -= steps.pop();
-		steps.push(0);
+		this.offset -= this.steps.pop().intValue();
+		this.steps.push(new Integer(0));
 	}
 
 }

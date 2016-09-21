@@ -1,4 +1,4 @@
-package de.claas.parser.grammars;
+package de.claas.parser.grammars.number;
 
 import org.junit.Test;
 
@@ -6,12 +6,13 @@ import de.claas.parser.Grammar;
 import de.claas.parser.GrammarTest;
 import de.claas.parser.Node;
 import de.claas.parser.exceptions.ParsingException;
+import de.claas.parser.grammars.number.Number;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 
 /**
  * 
- * The JUnit test for class {@link NumberTest}. It is intended to collect and
+ * The JUnit test for class {@link Number}. It is intended to collect and
  * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
  *
@@ -85,7 +86,7 @@ public class NumberTest extends GrammarTest<Number> {
 	 *            the number's exponential part
 	 * @return
 	 */
-	private Node generateTree(boolean minus, String integer, String frac, String e, String sign, String exp) {
+	static Node generateTree(boolean minus, String integer, String frac, String e, String sign, String exp) {
 		Node expected = new NonTerminalNode("number");
 
 		if (minus) {

@@ -1,4 +1,4 @@
-package de.claas.parser.rules;
+package de.claas.parser;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -10,15 +10,20 @@ import java.util.Iterator;
 
 import org.junit.Test;
 
-import de.claas.parser.Node;
 import de.claas.parser.Rule;
 import de.claas.parser.State;
+import de.claas.parser.rules.Terminal;
+import de.claas.parser.visitors.Parser;
 
 /**
  * 
- * The JUnit test for class {@link RuleTest}. It is intended to collect and
- * document a set of test cases for the tested class. Please refer to the
- * individual tests for more detailed information.
+ * The JUnit test for class {@link Rule}. It is intended to collect and document
+ * a set of test cases for the tested class. Please refer to the individual
+ * tests for more detailed information.
+ * <p>
+ * The tested class is abstract or an interface. Consequently, this JUnit test
+ * provides a set of test cases that apply to all concrete implementations of
+ * the tested class.
  *
  * @author Claas Ahlrichs
  *
@@ -39,7 +44,7 @@ public abstract class RuleTest {
 	 * Returns the default children for this rule. These children are used in
 	 * combination with the states returned by {@link #processibleState()} and
 	 * {@link #unprocessibleState()} in order to test whether the general
-	 * contract of {@link Rule#process(State)} is maintained.
+	 * contract of {@link Rule#process(boolean, State)} is maintained.
 	 * 
 	 * @return the default children for this rule
 	 */
@@ -77,26 +82,8 @@ public abstract class RuleTest {
 	 *            the (unprocessed) tokens
 	 * @return an instantiated {@link State} class with the specified tokens
 	 */
-	protected State buildState(String pattern) {
+	protected static State buildState(String pattern) {
 		return new State(pattern);
-	}
-
-	/**
-	 * Returns an instantiated {@link TestRule} class. Where appropriate, the
-	 * instance can be configured to have an arbitrary number of children. The
-	 * purpose of this function is to build {@link Rule} instances that expose
-	 * their internal state and allow for easier testing.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param output
-	 *            the node returned by {@link #process(State)}
-	 * @param children
-	 *            the children
-	 * @return an instantiated {@link TestRule} class
-	 */
-	protected TestRule buildTestRule(String name, Node output, Rule... children) {
-		return new TestRule(name, output, children);
 	}
 
 	@Test
@@ -130,9 +117,9 @@ public abstract class RuleTest {
 	@Test
 	public void shouldManageChildren() {
 		Rule rule = build();
-		Rule childA = buildTestRule("A", null);
-		Rule childB = buildTestRule("B", null);
-		Rule childC = buildTestRule("C", null);
+		Rule childA = new Terminal("A");
+		Rule childB = new Terminal("B");
+		Rule childC = new Terminal("C");
 		assertTrue(rule.addChild(childA));
 		assertTrue(rule.addChild(childB));
 		assertTrue(rule.addChild(childC));
@@ -195,7 +182,7 @@ public abstract class RuleTest {
 		int processingGroups = state.getGroups();
 
 		Rule rule = build(defaultChildren());
-		assertNotNull(rule.process(state));
+		assertNotNull(Parser.parse(state, rule));
 		assertTrue(state.getProcessedData().startsWith(processedPattern));
 		assertTrue(state.getProcessedData().length() >= processedPattern.length());
 		assertTrue(unprocessedPattern.endsWith(state.getUnprocessedData()));
@@ -215,7 +202,7 @@ public abstract class RuleTest {
 		int processingGroups = state.getGroups();
 
 		Rule rule = build(defaultChildren());
-		assertNull(rule.process(state));
+		assertNull(Parser.parse(state, rule));
 		assertEquals(processedPattern, state.getProcessedData());
 		assertEquals(unprocessedPattern, state.getUnprocessedData());
 		assertEquals(processingGroups, state.getGroups());
@@ -233,24 +220,24 @@ public abstract class RuleTest {
 		int processingGroups = state.getGroups();
 
 		Rule rule = build(defaultChildren());
-		assertNull(rule.process(state));
+		assertNull(Parser.parse(state, rule));
 		assertEquals(processedPattern, state.getProcessedData());
 		assertEquals(unprocessedPattern, state.getUnprocessedData());
 		assertEquals(processingGroups, state.getGroups());
 	}
-	
+
 	@Test
 	public void implementationOfEqualsShouldHandleNull() {
 		Rule rule = build(defaultChildren());
 		assertFalse(rule.equals(null));
 	}
-	
+
 	@Test
 	public void implementationOfEqualsShouldBeReflexive() {
 		Rule rule = build(defaultChildren());
 		assertTrue(rule.equals(rule));
 	}
-	
+
 	@Test
 	public void implementationOfEqualsShouldBeSymmetric() {
 		Rule ruleA = build(defaultChildren());
@@ -258,7 +245,7 @@ public abstract class RuleTest {
 		assertTrue(ruleA.equals(ruleB));
 		assertTrue(ruleB.equals(ruleA));
 	}
-	
+
 	@Test
 	public void implementationOfEqualsShouldBeTransitive() {
 		Rule ruleA = build(defaultChildren());

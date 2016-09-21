@@ -4,13 +4,11 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.Test;
 
 import de.claas.parser.Rule;
 import de.claas.parser.exceptions.CyclicRuleException;
-import de.claas.parser.grammars.abnf.AugmentedBackusNaurPrinter;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
@@ -21,9 +19,9 @@ import de.claas.parser.visitors.RuleVisitorTest;
 
 /**
  * 
- * The JUnit test for class {@link AugmentedBackusNaurPrinterTest}. It is
- * intended to collect and document a set of test cases for the tested class.
- * Please refer to the individual tests for more detailed information.
+ * The JUnit test for class {@link AugmentedBackusNaurPrinter}. It is intended
+ * to collect and document a set of test cases for the tested class. Please
+ * refer to the individual tests for more detailed information.
  *
  * @author Claas Ahlrichs
  *
@@ -93,7 +91,7 @@ public class AugmentedBackusNaurPrinterTest extends RuleVisitorTest {
 		List<String> lines = new ArrayList<>();
 		lines.add("repeat = ((digit *(digit)) / (*(digit) ('*') *(digit)))");
 		lines.add("digit = ('1' / '2' / '3')");
-		assertEquals(lines.stream().collect(Collectors.joining("\n")), printedRule);
+		assertEquals(String.join("\n", lines), printedRule);
 	}
 
 	@Test(expected = CyclicRuleException.class)

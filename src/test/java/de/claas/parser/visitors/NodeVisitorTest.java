@@ -1,13 +1,19 @@
 package de.claas.parser.visitors;
 
-import org.junit.Test;;
+import org.junit.Test;
+
+import de.claas.parser.NodeVisitor;
 
 /**
  * 
- * The JUnit test for class {@link NodeVisitorTest}. It is intended to collect
- * and document a set of test cases for the tested class. Please refer to the
+ * The JUnit test for class {@link NodeVisitor}. It is intended to collect and
+ * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
- *
+ * <p>
+ * The tested class is abstract or an interface. Consequently, this JUnit test
+ * provides a set of test cases that apply to all concrete implementations of
+ * the tested class.
+ * 
  * @author Claas Ahlrichs
  *
  */

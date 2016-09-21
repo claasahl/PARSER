@@ -20,8 +20,8 @@ import de.claas.parser.rules.Terminal;
  * {@link RuleVisitor}. It is intended to "visualize" a tree of {@link Rule}
  * objects. The tree is turned into a human readable (if not "pretty") string.
  * <p>
- * This visitor is meant for one-time use, only. As such, it should be used to
- * visualize multiple trees.
+ * This visitor is meant for one-time use, only. As such, it should not be used
+ * to visualize multiple trees.
  * 
  * @author Claas Ahlrichs
  *
@@ -67,59 +67,59 @@ public class RuleToString implements RuleVisitor {
 	@Override
 	public void visitConjunction(Conjunction rule) {
 		appendRule(rule, null);
-		if (visitedPath.add(rule)) {
+		if (this.visitedPath.add(rule)) {
 			incrementIndent();
 			for (Rule child : rule) {
 				child.visit(this);
 			}
 			decrementIndent();
-			visitedPath.remove(rule);
+			this.visitedPath.remove(rule);
 		}
 	}
 
 	@Override
 	public void visitDisjunction(Disjunction rule) {
 		appendRule(rule, null);
-		if (visitedPath.add(rule)) {
+		if (this.visitedPath.add(rule)) {
 			incrementIndent();
 			for (Rule child : rule) {
 				child.visit(this);
 			}
 			decrementIndent();
-			visitedPath.remove(rule);
+			this.visitedPath.remove(rule);
 		}
 	}
 
 	@Override
 	public void visitNonTerminal(NonTerminal rule) {
 		appendRule(rule, rule.getName());
-		if (visitedPath.add(rule)) {
+		if (this.visitedPath.add(rule)) {
 			incrementIndent();
 			rule.getRule().visit(this);
 			decrementIndent();
-			visitedPath.remove(rule);
+			this.visitedPath.remove(rule);
 		}
 	}
 
 	@Override
 	public void visitOptional(Optional rule) {
 		appendRule(rule, null);
-		if (visitedPath.add(rule)) {
+		if (this.visitedPath.add(rule)) {
 			incrementIndent();
 			rule.getRule().visit(this);
 			decrementIndent();
-			visitedPath.remove(rule);
+			this.visitedPath.remove(rule);
 		}
 	}
 
 	@Override
 	public void visitRepetition(Repetition rule) {
 		appendRule(rule, null);
-		if (visitedPath.add(rule)) {
+		if (this.visitedPath.add(rule)) {
 			incrementIndent();
 			rule.getRule().visit(this);
 			decrementIndent();
-			visitedPath.remove(rule);
+			this.visitedPath.remove(rule);
 		}
 	}
 
@@ -135,14 +135,14 @@ public class RuleToString implements RuleVisitor {
 	 * Increments the level / indentation for the next rule.
 	 */
 	private void incrementIndent() {
-		levels.incrementAndGet();
+		this.levels.incrementAndGet();
 	}
 
 	/**
 	 * Decrements the level / indentation for the next rule.
 	 */
 	private void decrementIndent() {
-		levels.decrementAndGet();
+		this.levels.decrementAndGet();
 	}
 
 	/**
@@ -157,17 +157,17 @@ public class RuleToString implements RuleVisitor {
 	 *            the postfix
 	 */
 	private void appendRule(Rule rule, String postfix) {
-		builder.append(new String(new byte[levels.get()]).replaceAll("\0", levelSeparator));
-		builder.append(rule.getClass().getSimpleName());
+		this.builder.append(new String(new byte[this.levels.get()]).replaceAll("\0", this.levelSeparator));
+		this.builder.append(rule.getClass().getSimpleName());
 		if (postfix != null) {
-			builder.append(":");
-			builder.append(postfix);
+			this.builder.append(":");
+			this.builder.append(postfix);
 		}
-		builder.append(lineSeparator);
+		this.builder.append(this.lineSeparator);
 	}
 
 	@Override
 	public String toString() {
-		return builder.toString();
+		return this.builder.toString();
 	}
 }

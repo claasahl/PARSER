@@ -3,7 +3,6 @@ package de.claas.parser.grammars.abnf;
 import de.claas.parser.Grammar;
 import de.claas.parser.Node;
 import de.claas.parser.Rule;
-import de.claas.parser.grammars.Number;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
@@ -12,9 +11,10 @@ import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
 
 /**
- * The class {@link Number}. It is mainly intended for educational purposes. It
- * represents a grammar for numbers. Instances of this class parse sentences of
- * the below grammar and return the result as a tree of {@link Node} instances.
+ * The class {@link AugmentedBackusNaur}. It is mainly intended for educational
+ * purposes. It represents a grammar for grammars in augmented Backus Naur form.
+ * Instances of this class parse sentences of the below grammar and return the
+ * result as a tree of {@link Node} instances.
  * <ul>
  * <li>rulelist = 1*( rule / (*c-wsp c-nl) )</li>
  * <li>rule = rulename defined-as elements c-nl ; continues if next line starts
@@ -33,8 +33,11 @@ import de.claas.parser.rules.Terminal;
  * <li>element = rulename / group / option / char-val / num-val / prose-val</li>
  * <li>group = "(" *c-wsp alternation *c-wsp ")"</li>
  * <li>option = "[" *c-wsp alternation *c-wsp "]"</li>
- * <li>char-val = DQUOTE *(%x20-21 / %x23-7E) DQUOTE ; quoted string of SP and
- * VCHAR without DQUOTE</li>
+ * <li>char-val = case-insensitive-string / case-sensitive-string</li>
+ * <li>case-insensitive-string = [ "%i" ] quoted-string</li>
+ * <li>case-sensitive-string = "%s" quoted-string</li>
+ * <li>quoted-string = DQUOTE *(%x20-21 / %x23-7E) DQUOTE ; quoted string of SP
+ * and VCHAR without DQUOTE</li>
  * <li>num-val = "%" (bin-val / dec-val / hex-val)</li>
  * <li>bin-val = "b" 1*BIT [ 1*("." 1*BIT) / ("-" 1*BIT) ] ; series of
  * concatenated bit values or single ONEOF range</li>
@@ -54,14 +57,10 @@ import de.claas.parser.rules.Terminal;
  * <li>SP = %x20</li>
  * <li>VCHAR = %x21-7E ; visible (printing) characters</li>
  * <li>WSP = SP / HTAB ; white space</li>
- * <li>CHAR = %x01-7F ; any 7-bit US-ASCII character, excluding NUL</li>
- * <li>CTL = %x00-1F / %x7F ; controls</li>
- * <li>LWSP = *(WSP / CRLF WSP) ; linear white space (past newline)</li>
- * <li>OCTET = %x00-FF ; 8 bits of data</li>
  * </ul>
- * The grammar has been defined as augmented Backus Naur form. Details on syntax
- * and grammar can be found in
- * <a href="https://www.ietf.org/rfc/rfc2234.txt">RFC 2234</a>.
+ * The grammar has been written in augmented Backus Naur form (ABNF), as
+ * specified in <a href="https://www.ietf.org/rfc/rfc5234.txt">RFC 5234</a> and
+ * updated by <a href="https://www.ietf.org/rfc/rfc7405.txt">RFC 7405</a>.
  * 
  * @author Claas Ahlrichs
  *
@@ -81,6 +80,7 @@ public class AugmentedBackusNaur extends Grammar {
 	 * @return the above described grammar
 	 */
 	private static NonTerminal grammar() {
+		int max = Integer.MAX_VALUE;
 		Terminal dash = new Terminal("-");
 		Terminal eq = new Terminal("=", "=/");
 		Terminal c = new Terminal(";");
@@ -130,7 +130,7 @@ public class AugmentedBackusNaur extends Grammar {
 		NonTerminal cWSP = new NonTerminal("c-wsp", new Disjunction(wsp, new Conjunction(cNL, wsp)));
 
 		// hex-val = "x" 1*HEXDIG [ 1*("." 1*HEXDIG) / ("-" 1*HEXDIG) ]
-		Rule rule31 = new Repetition(hexdig, 1, Integer.MAX_VALUE);
+		Rule rule31 = new Repetition(hexdig, 1, max);
 		NonTerminal hexVal = new NonTerminal("hex-val",
 				new Conjunction(xNum, rule31,
 						new Optional(new Disjunction(
@@ -143,7 +143,7 @@ public class AugmentedBackusNaur extends Grammar {
 				new Disjunction(new Terminal((char) 0x20, (char) 0x3d), new Terminal((char) 0x3f, (char) 0x7e))), rrr));
 
 		// dec-val = "d" 1*DIGIT [ 1*("." 1*DIGIT) / ("-" 1*DIGIT) ]
-		Rule rule32 = new Repetition(digit, 1, Integer.MAX_VALUE);
+		Rule rule32 = new Repetition(digit, 1, max);
 		NonTerminal decVal = new NonTerminal("dec-val",
 				new Conjunction(dNum, rule32,
 						new Optional(new Disjunction(
@@ -152,7 +152,7 @@ public class AugmentedBackusNaur extends Grammar {
 
 		// bin-val = "b" 1*BIT [ 1*("." 1*BIT) / ("-" 1*BIT) ] ; series of
 		// concatenated bit values or single ONEOF range
-		Rule rule33 = new Repetition(bit, 1, Integer.MAX_VALUE);
+		Rule rule33 = new Repetition(bit, 1, max);
 		NonTerminal binVal = new NonTerminal("bin-val",
 				new Conjunction(bNum, rule33,
 						new Optional(new Disjunction(
@@ -162,11 +162,22 @@ public class AugmentedBackusNaur extends Grammar {
 		// num-val = "%" (bin-val / dec-val / hex-val)
 		NonTerminal numVal = new NonTerminal("num-val", new Conjunction(p, new Disjunction(binVal, decVal, hexVal)));
 
-		// char-val = DQUOTE *(%x20-21 / %x23-7E) DQUOTE ; quoted string of SP
-		// and VCHAR without DQUOTE
-		NonTerminal charVal = new NonTerminal("char-val", new Conjunction(dQuote, new Repetition(
+		// quoted-string = DQUOTE *(%x20-21 / %x23-7E) DQUOTE ; quoted string of
+		// SP and VCHAR without DQUOTE
+		NonTerminal quotedString = new NonTerminal("quoted-string", new Conjunction(dQuote, new Repetition(
 				new Disjunction(new Terminal((char) 0x20, (char) 0x21), new Terminal((char) 0x23, (char) 0x7e))),
 				dQuote));
+
+		// case-insensitive-string = [ "%i" ] quoted-string
+		NonTerminal caseInsensitiveString = new NonTerminal("case-insensitive-string",
+				new Conjunction(new Optional(new Terminal("%i")), quotedString));
+
+		// case-sensitive-string = "%s" quoted-string
+		NonTerminal caseSensitiveString = new NonTerminal("case-sensitive-string",
+				new Conjunction(new Terminal("%s"), quotedString));
+
+		// char-val = case-insensitive-string / case-sensitive-string
+		NonTerminal charVal = new NonTerminal("char-val", new Disjunction(caseInsensitiveString, caseSensitiveString));
 
 		// option = "[" *c-wsp alternation *c-wsp "]"
 		NonTerminal option = new NonTerminal("option",
@@ -181,16 +192,15 @@ public class AugmentedBackusNaur extends Grammar {
 				new Disjunction(tmpRulename, group, option, charVal, numVal, proseVal));
 
 		// repeat = 1*DIGIT / (*DIGIT "*" *DIGIT)
-		NonTerminal repeat = new NonTerminal("repeat",
-				new Disjunction(new Conjunction(new Repetition(digit), s, new Repetition(digit)),
-						new Repetition(digit, 1, Integer.MAX_VALUE)));
+		NonTerminal repeat = new NonTerminal("repeat", new Disjunction(
+				new Conjunction(new Repetition(digit), s, new Repetition(digit)), new Repetition(digit, 1, max)));
 
 		// repetition = [repeat] element
 		NonTerminal repetition = new NonTerminal("repetition", new Conjunction(new Optional(repeat), element));
 
 		// concatenation = repetition *(1*c-wsp repetition)
 		NonTerminal concatenation = new NonTerminal("concatenation",
-				new Conjunction(repetition, new Repetition(new Conjunction(cWSP, new Repetition(cWSP), repetition))));
+				new Conjunction(repetition, new Repetition(new Conjunction(new Repetition(cWSP, 1, max), repetition))));
 
 		// alternation = concatenation *(*c-wsp "/" *c-wsp concatenation)
 		NonTerminal alternation = new NonTerminal("alternation", new Conjunction(concatenation,
@@ -216,7 +226,7 @@ public class AugmentedBackusNaur extends Grammar {
 
 		// rulelist = 1*( rule / (*c-wsp c-nl) )
 		Rule rule34 = new Disjunction(rule, new Conjunction(new Repetition(cWSP), cNL));
-		NonTerminal ruleList = new NonTerminal("rulelist", new Conjunction(rule34, new Repetition(rule34)));
+		NonTerminal ruleList = new NonTerminal("rulelist", new Repetition(rule34, 1, max));
 		return ruleList;
 	}
 
