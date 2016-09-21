@@ -217,7 +217,8 @@ public abstract class Interpreter<R> implements NodeVisitor {
 	 * @param node
 	 *            the node
 	 * @param get
-	 *            TODO
+	 *            a helper function for determining the actual consumer for the
+	 *            specified node
 	 * 
 	 * @throws InterpretingException
 	 *             if the specified node is unexpected
