@@ -8,6 +8,7 @@ import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 import de.claas.parser.rules.NonTerminal;
 import de.claas.parser.rules.Terminal;
+import de.claas.parser.visitors.NodeHashCode;
 
 /**
  * 
@@ -92,6 +93,13 @@ public abstract class Node implements Iterable<Node> {
 	 *            the visitor
 	 */
 	public abstract void visit(NodeVisitor visitor);
+	
+	@Override
+	public int hashCode() {
+		NodeHashCode hashCode = new NodeHashCode();
+		this.visit(hashCode);
+		return hashCode.getHashCode();
+	}
 	
 	@Override
 	public boolean equals(Object obj) {
