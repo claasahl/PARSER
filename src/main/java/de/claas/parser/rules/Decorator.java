@@ -85,9 +85,10 @@ public abstract class Decorator extends Rule {
 	 *            the decorated rule
 	 */
 	public void setRule(Rule rule) {
-		if (this.rule == null)
+		if (this.rule == null) {
+			invalidateHashCode();
 			this.rule = rule;
-		else
+		} else
 			throw new IllegalStateException(ONLY_ONCE);
 	}
 

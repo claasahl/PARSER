@@ -33,6 +33,20 @@ public abstract class Rule implements Iterable<Rule> {
 	private final List<Rule> children = new ArrayList<>();
 
 	/**
+	 * Internal flag for signaling that the hash code needs to be updated. The
+	 * actual update is done in a lazy fashion (i.e. hash code is updated the
+	 * next time it is needed).
+	 */
+	private boolean invalidHashCode = true;
+
+	/**
+	 * Internally cached hash code. The hash code is kept in local storage for
+	 * performance reasons. It will be updated in accordance with the
+	 * {@link #invalidHashCode}-flag.
+	 */
+	private int hashCode;
+
+	/**
 	 * Creates an instance with the given parameters. All children are added by
 	 * calling {@link #addChild(Rule)} in the order they are passed into this
 	 * constructor.
@@ -56,6 +70,7 @@ public abstract class Rule implements Iterable<Rule> {
 	 *         <code>false</code> otherwise
 	 */
 	public boolean addChild(Rule rule) {
+		invalidateHashCode();
 		return rule != null ? this.children.add(rule) : false;
 	}
 
@@ -69,6 +84,7 @@ public abstract class Rule implements Iterable<Rule> {
 	 *         <code>false</code> otherwise
 	 */
 	public boolean removeChild(Rule rule) {
+		invalidateHashCode();
 		return this.children.remove(rule);
 	}
 
@@ -96,11 +112,23 @@ public abstract class Rule implements Iterable<Rule> {
 	 */
 	public abstract void visit(RuleVisitor visitor);
 
+	/**
+	 * Notifies this node that its hash code is invalid. The hash code will be
+	 * lazily updated the time it is needed.
+	 */
+	protected void invalidateHashCode() {
+		this.invalidHashCode = true;
+	}
+
 	@Override
 	public int hashCode() {
-		RuleHashCode hashCode = new RuleHashCode();
-		this.visit(hashCode);
-		return hashCode.getHashCode();
+		if (this.invalidHashCode) {
+			RuleHashCode visitor = new RuleHashCode();
+			this.visit(visitor);
+			this.hashCode = visitor.getHashCode();
+			this.invalidHashCode = false;
+		}
+		return this.hashCode;
 	}
 
 	@Override
