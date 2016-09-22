@@ -120,6 +120,10 @@ public abstract class Node implements Iterable<Node> {
 
 	@Override
 	public int hashCode() {
+		// it is acceptable that the hash code only changes if (local) fields
+		// are changed. This hash code has no way of knowing whether any child
+		// was modified, since this hash code was last updated, and does not
+		// reflect any such changes in any of its children.
 		if (this.invalidHashCode) {
 			NodeHashCode visitor = new NodeHashCode();
 			this.visit(visitor);
