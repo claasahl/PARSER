@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import de.claas.parser.visitors.RuleHashCode;
+
 /**
  * 
  * Superclass of all (grammar) rules within this package. This class is intended
@@ -93,6 +95,13 @@ public abstract class Rule implements Iterable<Rule> {
 	 *            the visitor
 	 */
 	public abstract void visit(RuleVisitor visitor);
+
+	@Override
+	public int hashCode() {
+		RuleHashCode hashCode = new RuleHashCode();
+		this.visit(hashCode);
+		return hashCode.getHashCode();
+	}
 
 	@Override
 	public boolean equals(Object obj) {
