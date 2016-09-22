@@ -32,12 +32,4 @@ public class Optional extends Decorator {
 		visitor.visitOptional(this);
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj != null && Optional.class.isAssignableFrom(obj.getClass())) {
-			return super.equals(obj);
-		}
-		return false;
-	}
-
 }

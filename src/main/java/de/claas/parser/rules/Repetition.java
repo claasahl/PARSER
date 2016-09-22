@@ -81,17 +81,4 @@ public class Repetition extends Decorator {
 		visitor.visitRepetition(this);
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj != null && Repetition.class.isAssignableFrom(obj.getClass())) {
-			boolean equality = true;
-			Repetition rule = (Repetition) obj;
-			equality &= this.minRepetitions == rule.minRepetitions;
-			equality &= this.maxRepetitions == rule.maxRepetitions;
-			equality &= super.equals(obj);
-			return equality;
-		}
-		return false;
-	}
-
 }

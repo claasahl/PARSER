@@ -122,19 +122,6 @@ public class Terminal extends Rule {
 		visitor.visitTerminal(this);
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj != null && Terminal.class.isAssignableFrom(obj.getClass())) {
-			boolean equality = true;
-			Terminal rule = (Terminal) obj;
-			equality &= this.caseSensitive == rule.caseSensitive;
-			equality &= this.terminals.equals(rule.terminals);
-			equality &= super.equals(obj);
-			return equality;
-		}
-		return false;
-	}
-
 	/**
 	 * 
 	 * The class {@link TerminalLengthComparator}. It is intended to order
