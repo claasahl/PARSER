@@ -1,7 +1,7 @@
 package de.claas.parser.visitors;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import de.claas.parser.Node;
 import de.claas.parser.NodeVisitor;
@@ -23,7 +23,7 @@ import de.claas.parser.results.TerminalNode;
  */
 public class NodeHashCode implements NodeVisitor {
 
-	private final List<Node> visitedPath = new ArrayList<>();
+	private final Set<Integer> visitedPath = new HashSet<>();
 	private int hashCode = 0;
 
 	@Override
@@ -34,29 +34,28 @@ public class NodeHashCode implements NodeVisitor {
 
 	@Override
 	public void visitIntermediateNode(IntermediateNode node) {
-		if (!this.visitedPath.contains(node) && this.visitedPath.add(node)) {
-			this.hashCode += node.getClass().hashCode();
-			for (Node n : node) {
-				n.visit(this);
+		this.hashCode += node.getClass().hashCode();
+		
+		Integer uniqueId = new Integer(System.identityHashCode(node));
+		if (this.visitedPath.add(uniqueId)) {
+			for (Node child : node) {
+				child.visit(this);
 			}
-			this.visitedPath.remove(node);
-		} else {
-			this.hashCode += node.getClass().hashCode();
+			this.visitedPath.remove(uniqueId);
 		}
 	}
 
 	@Override
 	public void visitNonTerminaNode(NonTerminalNode node) {
-		if (!this.visitedPath.contains(node) && this.visitedPath.add(node)) {
-			this.hashCode += node.getClass().hashCode();
-			this.hashCode += node.getName().hashCode();
-			for (Node n : node) {
-				n.visit(this);
+		this.hashCode += node.getClass().hashCode();
+		this.hashCode += node.getName().hashCode();
+		
+		Integer uniqueId = new Integer(System.identityHashCode(node));
+		if (this.visitedPath.add(uniqueId)) {
+			for (Node child : node) {
+				child.visit(this);
 			}
-			this.visitedPath.remove(node);
-		} else {
-			this.hashCode += node.getClass().hashCode();
-			this.hashCode += node.getName().hashCode();
+			this.visitedPath.remove(uniqueId);
 		}
 	}
 
