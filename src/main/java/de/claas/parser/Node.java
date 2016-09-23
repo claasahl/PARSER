@@ -8,6 +8,7 @@ import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 import de.claas.parser.rules.NonTerminal;
 import de.claas.parser.rules.Terminal;
+import de.claas.parser.visitors.NodeEquality;
 import de.claas.parser.visitors.NodeHashCode;
 
 /**
@@ -135,11 +136,9 @@ public abstract class Node implements Iterable<Node> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj != null && Node.class.isAssignableFrom(obj.getClass())) {
-			Node node = (Node) obj;
-			return this.children.equals(node.children);
-		}
-		return false;
+		NodeEquality visitor = new NodeEquality(obj);
+		this.visit(visitor);
+		return visitor.isEquality();
 	}
 
 }

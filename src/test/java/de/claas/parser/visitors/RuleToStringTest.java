@@ -208,7 +208,6 @@ public class RuleToStringTest extends RuleVisitorTest {
 		List<String> lines = new ArrayList<>();
 		lines.add("Conjunction");
 		lines.add("  Conjunction");
-		lines.add("    Conjunction");
 		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 

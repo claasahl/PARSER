@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import de.claas.parser.visitors.RuleEquality;
 import de.claas.parser.visitors.RuleHashCode;
 
 /**
@@ -137,11 +138,9 @@ public abstract class Rule implements Iterable<Rule> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj != null && Rule.class.isAssignableFrom(obj.getClass())) {
-			Rule rule = (Rule) obj;
-			return this.children.equals(rule.children);
-		}
-		return false;
+		RuleEquality visitor = new RuleEquality(obj);
+		this.visit(visitor);
+		return visitor.isEquality();
 	}
 
 }
