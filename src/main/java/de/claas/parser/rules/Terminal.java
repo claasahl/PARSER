@@ -1,5 +1,6 @@
 package de.claas.parser.rules;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -59,6 +60,7 @@ public class Terminal extends Rule {
 	 * @param rangeEnd
 	 *            last character that this rule represents (inclusive)
 	 */
+	@Deprecated
 	public Terminal(char rangeStart, char rangeEnd) {
 		this.caseSensitive = true;
 		this.terminals = new ArrayList<>();
