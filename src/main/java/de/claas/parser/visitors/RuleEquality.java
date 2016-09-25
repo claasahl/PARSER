@@ -14,12 +14,31 @@ import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
 
+/**
+ * 
+ * The class {@link RuleEquality}. It is an implementation of the interface
+ * {@link RuleVisitor}. It is intended to compare a {@link Rule}-hierarchy with
+ * a reference object.
+ * <p>
+ * This visitor is meant for one-time use, only. As such, it should not be used
+ * to compare multiple {@link Rule}s.
+ *
+ * @author Claas Ahlrichs
+ *
+ */
 public class RuleEquality implements RuleVisitor {
 
 	private final Set<Integer> visitedPath = new HashSet<>();
 	private Object obj;
 	private boolean equality = true;
 
+	/**
+	 * Constructs a new {@link RuleEquality} with the specified parameter.
+	 * 
+	 * @param obj
+	 *            the reference object with which the visited {@link Rule}s are
+	 *            compared
+	 */
 	public RuleEquality(Object obj) {
 		this.obj = obj;
 	}
@@ -170,6 +189,17 @@ public class RuleEquality implements RuleVisitor {
 		}
 	}
 
+	/**
+	 * A helper function that successively visits all children of both specified
+	 * {@link Rule}s. It is main purpose is to ensure that the order in which
+	 * the children occur is identical and that the children themselves are
+	 * equal as well.
+	 * 
+	 * @param rule
+	 *            the original rule
+	 * @param other
+	 *            the reference rule with which the original rule is compared
+	 */
 	private void visitChildren(Rule rule, Rule other) {
 		Iterator<Rule> children = rule.iterator();
 		Iterator<Rule> otherChildren = other.iterator();
@@ -184,12 +214,29 @@ public class RuleEquality implements RuleVisitor {
 		this.equality = children.hasNext() == otherChildren.hasNext();
 	}
 
+	/**
+	 * A helper function that visits the child of both specified {@link Rule}s.
+	 * 
+	 * @param rule
+	 *            the original rule
+	 * @param other
+	 *            the reference rule with which the original rule is compared
+	 */
 	private void visitChild(Decorator rule, Decorator other) {
 		Rule child = rule.getRule();
 		this.obj = other.getRule();
 		child.visit(this);
 	}
 
+	/**
+	 * Returns <code>true</code> if the visited rules represent the same object
+	 * that was passed into the constructor of this visitor. Otherwise
+	 * <code>false</code> is returned.
+	 * 
+	 * @return <code>true</code> if the visited rules represent the same object
+	 *         that was passed into the constructor of this visitor,
+	 *         <code>false</code> other
+	 */
 	public boolean isEquality() {
 		return this.equality;
 	}
