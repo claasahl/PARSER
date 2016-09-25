@@ -9,9 +9,6 @@ import de.claas.parser.RuleVisitor;
  * {@link Decorator} class. It is intended to represent a non-terminal rule
  * within a grammar. Non-terminal rules are named rules which largely make up a
  * grammar.
- * <p>
- * This rule acts like any other rule. The only difference is that it has a name
- * and an optional comment.
  * 
  * @author Claas Ahlrichs
  *

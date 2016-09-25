@@ -1,6 +1,5 @@
 package de.claas.parser.rules;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,10 +14,6 @@ import de.claas.parser.RuleVisitor;
  * The class {@link Terminal}. It is an implementation of the {@link Rule}
  * class. It is intended to represent a terminal symbol (e.g. 'letter' of the
  * grammar's alphabet) within a grammar.
- * <p>
- * This rule will successfully process a given state if the processed token
- * equals any of the terminal symbols (see {@link #getTerminals()}). This rule
- * is greedy and thus it gives preference to longer terminal symbols.
  * 
  * @author Claas Ahlrichs
  *

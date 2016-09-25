@@ -7,9 +7,6 @@ import de.claas.parser.RuleVisitor;
  * 
  * The class {@link Conjunction}. It is an implementation of the {@link Rule}
  * class. It is intended to represent a conjunction of rules within a grammar.
- * <p>
- * This rule will only successfully process a given state if all children have
- * successfully been processed.
  * 
  * @author Claas Ahlrichs
  *

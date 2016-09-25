@@ -10,12 +10,6 @@ import de.claas.parser.RuleVisitor;
  * a grammar. The minimum and maximum number of repetitions can be limited to
  * any positive integer. The only constraint is the upper limit of integer
  * values (i.e. {@value Integer#MAX_VALUE}).
- * <p>
- * This rules default settings are such that it will successfully process a
- * given state regardless of how often the decorated rule can be processed (i.e.
- * minimum number of repetitions is {@value 0} and maximum number of repetitions
- * is {@value Integer#MAX_VALUE}). Making the decorated rule optional and
- * repeatable at the same time.
  * 
  * @author Claas Ahlrichs
  *
