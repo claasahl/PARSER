@@ -131,7 +131,7 @@ public class RuleHashCodeTest extends RuleVisitorTest {
 	@Override
 	public void shouldHandleRules() {
 		RuleHashCode visitor = build();
-		boolean caseSensitive = false;
+		boolean caseSensitive = true;
 		Rule terminals = new Terminal('0', '9');
 		Rule digit = new NonTerminal("digit", terminals);
 		Rule digits = new Repetition(digit, 1, 7);

@@ -335,19 +335,10 @@ public class ParserTest extends RuleVisitorTest {
 
 	@Test
 	public void terminalShouldFailIfTerminalsAreOutsideOfRange() {
-		Rule rule = new Terminal(true, 'a', 'z');
+		Rule rule = new Terminal('a', 'z');
 		Parser parser = build("A");
 		rule.visit(parser);
 		assertNull(parser.getResult());
-	}
-	
-	@Test
-	public void terminalShouldHaveCaseInsenstiveRange() {
-		Rule rule = new Terminal(false, 'a', 'z');
-		Parser parser = build("A");
-		rule.visit(parser);
-		Node expected = new TerminalNode("A");
-		assertEquals(expected, parser.getResult());
 	}
 
 	@Override

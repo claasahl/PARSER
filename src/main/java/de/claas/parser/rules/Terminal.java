@@ -57,10 +57,7 @@ public class Terminal extends Rule {
 	}
 
 	/**
-	 * Constructs a new {@link Terminal} with default parameters. Calling this
-	 * constructor is equivalent to calling
-	 * <code>{@link Terminal#Terminal(boolean, char, char)}</code> without case
-	 * sensitivity.
+	 * Constructs a new {@link Terminal} with default parameters.
 	 * 
 	 * @param rangeStart
 	 *            first character that this rule represents (inclusive)
@@ -68,21 +65,7 @@ public class Terminal extends Rule {
 	 *            last character that this rule represents (inclusive)
 	 */
 	public Terminal(char rangeStart, char rangeEnd) {
-		this(false, rangeStart, rangeEnd);
-	}
-
-	/**
-	 * Constructs a new {@link Terminal} with the specified parameters.
-	 * 
-	 * @param caseSensitive
-	 *            whether the terminals are case sensitive
-	 * @param rangeStart
-	 *            first character that this rule represents (inclusive)
-	 * @param rangeEnd
-	 *            last character that this rule represents (inclusive)
-	 */
-	public Terminal(boolean caseSensitive, char rangeStart, char rangeEnd) {
-		this.caseSensitive = caseSensitive;
+		this.caseSensitive = true;
 		this.terminals = new ArrayList<>();
 		for (int character = rangeStart; character <= rangeEnd; character++)
 			this.terminals.add("" + (char) character);
