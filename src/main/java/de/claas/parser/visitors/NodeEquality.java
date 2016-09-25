@@ -27,6 +27,7 @@ public class NodeEquality implements NodeVisitor {
 
 	private final Set<Integer> visitedPath = new HashSet<>();
 	private Object obj;
+	private boolean visited = false;
 	private boolean equality = true;
 
 	/**
@@ -42,6 +43,7 @@ public class NodeEquality implements NodeVisitor {
 
 	@Override
 	public void visitTerminalNode(TerminalNode node) {
+		this.visited = true;
 		if (node == this.obj)
 			return;
 		if (this.obj == null || node.getClass() != this.obj.getClass()) {
@@ -62,6 +64,7 @@ public class NodeEquality implements NodeVisitor {
 
 	@Override
 	public void visitIntermediateNode(IntermediateNode node) {
+		this.visited = true;
 		if (node == this.obj)
 			return;
 		if (this.obj == null || node.getClass() != this.obj.getClass()) {
@@ -79,6 +82,7 @@ public class NodeEquality implements NodeVisitor {
 
 	@Override
 	public void visitNonTerminaNode(NonTerminalNode node) {
+		this.visited = true;
 		if (node == this.obj)
 			return;
 		if (this.obj == null || node.getClass() != this.obj.getClass()) {
@@ -138,7 +142,7 @@ public class NodeEquality implements NodeVisitor {
 	 *         <code>false</code> other
 	 */
 	public boolean isEquality() {
-		return this.equality;
+		return this.equality && this.visited;
 	}
 
 }

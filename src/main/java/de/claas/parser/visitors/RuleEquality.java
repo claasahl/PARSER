@@ -30,6 +30,7 @@ public class RuleEquality implements RuleVisitor {
 
 	private final Set<Integer> visitedPath = new HashSet<>();
 	private Object obj;
+	private boolean visited = false;
 	private boolean equality = true;
 
 	/**
@@ -45,6 +46,7 @@ public class RuleEquality implements RuleVisitor {
 
 	@Override
 	public void visitConjunction(Conjunction rule) {
+		this.visited = true;
 		if (rule == this.obj)
 			return;
 		if (this.obj == null || rule.getClass() != this.obj.getClass()) {
@@ -62,6 +64,7 @@ public class RuleEquality implements RuleVisitor {
 
 	@Override
 	public void visitDisjunction(Disjunction rule) {
+		this.visited = true;
 		if (rule == this.obj)
 			return;
 		if (this.obj == null || rule.getClass() != this.obj.getClass()) {
@@ -79,6 +82,7 @@ public class RuleEquality implements RuleVisitor {
 
 	@Override
 	public void visitNonTerminal(NonTerminal rule) {
+		this.visited = true;
 		if (rule == this.obj)
 			return;
 		if (this.obj == null || rule.getClass() != this.obj.getClass()) {
@@ -114,6 +118,7 @@ public class RuleEquality implements RuleVisitor {
 
 	@Override
 	public void visitOptional(Optional rule) {
+		this.visited = true;
 		if (rule == this.obj)
 			return;
 		if (this.obj == null || rule.getClass() != this.obj.getClass()) {
@@ -131,6 +136,7 @@ public class RuleEquality implements RuleVisitor {
 
 	@Override
 	public void visitRepetition(Repetition rule) {
+		this.visited = true;
 		if (rule == this.obj)
 			return;
 		if (this.obj == null || rule.getClass() != this.obj.getClass()) {
@@ -153,6 +159,7 @@ public class RuleEquality implements RuleVisitor {
 
 	@Override
 	public void visitTerminal(Terminal rule) {
+		this.visited = true;
 		if (rule == this.obj)
 			return;
 		if (this.obj == null || rule.getClass() != this.obj.getClass()) {
@@ -238,7 +245,7 @@ public class RuleEquality implements RuleVisitor {
 	 *         <code>false</code> other
 	 */
 	public boolean isEquality() {
-		return this.equality;
+		return this.equality && this.visited;
 	}
 
 }
