@@ -117,11 +117,12 @@ public class RuleHashCodeTest extends RuleVisitorTest {
 	@Override
 	public void shouldHandleTerminalRule() {
 		RuleHashCode visitor = build();
-		Terminal rule = new Terminal(true, "child", "node");
+		boolean caseSensitive = true;
+		Rule rule = new Terminal(caseSensitive, "child", "node");
 		rule.visit(visitor);
 
 		int expected = rule.getClass().hashCode();
-		expected += rule.isCaseSensitive() ? 4096 : 512;
+		expected += caseSensitive ? 4096 : 512;
 		expected += "child".hashCode();
 		expected += "node".hashCode();
 		assertEquals(expected, visitor.getHashCode());
