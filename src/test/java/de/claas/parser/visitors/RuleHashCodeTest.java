@@ -130,8 +130,31 @@ public class RuleHashCodeTest extends RuleVisitorTest {
 
 	@Override
 	public void shouldHandleRules() {
-		// TODO Auto-generated method stub
+		RuleHashCode visitor = build();
+		boolean caseSensitive = false;
+		Rule terminals = new Terminal('0', '9');
+		Rule digit = new NonTerminal("digit", terminals);
+		Rule digits = new Repetition(digit, 1, 7);
+		digits.visit(visitor);
 
+		int expected = digits.getClass().hashCode();
+		expected += Integer.hashCode(1);
+		expected += Integer.hashCode(7);
+		expected += digit.getClass().hashCode();
+		expected += "digit".hashCode();
+		expected += terminals.getClass().hashCode();
+		expected += caseSensitive ? 4096 : 512;
+		expected += "0".hashCode();
+		expected += "1".hashCode();
+		expected += "2".hashCode();
+		expected += "3".hashCode();
+		expected += "4".hashCode();
+		expected += "5".hashCode();
+		expected += "6".hashCode();
+		expected += "7".hashCode();
+		expected += "8".hashCode();
+		expected += "9".hashCode();
+		assertEquals(expected, visitor.getHashCode());
 	}
 
 	@Override
