@@ -87,7 +87,7 @@ public class NodeHashCodeTest extends NodeVisitorTest {
 	@Override
 	public void shouldHandleCyclicNonTerminalNode() {
 		NodeHashCode visitor = build();
-		NonTerminalNode node = new NonTerminalNode("non-terminal");
+		Node node = new NonTerminalNode("non-terminal");
 		node.addChild(node);
 		node.visit(visitor);
 
@@ -101,7 +101,7 @@ public class NodeHashCodeTest extends NodeVisitorTest {
 	@Override
 	public void shouldHandleCyclicIntermediateNode() {
 		NodeHashCode visitor = build();
-		IntermediateNode node = new IntermediateNode();
+		Node node = new IntermediateNode();
 		node.addChild(node);
 		node.visit(visitor);
 

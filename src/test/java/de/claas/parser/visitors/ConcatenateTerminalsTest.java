@@ -86,7 +86,7 @@ public class ConcatenateTerminalsTest extends NodeVisitorTest {
 	@Override
 	@Test(expected = CyclicNodeException.class)
 	public void shouldHandleCyclicNonTerminalNode() {
-		NonTerminalNode node = new NonTerminalNode("root");
+		Node node = new NonTerminalNode("root");
 		node.addChild(node);
 		node.visit(this.visitor);
 	}
@@ -94,7 +94,7 @@ public class ConcatenateTerminalsTest extends NodeVisitorTest {
 	@Override
 	@Test(expected = CyclicNodeException.class)
 	public void shouldHandleCyclicIntermediateNode() {
-		IntermediateNode node = new IntermediateNode();
+		Node node = new IntermediateNode();
 		node.addChild(node);
 		node.visit(this.visitor);
 	}
