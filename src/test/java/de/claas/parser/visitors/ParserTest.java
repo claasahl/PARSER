@@ -275,7 +275,7 @@ public class ParserTest extends RuleVisitorTest {
 
 	@Test
 	public void terminalShouldSucceedIfAnyTerminalMatches() {
-		Terminal rule = new Terminal(HELLO, WORLD, "b");
+		Rule rule = new Terminal(HELLO, WORLD, "b");
 		Parser parser = build(HELLO);
 		rule.visit(parser);
 		Node expected = new TerminalNode(HELLO);
@@ -294,7 +294,7 @@ public class ParserTest extends RuleVisitorTest {
 
 	@Test
 	public void terminalShouldFailWithoutTerminals() {
-		Terminal rule = new Terminal();
+		Rule rule = new Terminal();
 		Parser parser = build(HELLO + WORLD);
 		rule.visit(parser);
 		assertNull(parser.getResult());
@@ -302,7 +302,7 @@ public class ParserTest extends RuleVisitorTest {
 	
 	@Test
 	public void terminalShouldHaveCaseInsenstiveTerminals() {
-		Terminal rule = new Terminal(false, "hello");
+		Rule rule = new Terminal(false, "hello");
 		Parser parser = build("HELLO");
 		rule.visit(parser);
 		Node expected = new TerminalNode("HELLO");
@@ -311,7 +311,7 @@ public class ParserTest extends RuleVisitorTest {
 
 	@Test
 	public void terminalShouldSucceedIfTerminalsAreWithinRange() {
-		Terminal rule = new Terminal('a', 'z');
+		Rule rule = new Terminal('a', 'z');
 		Parser parser = build("a");
 		rule.visit(parser);
 		Node expected = new TerminalNode("a");
@@ -335,7 +335,7 @@ public class ParserTest extends RuleVisitorTest {
 
 	@Test
 	public void terminalShouldFailIfTerminalsAreOutsideOfRange() {
-		Terminal rule = new Terminal(true, 'a', 'z');
+		Rule rule = new Terminal(true, 'a', 'z');
 		Parser parser = build("A");
 		rule.visit(parser);
 		assertNull(parser.getResult());
@@ -343,7 +343,7 @@ public class ParserTest extends RuleVisitorTest {
 	
 	@Test
 	public void terminalShouldHaveCaseInsenstiveRange() {
-		Terminal rule = new Terminal(false, 'a', 'z');
+		Rule rule = new Terminal(false, 'a', 'z');
 		Parser parser = build("A");
 		rule.visit(parser);
 		Node expected = new TerminalNode("A");

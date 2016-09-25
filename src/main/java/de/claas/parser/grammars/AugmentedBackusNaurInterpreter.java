@@ -480,7 +480,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		if (child != null && isExpected(child)) {
 			String marker = concatTerminals(child);
 			if (!"%i".equals(marker)) {
-				String msg = String.format("Expected case insensitivity marker '%i', but got '%s'", marker);
+				String msg = String.format("Expected case insensitivity marker '%%i', but got '%s'", marker);
 				throw new InterpretingException(msg);
 			}
 			child = children.hasNext() ? children.next() : null;
@@ -510,7 +510,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		if (child != null) {
 			String marker = concatTerminals(child);
 			if (!"%s".equals(marker)) {
-				String msg = String.format("Expected case sensitivity marker '%s', but got '%s'", marker);
+				String msg = String.format("Expected case sensitivity marker '%%s', but got '%s'", marker);
 				throw new InterpretingException(msg);
 			}
 			child = children.hasNext() ? children.next() : null;

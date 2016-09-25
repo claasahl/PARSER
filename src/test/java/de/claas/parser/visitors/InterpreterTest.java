@@ -120,7 +120,7 @@ public abstract class InterpreterTest<R> extends NodeVisitorTest {
 	@Test(expected = CyclicNodeException.class)
 	public void shouldHandleCyclicNonTerminalNode() {
 		Interpreter<R> interpreter = build();
-		NonTerminalNode node = getNonTerminalNode();
+		Node node = getNonTerminalNode();
 		node.addChild(node);
 		node.visit(interpreter);
 	}
@@ -129,7 +129,7 @@ public abstract class InterpreterTest<R> extends NodeVisitorTest {
 	@Test(expected = InterpretingException.class)
 	public void shouldHandleCyclicIntermediateNode() {
 		Interpreter<R> interpreter = build();
-		IntermediateNode node = new IntermediateNode();
+		Node node = new IntermediateNode();
 		node.addChild(node);
 		node.visit(interpreter);
 	}

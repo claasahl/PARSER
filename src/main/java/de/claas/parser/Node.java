@@ -8,6 +8,8 @@ import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 import de.claas.parser.rules.NonTerminal;
 import de.claas.parser.rules.Terminal;
+import de.claas.parser.visitors.NodeEquality;
+import de.claas.parser.visitors.NodeHashCode;
 
 /**
  * 
@@ -44,6 +46,20 @@ public abstract class Node implements Iterable<Node> {
 	private final List<Node> children = new ArrayList<>();
 
 	/**
+	 * Internal flag for signaling that the hash code needs to be updated. The
+	 * actual update is done in a lazy fashion (i.e. hash code is updated the
+	 * next time it is needed).
+	 */
+	private boolean invalidHashCode = true;
+
+	/**
+	 * Internally cached hash code. The hash code is kept in local storage for
+	 * performance reasons. It will be updated in accordance with the
+	 * {@link #invalidHashCode}-flag.
+	 */
+	private int hashCode;
+
+	/**
 	 * Adds the given (child) node. Returns <code>true</code> if the child was
 	 * successfully added. Otherwise <code>false</code> is returned.
 	 * 
@@ -53,6 +69,7 @@ public abstract class Node implements Iterable<Node> {
 	 *         <code>false</code> otherwise
 	 */
 	public boolean addChild(Node node) {
+		invalidateHashCode();
 		return node != null ? this.children.add(node) : false;
 	}
 
@@ -66,6 +83,7 @@ public abstract class Node implements Iterable<Node> {
 	 *         <code>false</code> otherwise
 	 */
 	public boolean removeChild(Node node) {
+		invalidateHashCode();
 		return this.children.remove(node);
 	}
 
@@ -92,14 +110,35 @@ public abstract class Node implements Iterable<Node> {
 	 *            the visitor
 	 */
 	public abstract void visit(NodeVisitor visitor);
-	
+
+	/**
+	 * Notifies this node that its hash code is invalid. The hash code will be
+	 * lazily updated the time it is needed.
+	 */
+	protected void invalidateHashCode() {
+		this.invalidHashCode = true;
+	}
+
+	@Override
+	public int hashCode() {
+		// it is acceptable that the hash code only changes if (local) fields
+		// are changed. This hash code has no way of knowing whether any child
+		// was modified, since this hash code was last updated, and does not
+		// reflect any such changes in any of its children.
+		if (this.invalidHashCode) {
+			NodeHashCode visitor = new NodeHashCode();
+			this.visit(visitor);
+			this.hashCode = visitor.getHashCode();
+			this.invalidHashCode = false;
+		}
+		return this.hashCode;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
-		if (obj != null && Node.class.isAssignableFrom(obj.getClass())) {
-			Node node = (Node) obj;
-			return this.children.equals(node.children);
-		}
-		return false;
+		NodeEquality visitor = new NodeEquality(obj);
+		this.visit(visitor);
+		return visitor.isEquality();
 	}
 
 }

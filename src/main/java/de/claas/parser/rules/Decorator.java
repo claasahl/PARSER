@@ -85,25 +85,11 @@ public abstract class Decorator extends Rule {
 	 *            the decorated rule
 	 */
 	public void setRule(Rule rule) {
-		if (this.rule == null)
+		if (this.rule == null) {
+			invalidateHashCode();
 			this.rule = rule;
-		else
+		} else
 			throw new IllegalStateException(ONLY_ONCE);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj != null && Decorator.class.isAssignableFrom(obj.getClass())) {
-			boolean equality = true;
-			Decorator decorator = (Decorator) obj;
-			if (this.rule == null)
-				equality &= decorator.rule == null;
-			else
-				equality &= this.rule.equals(decorator.getRule());
-			equality &= super.equals(obj);
-			return equality;
-		}
-		return false;
 	}
 
 }

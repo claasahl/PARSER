@@ -134,7 +134,7 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 
 	@Override
 	public void shouldHandleCyclicNonTerminalNode() {
-		NonTerminalNode node = new NonTerminalNode("root");
+		Node node = new NonTerminalNode("root");
 		node.addChild(node);
 		node.visit(this.visitor);
 
@@ -148,7 +148,7 @@ public class RemoveIntermediateNodesTest extends NodeVisitorTest {
 	@Override
 	public void shouldHandleCyclicIntermediateNode() {
 		Node root = new NonTerminalNode("root");
-		IntermediateNode node = new IntermediateNode();
+		Node node = new IntermediateNode();
 		node.addChild(node);
 		root.addChild(node);
 		root.visit(this.visitor);

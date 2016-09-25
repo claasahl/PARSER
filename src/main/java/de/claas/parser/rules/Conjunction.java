@@ -30,13 +30,5 @@ public class Conjunction extends Rule {
 	public void visit(RuleVisitor visitor) {
 		visitor.visitConjunction(this);
 	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj != null && Conjunction.class.isAssignableFrom(obj.getClass())) {
-			return super.equals(obj);
-		}
-		return false;
-	}
 
 }
