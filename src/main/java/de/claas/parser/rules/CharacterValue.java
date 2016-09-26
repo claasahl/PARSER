@@ -19,10 +19,10 @@ public class CharacterValue extends Terminal {
 
 	/**
 	 * 
-	 * Constructs a new {@link CharacterValue} with default parameters. Calling this
-	 * constructor is equivalent to calling
-	 * <code>{@link CharacterValue#Terminal(boolean, String...)}</code> without case
-	 * sensitivity.
+	 * Constructs a new {@link CharacterValue} with default parameters. Calling
+	 * this constructor is equivalent to calling
+	 * <code>{@link CharacterValue#Terminal(boolean, String...)}</code> without
+	 * case sensitivity.
 	 * 
 	 * @param terminal
 	 *            the terminal symbol
@@ -60,7 +60,7 @@ public class CharacterValue extends Terminal {
 	 *         <code>false</code>
 	 */
 	public boolean isCaseSensitive() {
-		return this.caseSensitive;	
+		return this.caseSensitive;
 	}
 
 	@Override
@@ -76,6 +76,25 @@ public class CharacterValue extends Terminal {
 	@Override
 	public void visit(RuleVisitor visitor) {
 		visitor.visitTerminal(this);
+	}
+
+	/**
+	 * Returns a {@link Disjunction}-rule with a {@link CharacterValue}-rule for
+	 * each terminal that is passed into the function.
+	 * 
+	 * @param caseSensitive
+	 *            whether the terminal are case sensitive
+	 * @param terminals
+	 *            the terminal symbols
+	 * @return a {@link Disjunction}-rule with a {@link CharacterValue}-rule for
+	 *         each terminal that is passed into the function
+	 */
+	public static Disjunction alternativeTerminals(boolean caseSensitive, String... terminals) {
+		Disjunction alternatives = new Disjunction();
+		for (String terminal : terminals) {
+			alternatives.addChild(new CharacterValue(caseSensitive, terminal));
+		}
+		return alternatives;
 	}
 
 }
