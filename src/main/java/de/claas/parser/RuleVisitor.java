@@ -1,9 +1,11 @@
 package de.claas.parser;
 
 import de.claas.parser.exceptions.CyclicRuleException;
+import de.claas.parser.rules.Character;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.Number;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
@@ -90,5 +92,25 @@ public interface RuleVisitor {
 	 *            the rule
 	 */
 	void visitTerminal(Terminal rule);
+
+	/**
+	 * Called by {@link Character}-rules.
+	 * 
+	 * @param rule
+	 *            the rule
+	 */
+	default void visitTerminal(Character rule) {
+		return;
+	}
+	
+	/**
+	 * Called by {@link Number}-rules.
+	 * 
+	 * @param rule
+	 *            the rule
+	 */
+	default void visitTerminal(Number rule) {
+		return;
+	}
 
 }
