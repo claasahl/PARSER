@@ -12,6 +12,7 @@ import de.claas.parser.exceptions.CyclicRuleException;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
@@ -303,7 +304,7 @@ public class ParserTest extends RuleVisitorTest {
 	
 	@Test
 	public void terminalShouldHaveCaseInsenstiveTerminals() {
-		Rule rule = new Terminal(false, "hello");
+		Rule rule = new CharacterValue(false, "hello");
 		Parser parser = build("HELLO");
 		rule.visit(parser);
 		Node expected = new TerminalNode("HELLO");

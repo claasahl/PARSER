@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.claas.parser.Rule;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
@@ -132,10 +133,10 @@ public class RuleEqualityTest extends RuleVisitorTest {
 
 	@Override
 	public void shouldHandleTerminalRule() {
-		Object obj = new Terminal(true, "child", "node");
+		Object obj = CharacterValue.alternativeTerminals(true, "child", "node");
 
 		RuleEquality visitor = build(obj);
-		Rule rule = new Terminal(true, "child", "node");
+		Rule rule = CharacterValue.alternativeTerminals(true, "child", "node");
 		rule.visit(visitor);
 		assertTrue(visitor.isEquality());
 
@@ -147,7 +148,7 @@ public class RuleEqualityTest extends RuleVisitorTest {
 
 	@Override
 	public void shouldHandleRules() {
-		Rule asterics = new Terminal("*");
+		Rule asterics = new CharacterValue("*");
 		Rule digit = new NonTerminal("digit", new NumberValue(16, '0', '9'));
 		Rule digits = new Repetition(digit);
 		Rule repeat = new NonTerminal("repeat",

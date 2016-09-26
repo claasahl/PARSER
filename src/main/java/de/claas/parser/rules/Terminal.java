@@ -25,28 +25,13 @@ public class Terminal extends Rule {
 
 	/**
 	 * 
-	 * Constructs a new {@link Terminal} with default parameters. Calling this
-	 * constructor is equivalent to calling
-	 * <code>{@link Terminal#Terminal(boolean, String...)}</code> without case
-	 * sensitivity.
+	 * Constructs a new {@link Terminal} with default parameters.
 	 * 
 	 * @param terminals
 	 *            the terminal symbols
 	 */
 	public Terminal(String... terminals) {
-		this(false, terminals);
-	}
-
-	/**
-	 * Constructs a new {@link Terminal} with the specified parameters.
-	 * 
-	 * @param caseSensitive
-	 *            whether the terminals are case sensitive
-	 * @param terminals
-	 *            the terminal symbols
-	 */
-	public Terminal(boolean caseSensitive, String... terminals) {
-		this.caseSensitive = caseSensitive;
+		this.caseSensitive = false;
 		this.terminals = Arrays.asList(terminals);
 		Collections.sort(this.terminals, Collections.reverseOrder(new TerminalLengthComparator()));
 	}

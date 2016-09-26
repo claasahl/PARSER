@@ -7,6 +7,7 @@ import java.util.Iterator;
 import org.junit.Before;
 
 import de.claas.parser.Rule;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
@@ -119,7 +120,7 @@ public class RuleHashCodeTest extends RuleVisitorTest {
 	public void shouldHandleTerminalRule() {
 		RuleHashCode visitor = build();
 		boolean caseSensitive = true;
-		Rule rule = new Terminal(caseSensitive, "child", "node");
+		Rule rule = CharacterValue.alternativeTerminals(caseSensitive, "child", "node");
 		rule.visit(visitor);
 
 		int expected = rule.getClass().hashCode();

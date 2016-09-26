@@ -17,6 +17,7 @@ import de.claas.parser.Node;
 import de.claas.parser.Rule;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
@@ -157,7 +158,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = %s\"helLO\"\r\n", false);
 
-		Rule hello = new Terminal(true, "helLO");
+		Rule hello = new CharacterValue(true, "helLO");
 		NonTerminal rule = new NonTerminal("rule", hello);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
@@ -168,7 +169,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = \"helLO\"\r\n", false);
 
-		Rule hello = new Terminal(false, "helLO");
+		Rule hello = new CharacterValue(false, "helLO");
 		NonTerminal rule = new NonTerminal("rule", hello);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
@@ -448,7 +449,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 				}
 
 				String terminal = terminals.next();
-				Node concatenation = generateConcatenation(new Terminal(rule.isCaseSensitive(), terminal));
+				Node concatenation = generateConcatenation(new CharacterValue(rule.isCaseSensitive(), terminal));
 				alternation.addChild(concatenation);
 				firstTerminal = false;
 			}
