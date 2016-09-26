@@ -9,6 +9,7 @@ import org.junit.Before;
 
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
@@ -42,7 +43,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 
 	@Override
 	public void shouldHandleConjunctionRule() {
-		Rule r1 = new Terminal("t");
+		Rule r1 = new CharacterValue("t");
 		new Conjunction(r1).visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
@@ -53,7 +54,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 
 	@Override
 	public void shouldHandleDisjunctionRule() {
-		Rule r1 = new Terminal("t");
+		Rule r1 = new CharacterValue("t");
 		new Disjunction(r1).visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
@@ -64,7 +65,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 
 	@Override
 	public void shouldHandleNonTerminalRule() {
-		Rule r1 = new Terminal("t");
+		Rule r1 = new CharacterValue("t");
 		new NonTerminal("some rule", r1).visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
@@ -75,7 +76,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 
 	@Override
 	public void shouldHandleOptionalRule() {
-		Rule r1 = new Terminal("t");
+		Rule r1 = new CharacterValue("t");
 		new Optional(r1).visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
@@ -86,7 +87,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 
 	@Override
 	public void shouldHandleRepetitionRule() {
-		Rule r1 = new Terminal("t");
+		Rule r1 = new CharacterValue("t");
 		new Repetition(r1).visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
@@ -97,17 +98,16 @@ public class RuleToStringTest extends RuleVisitorTest {
 
 	@Override
 	public void shouldHandleTerminalRule() {
-		new Terminal("some", "terminal").visit(this.visitor);
+		new CharacterValue("some-terminal").visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
-		lines.add("Terminal:terminal");
-		lines.add("Terminal:some");
+		lines.add("Terminal:some-terminal");
 		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 
 	@Override
 	public void shouldHandleRules() {
-		Rule asterics = new Terminal("*");
+		Rule asterics = new CharacterValue("*");
 		Rule digit = new NonTerminal("digit", new NumberValue(16, '0', '9'));
 		Rule digits = new Repetition(digit);
 		Rule repeat = new NonTerminal("repeat",

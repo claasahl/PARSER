@@ -42,7 +42,7 @@ public class RuleHashCodeTest extends RuleVisitorTest {
 
 	@Before
 	public void before() {
-		this.defaultChild = new Terminal("child");
+		this.defaultChild = new CharacterValue("child");
 		this.defaultChildHashCode = this.defaultChild.getClass().hashCode();
 		this.defaultChildHashCode += this.defaultChild.isCaseSensitive() ? 4096 : 512;
 		Iterator<String> terminals = this.defaultChild.getTerminals();

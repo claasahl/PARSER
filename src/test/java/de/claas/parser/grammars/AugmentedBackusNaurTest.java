@@ -47,8 +47,8 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = \"hel\" / \"lo\"\r\n", false);
 
-		Rule hel = new Terminal("hel");
-		Rule lo = new Terminal("lo");
+		Rule hel = new CharacterValue("hel");
+		Rule lo = new CharacterValue("lo");
 		Rule disjunction = new Disjunction(hel, lo);
 		NonTerminal rule = new NonTerminal("rule", disjunction);
 		Node expected = generateNodes(rule);
@@ -60,8 +60,8 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = \"hel\" \"lo\"\r\n", false);
 
-		Rule hel = new Terminal("hel");
-		Rule lo = new Terminal("lo");
+		Rule hel = new CharacterValue("hel");
+		Rule lo = new CharacterValue("lo");
 		Rule conjunction = new Conjunction(hel, lo);
 		NonTerminal rule = new NonTerminal("rule", conjunction);
 		Node expected = generateNodes(rule);
@@ -73,7 +73,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = *\"R\"\r\n", false);
 
-		Rule r = new Terminal("R");
+		Rule r = new CharacterValue("R");
 		Rule repetition = new Repetition(r);
 		NonTerminal rule = new NonTerminal("rule", repetition);
 		Node expected = generateNodes(rule);
@@ -85,7 +85,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = 4\"R\"\r\n", false);
 
-		Rule r = new Terminal("R");
+		Rule r = new CharacterValue("R");
 		Rule repetition = new Repetition(r, 4, 4);
 		NonTerminal rule = new NonTerminal("rule", repetition);
 		Node expected = generateNodes(rule);
@@ -97,7 +97,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = 23*\"R\"\r\n", false);
 
-		Rule r = new Terminal("R");
+		Rule r = new CharacterValue("R");
 		Rule repetition = new Repetition(r, 23, Integer.MAX_VALUE);
 		NonTerminal rule = new NonTerminal("rule", repetition);
 		Node expected = generateNodes(rule);
@@ -109,7 +109,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = *2\"R\"\r\n", false);
 
-		Rule r = new Terminal("R");
+		Rule r = new CharacterValue("R");
 		Rule repetition = new Repetition(r, 0, 2);
 		NonTerminal rule = new NonTerminal("rule", repetition);
 		Node expected = generateNodes(rule);
@@ -121,7 +121,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = \"hello\" world\r\n", false);
 
-		Rule hello = new Terminal("hello");
+		Rule hello = new CharacterValue("hello");
 		Rule world = new NonTerminal("world");
 		Rule conjunction = new Conjunction(hello, world);
 		NonTerminal rule = new NonTerminal("rule", conjunction);
@@ -134,7 +134,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = (\"hello\")\r\n", false);
 
-		Rule hello = new Conjunction(new Terminal("hello"));
+		Rule hello = new Conjunction(new CharacterValue("hello"));
 		Rule conjunction = new Conjunction(hello);
 		NonTerminal rule = new NonTerminal("rule", conjunction);
 		Node expected = generateNodes(rule);
@@ -146,7 +146,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = [\"hello\"]\r\n", false);
 
-		Rule hello = new Terminal("hello");
+		Rule hello = new CharacterValue("hello");
 		Rule optional = new Optional(hello);
 		NonTerminal rule = new NonTerminal("rule", optional);
 		Node expected = generateNodes(rule);
@@ -279,9 +279,9 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = \"hel\"\r\nrule =/ \"lo\"\r\n", false);
 
-		Terminal hel = new Terminal("hel");
+		Terminal hel = new CharacterValue("hel");
 		NonTerminal rule1 = new NonTerminal("rule", hel);
-		Terminal lo = new Terminal("lo");
+		Terminal lo = new CharacterValue("lo");
 		NonTerminal rule2 = new NonTerminal("rule", lo);
 		Node expected = generateNodes(rule1, rule2);
 		assertEquals(expected, actual);
@@ -292,7 +292,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = \"R\"; rrrrrrrr RRRR\r\n", false);
 
-		Rule r = new Terminal("R");
+		Rule r = new CharacterValue("R");
 		NonTerminal rule = new NonTerminal("rule", "rrrrrrrr RRRR", r);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);

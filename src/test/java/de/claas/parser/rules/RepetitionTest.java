@@ -21,7 +21,7 @@ public class RepetitionTest extends DecoratorTest {
 
 	@Override
 	protected Rule[] defaultChildren() {
-		return new Rule[] { new Terminal("decorated") };
+		return new Rule[] { new CharacterValue("decorated") };
 	}
 
 	@Override

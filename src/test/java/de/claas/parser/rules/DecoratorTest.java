@@ -74,7 +74,7 @@ public abstract class DecoratorTest extends RuleTest {
 	public void addChildShouldBeForwardedToDecoratedRule() {
 		Rule decorated = new Conjunction();
 		Decorator rule = build(decorated);
-		Rule child = new Terminal("child");
+		Rule child = new CharacterValue("child");
 
 		assertFalse(decorated.hasChildren());
 		assertTrue(rule.addChild(child));
@@ -91,7 +91,7 @@ public abstract class DecoratorTest extends RuleTest {
 	public void removeChildShouldBeForwardedToDecoratedRule() {
 		Rule decorated = new Conjunction();
 		Decorator rule = build(decorated);
-		Rule child = new Terminal("child");
+		Rule child = new CharacterValue("child");
 
 		assertTrue(decorated.addChild(child));
 		assertTrue(rule.removeChild(child));
@@ -108,7 +108,7 @@ public abstract class DecoratorTest extends RuleTest {
 	public void hasChildrenShouldBeForwardedToDecoratedRule() {
 		Rule decorated = new Conjunction();
 		Decorator rule = build(decorated);
-		Rule child = new Terminal("child");
+		Rule child = new CharacterValue("child");
 
 		assertFalse(decorated.hasChildren());
 		assertFalse(rule.hasChildren());
@@ -127,7 +127,7 @@ public abstract class DecoratorTest extends RuleTest {
 	public void iteratorShouldBeForwardedToDecoratedRule() {
 		Rule decorated = new Conjunction();
 		Decorator rule = build(decorated);
-		Rule child = new Terminal("child");
+		Rule child = new CharacterValue("child");
 
 		assertFalse(decorated.iterator().hasNext());
 		assertFalse(rule.iterator().hasNext());

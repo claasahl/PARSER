@@ -47,7 +47,7 @@ public class RuleEqualityTest extends RuleVisitorTest {
 
 	@Before
 	public void before() {
-		this.defaultChild = new Terminal("child");
+		this.defaultChild = new CharacterValue("child");
 	}
 
 	@Override
@@ -155,7 +155,7 @@ public class RuleEqualityTest extends RuleVisitorTest {
 				new Disjunction(new Conjunction(digit, digits), new Conjunction(digits, asterics, digits)));
 
 		RuleEquality visitor = build(repeat);
-		asterics = new Terminal("*");
+		asterics = new CharacterValue("*");
 		digit = new NonTerminal("digit", new NumberValue(16, '0', '9'));
 		digits = new Repetition(digit);
 		repeat = new NonTerminal("repeat",

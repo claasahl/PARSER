@@ -3,6 +3,7 @@ package de.claas.parser.grammars;
 import de.claas.parser.Grammar;
 import de.claas.parser.Node;
 import de.claas.parser.Rule;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
@@ -82,40 +83,40 @@ public class AugmentedBackusNaur extends Grammar {
 	 */
 	private static NonTerminal grammar() {
 		int max = Integer.MAX_VALUE;
-		Terminal dash = new Terminal("-");
-		Terminal eq = new Terminal("=", "=/");
-		Terminal c = new Terminal(";");
-		Terminal slash = new Terminal("/");
-		Terminal s = new Terminal("*");
-		Terminal d = new Terminal(".");
-		Terminal l = new Terminal("(");
-		Terminal r = new Terminal(")");
-		Terminal ll = new Terminal("[");
-		Terminal rr = new Terminal("]");
-		Terminal lll = new Terminal("<");
-		Terminal rrr = new Terminal(">");
-		Terminal p = new Terminal("%");
-		Terminal bNum = new Terminal("b");
-		Terminal dNum = new Terminal("d");
-		Terminal xNum = new Terminal("x");
+		Rule dash = new CharacterValue("-");
+		Rule eq = CharacterValue.alternatives(false, "=", "=/");
+		Rule c = new CharacterValue(";");
+		Rule slash = new CharacterValue("/");
+		Rule s = new CharacterValue("*");
+		Rule d = new CharacterValue(".");
+		Rule l = new CharacterValue("(");
+		Rule r = new CharacterValue(")");
+		Rule ll = new CharacterValue("[");
+		Rule rr = new CharacterValue("]");
+		Rule lll = new CharacterValue("<");
+		Rule rrr = new CharacterValue(">");
+		Rule p = new CharacterValue("%");
+		Rule bNum = new CharacterValue("b");
+		Rule dNum = new CharacterValue("d");
+		Rule xNum = new CharacterValue("x");
 
 		// ALPHA = %x41-5A / %x61-7A ; A-Z / a-z
 		NonTerminal alpha = new NonTerminal("alpha", new Disjunction(new NumberValue(16, 'A', 'Z'), new NumberValue(16, 'a', 'z')));
 		// DIGIT = %x30-39 ; 0-9
 		NonTerminal digit = new NonTerminal("digit", new NumberValue(16, '0', '9'));
 		// WSP = SP / HTAB ; white space
-		NonTerminal wsp = new NonTerminal("wsp", new Terminal("" + (char) 0x20, "" + (char) 0x09));
+		NonTerminal wsp = new NonTerminal("wsp", CharacterValue.alternatives(false, "" + (char) 0x20, "" + (char) 0x09));
 		// CRLF = CR LF ; Internet standard newline
-		NonTerminal crlf = new NonTerminal("crlf", new Terminal("\r\n"));
+		NonTerminal crlf = new NonTerminal("crlf", new CharacterValue("\r\n"));
 		// VCHAR = %x21-7E ; visible (printing) characters
 		NonTerminal vchar = new NonTerminal("vchar", new NumberValue(16, 0x21, 0x7e));
 		// DQUOTE = %x22 ; " (Double Quote)
-		NonTerminal dQuote = new NonTerminal("dQuote", new Terminal("\""));
+		NonTerminal dQuote = new NonTerminal("dQuote", new CharacterValue("\""));
 		// BIT = "0" / "1"
-		NonTerminal bit = new NonTerminal("bit", new Terminal("0", "1"));
+		NonTerminal bit = new NonTerminal("bit", CharacterValue.alternatives(false, "0", "1"));
 		// HEXDIG = DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
-		NonTerminal hexdig = new NonTerminal("hexdig", new Terminal("0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-				"A", "B", "C", "D", "E", "F", "a", "b", "c", "d", "e", "f"));
+		NonTerminal hexdig = new NonTerminal("hexdig", CharacterValue.alternatives(false, "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+				"A", "B", "C", "D", "E", "F"));
 
 		Rule tmpRulename = new Conjunction();
 		Rule tmpAlternation = new Conjunction();
@@ -171,11 +172,11 @@ public class AugmentedBackusNaur extends Grammar {
 
 		// case-insensitive-string = [ "%i" ] quoted-string
 		NonTerminal caseInsensitiveString = new NonTerminal("case-insensitive-string",
-				new Conjunction(new Optional(new Terminal("%i")), quotedString));
+				new Conjunction(new Optional(new CharacterValue("%i")), quotedString));
 
 		// case-sensitive-string = "%s" quoted-string
 		NonTerminal caseSensitiveString = new NonTerminal("case-sensitive-string",
-				new Conjunction(new Terminal("%s"), quotedString));
+				new Conjunction(new CharacterValue("%s"), quotedString));
 
 		// char-val = case-insensitive-string / case-sensitive-string
 		NonTerminal charVal = new NonTerminal("char-val", new Disjunction(caseInsensitiveString, caseSensitiveString));

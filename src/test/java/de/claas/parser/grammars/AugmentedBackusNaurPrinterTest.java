@@ -10,9 +10,11 @@ import org.junit.Test;
 import de.claas.parser.Rule;
 import de.claas.parser.exceptions.CyclicRuleException;
 import de.claas.parser.grammars.AugmentedBackusNaurPrinter;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
@@ -30,8 +32,8 @@ import de.claas.parser.visitors.RuleVisitorTest;
 public class AugmentedBackusNaurPrinterTest extends RuleVisitorTest {
 
 	private static final String NAME = "ruleName";
-	private static final Terminal ALPHA = new Terminal("A", "B", "C");
-	private static final Terminal NUM = new Terminal("1", "2", "3");
+	private static final Rule ALPHA = CharacterValue.alternatives(false, "A", "B", "C");
+	private static final Rule NUM = new NumberValue(1, '0', '3');
 
 	@Override
 	public void shouldHandleNoRule() {
@@ -88,7 +90,7 @@ public class AugmentedBackusNaurPrinterTest extends RuleVisitorTest {
 
 	@Override
 	public void shouldHandleRules() {
-		Rule asterics = new Terminal("*");
+		Rule asterics = new CharacterValue("*");
 		Rule digit = new NonTerminal("digit", NUM);
 		Rule digits = new Repetition(digit);
 		NonTerminal repeat = new NonTerminal("repeat",
