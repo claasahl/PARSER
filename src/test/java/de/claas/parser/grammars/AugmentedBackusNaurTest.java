@@ -20,6 +20,7 @@ import de.claas.parser.results.TerminalNode;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
@@ -178,7 +179,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = %b010101\r\n", false);
 
-		Rule value = new Terminal(false, "010101");
+		Rule value = new NumberValue(2, (char) 0b010101);
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
@@ -189,7 +190,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = %b01.11.00\r\n", false);
 
-		Rule value = new Terminal(false, "01", "11", "00");
+		Rule value = new NumberValue(2, (char) 0b01, (char) 0b11, (char) 0b00);
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
@@ -200,7 +201,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = %b01-11\r\n", false);
 
-		Rule value = new Terminal(false, "01", "10", "11");
+		Rule value = new NumberValue(2, (char) 0b01, (char) 0b11);
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
@@ -211,7 +212,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = %d123\r\n", false);
 
-		Rule value = new Terminal(false, "123");
+		Rule value = new NumberValue(10, (char) 123);
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
@@ -222,7 +223,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = %d12.3\r\n", false);
 
-		Rule value = new Terminal(false, "12", "3");
+		Rule value = new NumberValue(10, (char) 12, (char) 3);
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
@@ -233,7 +234,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = %d2-4\r\n", false);
 
-		Rule value = new Terminal(false, "2", "3", "4");
+		Rule value = new NumberValue(10, (char) 2, (char) 4);
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
@@ -244,7 +245,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = %xFF\r\n", false);
 
-		Rule value = new Terminal(false, "FF");
+		Rule value = new NumberValue(16, (char) 0xff);
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
@@ -255,7 +256,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = %xA.BB\r\n", false);
 
-		Rule value = new Terminal(false, "A", "BB");
+		Rule value = new NumberValue(16, (char) 0xa, (char) 0xbb);
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
@@ -264,9 +265,9 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 	@Test
 	public void shouldHandleRangeOfHexValues() {
 		Grammar grammar = build();
-		Node actual = grammar.parse("rule = %xFE-FF\r\n", false);
+		Node actual = grammar.parse("rule = %xF0-FF\r\n", false);
 
-		Rule value = new Terminal(false, "FE", "FF");
+		Rule value = new NumberValue(16, (char) 0xf0, (char) 0xff);
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);

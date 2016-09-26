@@ -15,6 +15,7 @@ import de.claas.parser.results.TerminalNode;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
@@ -311,7 +312,7 @@ public class ParserTest extends RuleVisitorTest {
 
 	@Test
 	public void terminalShouldSucceedIfTerminalsAreWithinRange() {
-		Rule rule = new Terminal('a', 'z');
+		Rule rule = new NumberValue(16, 'a', 'z');
 		Parser parser = build("a");
 		rule.visit(parser);
 		Node expected = new TerminalNode("a");
@@ -335,7 +336,7 @@ public class ParserTest extends RuleVisitorTest {
 
 	@Test
 	public void terminalShouldFailIfTerminalsAreOutsideOfRange() {
-		Rule rule = new Terminal('a', 'z');
+		Rule rule = new NumberValue(16, 'a', 'z');
 		Parser parser = build("A");
 		rule.visit(parser);
 		assertNull(parser.getResult());
@@ -344,7 +345,7 @@ public class ParserTest extends RuleVisitorTest {
 	@Override
 	public void shouldHandleRules() {
 		Rule plus = new Terminal("+");
-		Rule digit = new NonTerminal("digit", new Terminal('0', '9'));
+		Rule digit = new NonTerminal("digit", new NumberValue(16, '0', '9'));
 		Rule number = new NonTerminal("number", new Conjunction(new Optional(plus), new Repetition(digit, 1, 10)));
 		Parser parser = build("+321");
 		number.visit(parser);

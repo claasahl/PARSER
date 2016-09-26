@@ -1,6 +1,5 @@
 package de.claas.parser.rules;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -50,22 +49,6 @@ public class Terminal extends Rule {
 		this.caseSensitive = caseSensitive;
 		this.terminals = Arrays.asList(terminals);
 		Collections.sort(this.terminals, Collections.reverseOrder(new TerminalLengthComparator()));
-	}
-
-	/**
-	 * Constructs a new {@link Terminal} with default parameters.
-	 * 
-	 * @param rangeStart
-	 *            first character that this rule represents (inclusive)
-	 * @param rangeEnd
-	 *            last character that this rule represents (inclusive)
-	 */
-	@Deprecated
-	public Terminal(char rangeStart, char rangeEnd) {
-		this.caseSensitive = true;
-		this.terminals = new ArrayList<>();
-		for (int character = rangeStart; character <= rangeEnd; character++)
-			this.terminals.add("" + (char) character);
 	}
 
 	/**

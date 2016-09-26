@@ -10,6 +10,7 @@ import de.claas.parser.Rule;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
@@ -132,7 +133,7 @@ public class RuleHashCodeTest extends RuleVisitorTest {
 	public void shouldHandleRules() {
 		RuleHashCode visitor = build();
 		boolean caseSensitive = true;
-		Rule terminals = new Terminal('0', '9');
+		Rule terminals = new NumberValue(16, '0', '9');
 		Rule digit = new NonTerminal("digit", terminals);
 		Rule digits = new Repetition(digit, 1, 7);
 		digits.visit(visitor);

@@ -12,6 +12,7 @@ import de.claas.parser.RuleVisitor;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
@@ -107,7 +108,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 	@Override
 	public void shouldHandleRules() {
 		Rule asterics = new Terminal("*");
-		Rule digit = new NonTerminal("digit", new Terminal('0', '9'));
+		Rule digit = new NonTerminal("digit", new NumberValue(16, '0', '9'));
 		Rule digits = new Repetition(digit);
 		Rule repeat = new NonTerminal("repeat",
 				new Disjunction(new Conjunction(digit, digits), new Conjunction(digits, asterics, digits)));

@@ -6,6 +6,7 @@ import de.claas.parser.Rule;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
@@ -99,19 +100,19 @@ public class AugmentedBackusNaur extends Grammar {
 		Terminal xNum = new Terminal("x");
 
 		// ALPHA = %x41-5A / %x61-7A ; A-Z / a-z
-		NonTerminal alpha = new NonTerminal("alpha", new Disjunction(new Terminal('A', 'Z'), new Terminal('a', 'z')));
+		NonTerminal alpha = new NonTerminal("alpha", new Disjunction(new NumberValue(16, 'A', 'Z'), new NumberValue(16, 'a', 'z')));
 		// DIGIT = %x30-39 ; 0-9
-		NonTerminal digit = new NonTerminal("digit", new Terminal('0', '9'));
+		NonTerminal digit = new NonTerminal("digit", new NumberValue(16, '0', '9'));
 		// WSP = SP / HTAB ; white space
 		NonTerminal wsp = new NonTerminal("wsp", new Terminal("" + (char) 0x20, "" + (char) 0x09));
 		// CRLF = CR LF ; Internet standard newline
 		NonTerminal crlf = new NonTerminal("crlf", new Terminal("\r\n"));
 		// VCHAR = %x21-7E ; visible (printing) characters
-		NonTerminal vchar = new NonTerminal("vchar", new Terminal((char) 0x21, (char) 0x7e));
+		NonTerminal vchar = new NonTerminal("vchar", new NumberValue(16, 0x21, 0x7e));
 		// DQUOTE = %x22 ; " (Double Quote)
 		NonTerminal dQuote = new NonTerminal("dQuote", new Terminal("\""));
 		// BIT = "0" / "1"
-		NonTerminal bit = new NonTerminal("bit", new Terminal('0', '1'));
+		NonTerminal bit = new NonTerminal("bit", new Terminal("0", "1"));
 		// HEXDIG = DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
 		NonTerminal hexdig = new NonTerminal("hexdig", new Terminal("0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
 				"A", "B", "C", "D", "E", "F", "a", "b", "c", "d", "e", "f"));
@@ -140,7 +141,7 @@ public class AugmentedBackusNaur extends Grammar {
 		// prose-val = "<" *(%x20-3D / %x3F-7E) ">" ; bracketed string of SP and
 		// VCHAR without angles prose description, to be used as last resort
 		NonTerminal proseVal = new NonTerminal("prose-val", new Conjunction(lll, new Repetition(
-				new Disjunction(new Terminal((char) 0x20, (char) 0x3d), new Terminal((char) 0x3f, (char) 0x7e))), rrr));
+				new Disjunction(new NumberValue(16, 0x20, 0x3d), new NumberValue(16, 0x3f, 0x7e))), rrr));
 
 		// dec-val = "d" 1*DIGIT [ 1*("." 1*DIGIT) / ("-" 1*DIGIT) ]
 		Rule rule32 = new Repetition(digit, 1, max);
@@ -165,7 +166,7 @@ public class AugmentedBackusNaur extends Grammar {
 		// quoted-string = DQUOTE *(%x20-21 / %x23-7E) DQUOTE ; quoted string of
 		// SP and VCHAR without DQUOTE
 		NonTerminal quotedString = new NonTerminal("quoted-string", new Conjunction(dQuote, new Repetition(
-				new Disjunction(new Terminal((char) 0x20, (char) 0x21), new Terminal((char) 0x23, (char) 0x7e))),
+				new Disjunction(new NumberValue(16, 0x20, 0x21), new NumberValue(16, 0x23, 0x7e))),
 				dQuote));
 
 		// case-insensitive-string = [ "%i" ] quoted-string
