@@ -5,15 +5,15 @@ import de.claas.parser.RuleVisitor;
 
 /**
  * 
- * The class {@link Number}. It is an implementation of the {@link Rule} class.
- * It is intended to represent a range of numeric terminal symbols or a
+ * The class {@link NumberValue}. It is an implementation of the {@link Rule}
+ * class. It is intended to represent a range of numeric terminal symbols or a
  * collection of numeric terminal symbols (e.g. 'letter' of the grammar's
  * alphabet) within a grammar.
  * 
  * @author Claas Ahlrichs
  *
  */
-public class Number extends Terminal {
+public class NumberValue extends Terminal {
 
 	private final int radix;
 	private final String terminal;
@@ -21,14 +21,14 @@ public class Number extends Terminal {
 	private final java.lang.Character rangeEnd;
 
 	/**
-	 * Constructs a new {@link Number} with the specified parameters.
+	 * Constructs a new {@link NumberValue} with the specified parameters.
 	 * 
 	 * @param radix
 	 *            the radix (i.e. 2, 10 or 16)
 	 * @param terminals
 	 *            the terminal symbols
 	 */
-	public Number(int radix, char... terminals) {
+	public NumberValue(int radix, char... terminals) {
 		this.radix = radix;
 		this.terminal = new String(terminals);
 		this.rangeStart = null;
@@ -36,7 +36,7 @@ public class Number extends Terminal {
 	}
 
 	/**
-	 * Constructs a new {@link Number} with default parameters.
+	 * Constructs a new {@link NumberValue} with default parameters.
 	 * 
 	 * @param radix
 	 *            the radix (i.e. 2, 10 or 16)
@@ -45,11 +45,11 @@ public class Number extends Terminal {
 	 * @param rangeEnd
 	 *            last character that this rule represents (inclusive)
 	 */
-	public Number(int radix, char rangeStart, char rangeEnd) {
+	public NumberValue(int radix, int rangeStart, int rangeEnd) {
 		this.radix = radix;
 		this.terminal = null;
-		this.rangeStart = new java.lang.Character(rangeStart);
-		this.rangeEnd = new java.lang.Character(rangeEnd);
+		this.rangeStart = new Character(Character.forDigit(rangeStart, 10));
+		this.rangeEnd = new Character(Character.forDigit(rangeEnd, 10));
 	}
 
 	/**
