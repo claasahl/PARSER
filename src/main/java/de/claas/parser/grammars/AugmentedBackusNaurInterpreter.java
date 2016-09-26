@@ -645,7 +645,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			for (int number = rangeStart; number <= rangeEnd; number++)
 				terminals.add("" + (char) number);
 		}
-		return CharacterValue.alternativeTerminals(true, terminals.toArray(new String[0]));
+		return CharacterValue.alternatives(true, terminals.toArray(new String[0]));
 	}
 
 	private Rule visitProseVal(NonTerminalNode node) {

@@ -133,10 +133,10 @@ public class RuleEqualityTest extends RuleVisitorTest {
 
 	@Override
 	public void shouldHandleTerminalRule() {
-		Object obj = CharacterValue.alternativeTerminals(true, "child", "node");
+		Object obj = CharacterValue.alternatives(true, "child", "node");
 
 		RuleEquality visitor = build(obj);
-		Rule rule = CharacterValue.alternativeTerminals(true, "child", "node");
+		Rule rule = CharacterValue.alternatives(true, "child", "node");
 		rule.visit(visitor);
 		assertTrue(visitor.isEquality());
 

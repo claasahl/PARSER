@@ -120,7 +120,7 @@ public class RuleHashCodeTest extends RuleVisitorTest {
 	public void shouldHandleTerminalRule() {
 		RuleHashCode visitor = build();
 		boolean caseSensitive = true;
-		Rule rule = CharacterValue.alternativeTerminals(caseSensitive, "child", "node");
+		Rule rule = CharacterValue.alternatives(caseSensitive, "child", "node");
 		rule.visit(visitor);
 
 		int expected = rule.getClass().hashCode();

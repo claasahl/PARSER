@@ -89,7 +89,7 @@ public class CharacterValue extends Terminal {
 	 * @return a {@link Disjunction}-rule with a {@link CharacterValue}-rule for
 	 *         each terminal that is passed into the function
 	 */
-	public static Disjunction alternativeTerminals(boolean caseSensitive, String... terminals) {
+	public static Disjunction alternatives(boolean caseSensitive, String... terminals) {
 		Disjunction alternatives = new Disjunction();
 		for (String terminal : terminals) {
 			alternatives.addChild(new CharacterValue(caseSensitive, terminal));
