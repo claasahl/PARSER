@@ -1,13 +1,6 @@
 package de.claas.parser.rules;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-
 import de.claas.parser.Rule;
-import de.claas.parser.RuleVisitor;
 
 /**
  * 
@@ -18,42 +11,7 @@ import de.claas.parser.RuleVisitor;
  * @author Claas Ahlrichs
  *
  */
-public class Terminal extends Rule {
-
-	private final boolean caseSensitive;
-	private final List<String> terminals;
-
-	/**
-	 * 
-	 * Constructs a new {@link Terminal} with default parameters.
-	 * 
-	 * @param terminals
-	 *            the terminal symbols
-	 */
-	public Terminal(String... terminals) {
-		this.caseSensitive = false;
-		this.terminals = Arrays.asList(terminals);
-		Collections.sort(this.terminals, Collections.reverseOrder(new TerminalLengthComparator()));
-	}
-
-	/**
-	 * Returns the terminal symbols that this rule represents.
-	 * 
-	 * @return the terminal symbols that this rule represents
-	 */
-	public Iterator<String> getTerminals() {
-		return this.terminals.iterator();
-	}
-
-	/**
-	 * Whether the terminals are case sensitive or not.
-	 * 
-	 * @return <code>true</code> if the terminals are case sensitive, otherwise
-	 *         <code>false</code>
-	 */
-	public boolean isCaseSensitive() {
-		return this.caseSensitive;
-	}
+public abstract class Terminal extends Rule {
 
 	@Override
 	public boolean addChild(Rule rule) {
@@ -63,37 +21,6 @@ public class Terminal extends Rule {
 	@Override
 	public boolean removeChild(Rule rule) {
 		return false;
-	}
-
-	@Override
-	public void visit(RuleVisitor visitor) {
-		visitor.visitTerminal(this);
-	}
-
-	/**
-	 * 
-	 * The class {@link TerminalLengthComparator}. It is intended to order
-	 * terminal symbols according to their length. The rational behind this
-	 * comparator is such that longer terminal symbols are given preference by
-	 * the {@link Terminal} rule that uses it.
-	 * 
-	 * @author Claas Ahlrichs
-	 *
-	 */
-	private static class TerminalLengthComparator implements Comparator<String> {
-
-		/**
-		 * Constructs a new {@link TerminalLengthComparator} with default
-		 * parameters.
-		 */
-		public TerminalLengthComparator() {
-		}
-
-		@Override
-		public int compare(String terminalA, String terminalB) {
-			return Integer.compare(terminalA.length(), terminalB.length());
-		}
-
 	}
 
 }
