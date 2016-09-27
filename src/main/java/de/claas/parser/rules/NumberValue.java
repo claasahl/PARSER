@@ -64,9 +64,12 @@ public class NumberValue extends Terminal {
 	}
 
 	/**
-	 * Returns the terminal symbol that this rule represents.
+	 * Returns the terminal symbol if this is a collection-based terminal. If
+	 * this is not a collection-based (i.e. range-based) <code>null</code> is
+	 * returned.
 	 * 
-	 * @return the terminal symbol that this rule represents
+	 * @return the terminal symbol unless this is a collection-based terminal,
+	 *         otherwise <code>null</code>
 	 */
 	public String getTerminal() {
 		return this.terminal;
@@ -74,7 +77,8 @@ public class NumberValue extends Terminal {
 
 	/**
 	 * Returns the lower end of the range if this is a range-based terminal. If
-	 * this is not a range based <code>null</code> is returned.
+	 * this is not a range-based (i.e. collection-based) <code>null</code> is
+	 * returned.
 	 * 
 	 * @return the lower end of the range if this is a range-based terminal,
 	 *         otherwise <code>null</code>
