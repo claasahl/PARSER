@@ -10,12 +10,13 @@ import de.claas.parser.Grammar;
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
 import de.claas.parser.exceptions.CyclicRuleException;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
-import de.claas.parser.rules.Terminal;
 
 /**
  * 
@@ -119,7 +120,12 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 	}
 
 	@Override
-	public void visitTerminal(Terminal rule) {
+	public void visitTerminal(CharacterValue rule) {
+		// nothing to be done
+	}
+
+	@Override
+	public void visitTerminal(NumberValue rule) {
 		// nothing to be done
 	}
 
@@ -233,30 +239,38 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 		}
 
 		@Override
-		public void visitTerminal(Terminal rule) {
-			this.stringBuilder.append("(");
-			Iterator<String> terminals = rule.getTerminals();
-			while (terminals.hasNext()) {
-				String terminal = terminals.next();
-				if (terminal.length() == 1) {
-					char character = terminal.charAt(0);
-					if (Character.isISOControl(character)) {
-						this.stringBuilder.append("x");
-						this.stringBuilder.append(Integer.toHexString(character));
-					} else {
-						this.stringBuilder.append("'");
-						this.stringBuilder.append(terminal);
-						this.stringBuilder.append("'");
-					}
-				} else {
-					this.stringBuilder.append("'");
-					this.stringBuilder.append(terminal);
-					this.stringBuilder.append("'");
+		public void visitTerminal(CharacterValue rule) {
+			this.stringBuilder.append("'");
+			this.stringBuilder.append(rule.getTerminal());
+			this.stringBuilder.append("'");
+		}
+
+		@Override
+		public void visitTerminal(NumberValue rule) {
+			int radix = rule.getRadix();
+			String marker = "";
+			marker = radix == 16 ? "x" : marker;
+			marker = radix == 10 ? "d" : marker;
+			marker = radix == 2 ? "b" : marker;
+			if (rule.getTerminal() != null) {
+				String terminal = rule.getTerminal();
+				this.stringBuilder.append("%");
+				this.stringBuilder.append(marker);
+				for (int index = 0; index < terminal.length(); index++) {
+					String number = Integer.toString(terminal.charAt(index), radix);
+					this.stringBuilder.append(number);
+					if (index + 1 < terminal.length())
+						this.stringBuilder.append(".");
 				}
-				if (terminals.hasNext())
-					this.stringBuilder.append(" / ");
+			} else {
+				String start = Integer.toString(rule.getRangeStart().charValue(), radix);
+				String end = Integer.toString(rule.getRangeEnd().charValue(), radix);
+				this.stringBuilder.append("%");
+				this.stringBuilder.append(marker);
+				this.stringBuilder.append(start);
+				this.stringBuilder.append("-");
+				this.stringBuilder.append(end);
 			}
-			this.stringBuilder.append(")");
 		}
 
 		@Override
