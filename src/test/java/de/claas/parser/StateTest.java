@@ -106,4 +106,12 @@ public class StateTest {
 		state.revert();
 		assertEquals("helLO", state.process(false, "helLO"));
 	}
+	
+	@Test
+	public void shouldProcessNothing() {
+		State state = buildState("");
+		assertNull(state.process(true, "some token"));
+		assertNull(state.process(false, "some token"));
+		assertNull(state.process('A', 'Z'));
+	}
 }

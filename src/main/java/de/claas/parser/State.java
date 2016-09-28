@@ -87,6 +87,9 @@ public class State {
 	 *         specified boundaries, otherwise <code>null</code>
 	 */
 	public String process(char rangeStart, char rangeEnd) {
+		if(this.offset >= this.data.length())
+			return null;
+		
 		char currentChar = this.data.charAt(this.offset);
 		if (currentChar >= rangeStart && currentChar <= rangeEnd) {
 			this.offset += 1;
