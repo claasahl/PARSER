@@ -8,7 +8,6 @@ import de.claas.parser.rules.NonTerminal;
 import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
-import de.claas.parser.rules.Terminal;
 
 /**
  * 
@@ -84,14 +83,6 @@ public interface RuleVisitor {
 	 *             cannot be handled by the visitor
 	 */
 	void visitRepetition(Repetition rule);
-
-	/**
-	 * Called by {@link Terminal}-rules.
-	 * 
-	 * @param rule
-	 *            the rule
-	 */
-	void visitTerminal(Terminal rule);
 
 	/**
 	 * Called by {@link CharacterValue}-rules.
