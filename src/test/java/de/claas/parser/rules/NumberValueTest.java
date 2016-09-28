@@ -55,7 +55,7 @@ public class NumberValueTest extends TerminalTest {
 	public void shouldBeRangeBasedTerminal() {
 		NumberValue rule = new NumberValue(this.DEFAULT_RADIX, '0', '9');
 		assertNull(rule.getTerminal());
-		assertEquals(new Character('0'), rule.getTerminal());
+		assertEquals(new Character('0'), rule.getRangeStart());
 		assertEquals(new Character('9'), rule.getRangeEnd());
 	}
 

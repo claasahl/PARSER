@@ -48,8 +48,8 @@ public class NumberValue extends Terminal {
 	public NumberValue(int radix, int rangeStart, int rangeEnd) {
 		this.radix = radix;
 		this.terminal = null;
-		this.rangeStart = new Character(Character.forDigit(rangeStart, 10));
-		this.rangeEnd = new Character(Character.forDigit(rangeEnd, 10));
+		this.rangeStart = new Character((char) rangeStart);
+		this.rangeEnd = new Character((char) rangeEnd);
 	}
 
 	/**
