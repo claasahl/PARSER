@@ -279,17 +279,20 @@ public class ParserTest extends RuleVisitorTest {
 		Rule rule = CharacterValue.alternatives(false, HELLO, WORLD, "b");
 		Parser parser = build(HELLO);
 		rule.visit(parser);
-		Node expected = new TerminalNode(HELLO);
+		Node expected = new IntermediateNode();
+		expected.addChild(new TerminalNode(HELLO));
 		assertEquals(expected, parser.getResult());
 
 		parser = build(WORLD);
 		rule.visit(parser);
-		expected = new TerminalNode(WORLD);
+		expected = new IntermediateNode();
+		expected.addChild(new TerminalNode(WORLD));
 		assertEquals(expected, parser.getResult());
 
 		parser = build("b");
 		rule.visit(parser);
-		expected = new TerminalNode("b");
+		expected = new IntermediateNode();
+		expected.addChild(new TerminalNode("b"));
 		assertEquals(expected, parser.getResult());
 	}
 

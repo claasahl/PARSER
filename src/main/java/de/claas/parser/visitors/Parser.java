@@ -1,7 +1,6 @@
 package de.claas.parser.visitors;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import de.claas.parser.Node;
@@ -12,9 +11,11 @@ import de.claas.parser.exceptions.CyclicRuleException;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
@@ -244,13 +245,36 @@ public class Parser implements RuleVisitor {
 	}
 
 	@Override
-	public void visitTerminal(Terminal rule) {
+	public void visitTerminal(CharacterValue rule) {
 		this.state.beginGroup();
 		try {
-			Iterator<String> terminals = rule.getTerminals();
-			while (terminals.hasNext()) {
-				String terminal = terminals.next();
-				String token = this.state.process(rule.isCaseSensitive(), terminal);
+			String terminal = rule.getTerminal();
+			String token = this.state.process(rule.isCaseSensitive(), terminal);
+			if (token != null) {
+				setResult(new TerminalNode(token));
+				return;
+			}
+			clearResult();
+		} finally {
+			this.state.endGroup();
+		}
+	}
+
+	@Override
+	public void visitTerminal(NumberValue rule) {
+		this.state.beginGroup();
+		try {
+			if (rule.getTerminal() != null) {
+				String terminal = rule.getTerminal();
+				String token = this.state.process(true, terminal);
+				if (token != null) {
+					setResult(new TerminalNode(token));
+					return;
+				}
+			} else {
+				char rangeStart = rule.getRangeStart().charValue();
+				char rangeEnd = rule.getRangeEnd().charValue();
+				String token = this.state.process(rangeStart, rangeEnd);
 				if (token != null) {
 					setResult(new TerminalNode(token));
 					return;
