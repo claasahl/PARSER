@@ -16,7 +16,6 @@ import de.claas.parser.rules.NonTerminal;
 import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
-import de.claas.parser.rules.Terminal;
 
 /**
  * 
@@ -48,7 +47,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 
 		List<String> lines = new ArrayList<>();
 		lines.add("Conjunction");
-		lines.add("  Terminal:t");
+		lines.add("  CharacterValue:t");
 		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 
@@ -59,7 +58,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 
 		List<String> lines = new ArrayList<>();
 		lines.add("Disjunction");
-		lines.add("  Terminal:t");
+		lines.add("  CharacterValue:t");
 		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 
@@ -70,7 +69,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 
 		List<String> lines = new ArrayList<>();
 		lines.add("NonTerminal:some rule");
-		lines.add("  Terminal:t");
+		lines.add("  CharacterValue:t");
 		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 
@@ -81,7 +80,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 
 		List<String> lines = new ArrayList<>();
 		lines.add("Optional");
-		lines.add("  Terminal:t");
+		lines.add("  CharacterValue:t");
 		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 
@@ -92,7 +91,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 
 		List<String> lines = new ArrayList<>();
 		lines.add("Repetition");
-		lines.add("  Terminal:t");
+		lines.add("  CharacterValue:t");
 		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 
@@ -101,7 +100,7 @@ public class RuleToStringTest extends RuleVisitorTest {
 		new CharacterValue("some-terminal").visit(this.visitor);
 
 		List<String> lines = new ArrayList<>();
-		lines.add("Terminal:some-terminal");
+		lines.add("CharacterValue:some-terminal");
 		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());
 	}
 
@@ -118,26 +117,18 @@ public class RuleToStringTest extends RuleVisitorTest {
 		lines.add("  Disjunction");
 		lines.add("    Conjunction");
 		lines.add("      NonTerminal:digit");
-		for (int i = 0; i <= 9; i++) {
-			lines.add("        Terminal:" + i);
-		}
+		lines.add("        NumberValue:%x30-39");
 		lines.add("      Repetition");
 		lines.add("        NonTerminal:digit");
-		for (int i = 0; i <= 9; i++) {
-			lines.add("          Terminal:" + i);
-		}
+		lines.add("          NumberValue:%x30-39");
 		lines.add("    Conjunction");
 		lines.add("      Repetition");
 		lines.add("        NonTerminal:digit");
-		for (int i = 0; i <= 9; i++) {
-			lines.add("          Terminal:" + i);
-		}
-		lines.add("      Terminal:*");
+		lines.add("          NumberValue:%x30-39");
+		lines.add("      CharacterValue:*");
 		lines.add("      Repetition");
 		lines.add("        NonTerminal:digit");
-		for (int i = 0; i <= 9; i++) {
-			lines.add("          Terminal:" + i);
-		}
+		lines.add("          NumberValue:%x30-39");
 
 		repeat.visit(this.visitor);
 		assertEquals(String.join("\n", lines) + "\n", this.visitor.toString());

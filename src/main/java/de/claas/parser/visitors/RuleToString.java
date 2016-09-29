@@ -1,18 +1,18 @@
 package de.claas.parser.visitors;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
-import de.claas.parser.rules.Terminal;
 
 /**
  * 
@@ -124,10 +124,33 @@ public class RuleToString implements RuleVisitor {
 	}
 
 	@Override
-	public void visitTerminal(Terminal rule) {
-		Iterator<String> iterator = rule.getTerminals();
-		while (iterator.hasNext()) {
-			appendRule(rule, iterator.next());
+	public void visitTerminal(CharacterValue rule) {
+		appendRule(rule, rule.getTerminal());
+	}
+	
+	@Override
+	public void visitTerminal(NumberValue rule) {
+		int radix = rule.getRadix();
+		String marker = "";
+		marker = radix == 16 ? "x" : marker;
+		marker = radix == 10 ? "d" : marker;
+		marker = radix == 2 ? "b" : marker;
+		if (rule.getTerminal() != null) {
+			String terminal = rule.getTerminal();
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.append("%");
+			stringBuilder.append(marker);
+			for (int index = 0; index < terminal.length(); index++) {
+				String number = Integer.toString(terminal.charAt(index), radix);
+				stringBuilder.append(number);
+				if (index + 1 < terminal.length())
+					stringBuilder.append(".");
+			}
+			appendRule(rule, stringBuilder.toString());
+		} else {
+			String start = Integer.toString(rule.getRangeStart().charValue(), radix);
+			String end = Integer.toString(rule.getRangeEnd().charValue(), radix);
+			appendRule(rule, String.format("%%%s%s-%s", marker, start, end));
 		}
 	}
 
