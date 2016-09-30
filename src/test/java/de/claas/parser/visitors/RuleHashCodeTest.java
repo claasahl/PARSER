@@ -2,8 +2,6 @@ package de.claas.parser.visitors;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Iterator;
-
 import org.junit.Before;
 
 import de.claas.parser.Rule;
@@ -14,7 +12,6 @@ import de.claas.parser.rules.NonTerminal;
 import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
-import de.claas.parser.rules.Terminal;
 
 /**
  * 
@@ -27,7 +24,7 @@ import de.claas.parser.rules.Terminal;
  */
 public class RuleHashCodeTest extends RuleVisitorTest {
 
-	private Terminal defaultChild;
+	private CharacterValue defaultChild;
 	private int defaultChildHashCode;
 
 	/**
@@ -45,10 +42,7 @@ public class RuleHashCodeTest extends RuleVisitorTest {
 		this.defaultChild = new CharacterValue("child");
 		this.defaultChildHashCode = this.defaultChild.getClass().hashCode();
 		this.defaultChildHashCode += this.defaultChild.isCaseSensitive() ? 4096 : 512;
-		Iterator<String> terminals = this.defaultChild.getTerminals();
-		while (terminals.hasNext()) {
-			this.defaultChildHashCode += terminals.next().hashCode();
-		}
+		this.defaultChildHashCode += this.defaultChild.getTerminal().hashCode();
 	}
 
 	@Override
@@ -120,20 +114,18 @@ public class RuleHashCodeTest extends RuleVisitorTest {
 	public void shouldHandleTerminalRule() {
 		RuleHashCode visitor = build();
 		boolean caseSensitive = true;
-		Rule rule = CharacterValue.alternatives(caseSensitive, "child", "node");
+		Rule rule = new CharacterValue(caseSensitive, "child");
 		rule.visit(visitor);
 
 		int expected = rule.getClass().hashCode();
 		expected += caseSensitive ? 4096 : 512;
 		expected += "child".hashCode();
-		expected += "node".hashCode();
 		assertEquals(expected, visitor.getHashCode());
 	}
 
 	@Override
 	public void shouldHandleRules() {
 		RuleHashCode visitor = build();
-		boolean caseSensitive = true;
 		Rule terminals = new NumberValue(16, '0', '9');
 		Rule digit = new NonTerminal("digit", terminals);
 		Rule digits = new Repetition(digit, 1, 7);
@@ -145,17 +137,9 @@ public class RuleHashCodeTest extends RuleVisitorTest {
 		expected += digit.getClass().hashCode();
 		expected += "digit".hashCode();
 		expected += terminals.getClass().hashCode();
-		expected += caseSensitive ? 4096 : 512;
-		expected += "0".hashCode();
-		expected += "1".hashCode();
-		expected += "2".hashCode();
-		expected += "3".hashCode();
-		expected += "4".hashCode();
-		expected += "5".hashCode();
-		expected += "6".hashCode();
-		expected += "7".hashCode();
-		expected += "8".hashCode();
-		expected += "9".hashCode();
+		expected += Integer.hashCode(16);
+		expected += Character.hashCode('0');
+		expected += Character.hashCode('9');
 		assertEquals(expected, visitor.getHashCode());
 	}
 

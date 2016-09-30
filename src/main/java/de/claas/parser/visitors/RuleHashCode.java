@@ -1,17 +1,17 @@
 package de.claas.parser.visitors;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
-import de.claas.parser.rules.Terminal;
 
 /**
  * 
@@ -96,13 +96,23 @@ public class RuleHashCode implements RuleVisitor {
 	}
 
 	@Override
-	public void visitTerminal(Terminal rule) {
+	public void visitTerminal(CharacterValue rule) {
 		this.hashCode += rule.getClass().hashCode();
 		this.hashCode += rule.isCaseSensitive() ? 4096 : 512;
-		Iterator<String> terminals = rule.getTerminals();
-		while (terminals.hasNext()) {
-			this.hashCode += terminals.next().hashCode();
-		}
+		if (rule.getTerminal() != null)
+			this.hashCode += rule.getTerminal().hashCode();
+	}
+	
+	@Override
+	public void visitTerminal(NumberValue rule) {
+		this.hashCode += rule.getClass().hashCode();
+		this.hashCode += Integer.hashCode(rule.getRadix());
+		if (rule.getTerminal() != null)
+			this.hashCode += rule.getTerminal().hashCode();
+		if (rule.getRangeStart() != null)
+			this.hashCode += rule.getRangeStart().hashCode();
+		if (rule.getRangeEnd() != null)
+			this.hashCode += rule.getRangeEnd().hashCode();
 	}
 
 	/**
