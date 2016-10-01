@@ -4,89 +4,142 @@ import java.util.Stack;
 
 /**
  * 
- * The class {@link State}. It is intended to represent the state while
- * processing / parsing tokens.
+ * The class {@link State}. It is intended to be used by {@link Grammar}
+ * instances during processing / parsing. The state is fed with data, that is
+ * presumed to fulfill the grammar in question, and provides methods for
+ * processing the given data as well as methods for querying its internal state.
  * 
  * @author Claas Ahlrichs
  *
  */
 public class State {
 
-	private final Stack<String> tokens;
-	private final Stack<String> processedTokens;
 	private final Stack<Integer> steps;
+	private final String data;
+	private final String dataUpperCase;
+	private int offset = 0;
 
 	/**
-	 * Creates an instance with default parameters.
-	 */
-	public State() {
-		this(new Stack<>());
-	}
-
-	/**
-	 * Creates an instance with the given parameter.
+	 * Constructs a new {@link State} with the specified parameter.
 	 * 
-	 * @param tokens
-	 *            the tokens that need processing / parsing
+	 * @param state
+	 *            the state which is being duplicated
 	 */
-	public State(Stack<String> tokens) {
-		// TODO no null values among tokens
-		this.tokens = new Stack<>();
-		this.tokens.addAll(tokens);
-		this.processedTokens = new Stack<>();
+	public State(State state) {
 		this.steps = new Stack<>();
+		this.steps.addAll(state.steps);
+		this.data = state.data;
+		this.dataUpperCase = state.dataUpperCase;
+		this.offset = state.offset;
 	}
 
 	/**
-	 * Returns the next token and marks it as <i>processed</i>. The returned
-	 * token is taken from a stack of (unprocessed) tokens and transferred to a
-	 * stack of processed tokens. If no more tokens are available, then
+	 * Constructs a new {@link State} with the specified parameter.
+	 * 
+	 * @param data
+	 *            the data that will be processed by this {@link State}
+	 */
+	public State(String data) {
+		this.steps = new Stack<>();
+		this.data = data;
+		this.dataUpperCase = data.toUpperCase();
+	}
+
+	/**
+	 * Returns the actually processed token if the specified token was
+	 * successfully processed. The specified token and actually processed token
+	 * may be different depending on the case sensitivity. Otherwise,
 	 * <code>null</code> is returned.
 	 * 
-	 * @return the next token. <code>null</code> if no more tokens are available
+	 * @param caseSensitive
+	 *            whether the token is case sensitive (or not)
+	 * @param token
+	 *            the token
+	 * 
+	 * @return the actually processed token if the specified token was
+	 *         successfully processed, otherwise <code>null</code>
 	 */
-	public String processToken() {
-		if (tokens.isEmpty())
+	public String process(boolean caseSensitive, String token) {
+		String localData = caseSensitive ? this.data : this.dataUpperCase;
+		String localToken = caseSensitive ? token : token.toUpperCase();
+		if (localData.startsWith(localToken, this.offset)) {
+			String actualToken = this.data.substring(this.offset, this.offset + localToken.length());
+			this.offset += localToken.length();
+			if (!this.steps.isEmpty()) {
+				int sum = this.steps.pop().intValue() + localToken.length();
+				this.steps.push(new Integer(sum));
+			}
+			return actualToken;
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the processed character if the current character falls within the
+	 * specified boundaries. Otherwise, <code>null</code> is returned.
+	 * 
+	 * @param rangeStart
+	 *            lower boundary of allowed characters
+	 * @param rangeEnd
+	 *            upper boundary of allowed characters
+	 * 
+	 * @return the processed character if the current character falls within the
+	 *         specified boundaries, otherwise <code>null</code>
+	 */
+	public String process(char rangeStart, char rangeEnd) {
+		if(this.offset >= this.data.length())
 			return null;
-
-		String token = tokens.pop();
-		processedTokens.push(token);
-		if (!steps.isEmpty())
-			steps.push(steps.pop() + 1);
-		return token;
+		
+		char currentChar = this.data.charAt(this.offset);
+		if (currentChar >= rangeStart && currentChar <= rangeEnd) {
+			this.offset += 1;
+			if (!this.steps.isEmpty()) {
+				int sum = this.steps.pop().intValue() + 1;
+				this.steps.push(new Integer(sum));
+			}
+			return Character.toString(currentChar);
+		}
+		return null;
 	}
 
 	/**
-	 * Returns the token that was most recently processed and marks it as
-	 * <i>unprocessed</i>. The returned token is taken from a stack of
-	 * (processed) tokens and transferred back to a stack of unprocessed tokens.
+	 * Returns the unprocessed data of this state. An empty string is returned
+	 * if all data were processed. Equals {@link #getData()} if no data was
+	 * processed. The returned string is the trailing part of this state's data
+	 * (i.e. this state's data ends with the unprocessed data). The length of
+	 * the returned string decreases as more data is being processed.
 	 * 
-	 * @return the token that was most recently processed
+	 * @return the unprocessed data of this state
 	 */
-	public String unprocessToken() {
-		String token = processedTokens.pop();
-		tokens.push(token);
-		if (!steps.isEmpty())
-			steps.push(steps.pop() - 1);
-		return token;
+	public String getUnprocessedData() {
+		return this.data.substring(this.offset);
 	}
 
 	/**
-	 * Returns the (current) number of unprocessed tokens.
+	 * Returns the processed data of this state. An empty string is returned if
+	 * no data was processed. Equals {@link #getData()} if all data were
+	 * processed. The returned string is the leading part of this state's data
+	 * (i.e. this state's data starts with the processed data). The length of
+	 * the returned string increases as more data is being processed.
 	 * 
-	 * @return the (current) number of unprocessed tokens
+	 * @return the processed data of this state
 	 */
-	public int getUnprocessedTokens() {
-		return tokens.size();
+	public String getProcessedData() {
+		return this.data.substring(0, this.offset);
 	}
 
 	/**
-	 * Returns the (current) number of processed tokens.
+	 * Returns the data that is being processed by this state. The returned data
+	 * corresponds to what was specified during construction. While the data is
+	 * being processed (i.e. {@link #hasUnprocessedData()} is
+	 * <code>true</code>), the data can be split into two parts: the processed
+	 * part and the unprocessed part. See {@link #getProcessedData()} and
+	 * {@link #getUnprocessedData()} for more details on their semantics.
 	 * 
-	 * @return the (current) number of processed tokens
+	 * @return the data that is being processed by this state
 	 */
-	public int getProcessedTokens() {
-		return processedTokens.size();
+	public String getData() {
+		return this.data;
 	}
 
 	/**
@@ -96,7 +149,7 @@ public class State {
 	 * {@link #endGroup()}.
 	 */
 	public void beginGroup() {
-		steps.push(0);
+		this.steps.push(new Integer(0));
 	}
 
 	/**
@@ -106,11 +159,11 @@ public class State {
 	 * closed, but the previous one as well.
 	 */
 	public void endGroup() {
-		if (steps.size() >= 2) {
-			int sum = steps.pop() + steps.pop();
-			steps.push(sum);
-		} else if (!steps.isEmpty()) {
-			steps.pop();
+		if (this.steps.size() >= 2) {
+			int sum = this.steps.pop().intValue() + this.steps.pop().intValue();
+			this.steps.push(new Integer(sum));
+		} else if (!this.steps.isEmpty()) {
+			this.steps.pop();
 		}
 	}
 
@@ -120,25 +173,21 @@ public class State {
 	 * @return the (current) number of processing groups
 	 */
 	public int getGroups() {
-		return steps.size();
+		return this.steps.size();
 	}
 
 	/**
-	 * Reverts the changes of the current processing group. This method
-	 * transfers the number of tokens, that were processed as part of the
-	 * current processing group, from the processed tokens back to the
-	 * (remaining) tokens. Thus reverting the state to the beginning of the
+	 * Reverts the changes of the current processing group. This method marks
+	 * the tokens, that were processed as part of the current processing group,
+	 * as unprocessed and thus reverting the state to the beginning of the
 	 * processing group.
-	 * <p/>
+	 * <p>
 	 * This method will not end a group. Use {@link #endGroup()} for closing /
 	 * ending groups.
 	 */
 	public void revert() {
-		for (int i = steps.pop(); i > 0; i--) {
-			String tmp = processedTokens.pop();
-			tokens.push(tmp);
-		}
-		steps.push(0);
+		this.offset -= this.steps.pop().intValue();
+		this.steps.push(new Integer(0));
 	}
 
 }

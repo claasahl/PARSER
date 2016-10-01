@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import de.claas.parser.visitors.RuleEquality;
+import de.claas.parser.visitors.RuleHashCode;
+
 /**
  * 
  * Superclass of all (grammar) rules within this package. This class is intended
  * to model rules that describe grammars. Implementations of this class are
  * utilized by {@link Grammar} instances to describe abstract concepts such as
  * words, phrases and sentences.
- * <p/>
+ * <p>
  * The hierarchy of this class resembles the <i>composite</i> design pattern.
  * This is due to the fact that {@link Grammar} instances can largely be
  * described by a tree of nested (grammar) rules.
@@ -29,6 +32,20 @@ public abstract class Rule implements Iterable<Rule> {
 	 * from the way outside classes access them.
 	 */
 	private final List<Rule> children = new ArrayList<>();
+
+	/**
+	 * Internal flag for signaling that the hash code needs to be updated. The
+	 * actual update is done in a lazy fashion (i.e. hash code is updated the
+	 * next time it is needed).
+	 */
+	private boolean invalidHashCode = true;
+
+	/**
+	 * Internally cached hash code. The hash code is kept in local storage for
+	 * performance reasons. It will be updated in accordance with the
+	 * {@link #invalidHashCode}-flag.
+	 */
+	private int hashCode;
 
 	/**
 	 * Creates an instance with the given parameters. All children are added by
@@ -54,7 +71,8 @@ public abstract class Rule implements Iterable<Rule> {
 	 *         <code>false</code> otherwise
 	 */
 	public boolean addChild(Rule rule) {
-		return rule != null ? children.add(rule) : false;
+		invalidateHashCode();
+		return rule != null ? this.children.add(rule) : false;
 	}
 
 	/**
@@ -67,7 +85,8 @@ public abstract class Rule implements Iterable<Rule> {
 	 *         <code>false</code> otherwise
 	 */
 	public boolean removeChild(Rule rule) {
-		return children.remove(rule);
+		invalidateHashCode();
+		return this.children.remove(rule);
 	}
 
 	/**
@@ -78,27 +97,13 @@ public abstract class Rule implements Iterable<Rule> {
 	 *         otherwise
 	 */
 	public boolean hasChildren() {
-		return !children.isEmpty();
+		return !this.children.isEmpty();
 	}
 
 	@Override
 	public Iterator<Rule> iterator() {
-		return children.iterator();
+		return this.children.iterator();
 	}
-
-	/**
-	 * Tests if the given {@link State} object fulfills this rule. If successful
-	 * (i.e. state fulfills this rule), then the state is processed and a
-	 * {@link Node} (that represents the processed state) is returned. If
-	 * unsuccessful (i.e. state does not fulfills this rule), then the state
-	 * remains unchanged and <code>null</code> is returned.
-	 * 
-	 * @param state
-	 *            the state
-	 * @return the {@link Node} that represents the processed state or
-	 *         <code>null</code> if the state does not fulfill this rule
-	 */
-	public abstract Node process(State state);
 
 	/**
 	 * Instructs this rule to visit the given {@link RuleVisitor} instance.
@@ -107,5 +112,35 @@ public abstract class Rule implements Iterable<Rule> {
 	 *            the visitor
 	 */
 	public abstract void visit(RuleVisitor visitor);
+
+	/**
+	 * Notifies this node that its hash code is invalid. The hash code will be
+	 * lazily updated the time it is needed.
+	 */
+	protected void invalidateHashCode() {
+		this.invalidHashCode = true;
+	}
+
+	@Override
+	public int hashCode() {
+		// it is acceptable that the hash code only changes if (local) fields
+		// are changed. This hash code has no way of knowing whether any child
+		// was modified, since this hash code was last updated, and does not
+		// reflect any such changes in any of its children.
+		if (this.invalidHashCode) {
+			RuleHashCode visitor = new RuleHashCode();
+			this.visit(visitor);
+			this.hashCode = visitor.getHashCode();
+			this.invalidHashCode = false;
+		}
+		return this.hashCode;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		RuleEquality visitor = new RuleEquality(obj);
+		this.visit(visitor);
+		return visitor.isEquality();
+	}
 
 }
