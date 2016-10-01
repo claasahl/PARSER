@@ -3,7 +3,10 @@ This is an open source library for parsing text-based inputs. PARSER makes use o
 
 
 ## Build Status
+### develop-branch
 [![Build Status](https://travis-ci.org/claasahl/PARSER.svg?branch=develop)](https://travis-ci.org/claasahl/PARSER)
+### master-branch
+[![Build Status](https://travis-ci.org/claasahl/PARSER.svg?branch=master)](https://travis-ci.org/claasahl/PARSER)
 
 
 ## License

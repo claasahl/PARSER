@@ -5,7 +5,7 @@
 
 	<groupId>de.claas.parser</groupId>
 	<artifactId>PARSER</artifactId>
-	<version>0.1</version>
+	<version>1</version>
 	<packaging>jar</packaging>
 
 
