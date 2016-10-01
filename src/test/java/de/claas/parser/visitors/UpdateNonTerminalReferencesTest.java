@@ -11,13 +11,13 @@ import org.junit.Test;
 
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Decorator;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
-import de.claas.parser.rules.Terminal;
 
 /**
  *
@@ -51,9 +51,9 @@ public class UpdateNonTerminalReferencesTest extends RuleVisitorTest {
 	@Before
 	public void before() {
 		this.rules.clear();
-		this.rules.put(this.NON_TERMINAL, new NonTerminal(this.NON_TERMINAL, new Terminal(this.NON_TERMINAL)));
+		this.rules.put(this.NON_TERMINAL, new NonTerminal(this.NON_TERMINAL, new CharacterValue(this.NON_TERMINAL)));
 		this.rules.put(this.ANOTHER_NON_TERMINAL,
-				new NonTerminal(this.ANOTHER_NON_TERMINAL, new Terminal(this.ANOTHER_NON_TERMINAL)));
+				new NonTerminal(this.ANOTHER_NON_TERMINAL, new CharacterValue(this.ANOTHER_NON_TERMINAL)));
 	}
 
 	@Override
@@ -113,28 +113,28 @@ public class UpdateNonTerminalReferencesTest extends RuleVisitorTest {
 
 	@Override
 	public void shouldHandleTerminalRule() {
-		Rule actual = new Terminal(this.TERMINAL);
+		Rule actual = new CharacterValue(this.TERMINAL);
 		RuleVisitor visitor = build(this.rules.values());
 		actual.visit(visitor);
 
-		Rule expected = new Terminal(this.TERMINAL);
+		Rule expected = new CharacterValue(this.TERMINAL);
 		assertEquals(expected, actual);
 	}
 
 	@Override
 	public void shouldHandleRules() {
 		Rule actual = new Conjunction();
-		actual.addChild(new Terminal(this.TERMINAL));
+		actual.addChild(new CharacterValue(this.TERMINAL));
 		actual.addChild(new NonTerminal(this.NON_TERMINAL));
-		actual.addChild(new Terminal(this.TERMINAL));
+		actual.addChild(new CharacterValue(this.TERMINAL));
 		actual.addChild(new NonTerminal(this.ANOTHER_NON_TERMINAL));
 		RuleVisitor visitor = build(this.rules.values());
 		actual.visit(visitor);
 
 		Rule expected = new Conjunction();
-		expected.addChild(new Terminal(this.TERMINAL));
+		expected.addChild(new CharacterValue(this.TERMINAL));
 		expected.addChild(this.rules.get(this.NON_TERMINAL));
-		expected.addChild(new Terminal(this.TERMINAL));
+		expected.addChild(new CharacterValue(this.TERMINAL));
 		expected.addChild(this.rules.get(this.ANOTHER_NON_TERMINAL));
 		assertEquals(expected, actual);
 	}
@@ -183,13 +183,13 @@ public class UpdateNonTerminalReferencesTest extends RuleVisitorTest {
 
 	@Override
 	public void shouldHandleCyclicDisjunctionRule() {
-		Rule cycle = new Disjunction(new Terminal(this.TERMINAL));
+		Rule cycle = new Disjunction(new CharacterValue(this.TERMINAL));
 		Rule actual = new Conjunction(cycle, new NonTerminal(this.NON_TERMINAL));
 		cycle.addChild(actual);
 		RuleVisitor visitor = build(this.rules.values());
 		actual.visit(visitor);
 
-		Rule expectedCycle = new Disjunction(new Terminal(this.TERMINAL));
+		Rule expectedCycle = new Disjunction(new CharacterValue(this.TERMINAL));
 		Rule expected = new Conjunction(expectedCycle, this.rules.get(this.NON_TERMINAL));
 		expectedCycle.addChild(expected);
 		assertEquals(expected, actual);
@@ -197,13 +197,13 @@ public class UpdateNonTerminalReferencesTest extends RuleVisitorTest {
 
 	@Override
 	public void shouldHandleCyclicConjunctionRule() {
-		Rule cycle = new Conjunction(new Terminal(this.TERMINAL));
+		Rule cycle = new Conjunction(new CharacterValue(this.TERMINAL));
 		Rule actual = new Conjunction(cycle, new NonTerminal(this.NON_TERMINAL));
 		cycle.addChild(actual);
 		RuleVisitor visitor = build(this.rules.values());
 		actual.visit(visitor);
 
-		Rule expectedCycle = new Conjunction(new Terminal(this.TERMINAL));
+		Rule expectedCycle = new Conjunction(new CharacterValue(this.TERMINAL));
 		Rule expected = new Conjunction(expectedCycle, this.rules.get(this.NON_TERMINAL));
 		expectedCycle.addChild(expected);
 		assertEquals(expected, actual);
@@ -212,16 +212,16 @@ public class UpdateNonTerminalReferencesTest extends RuleVisitorTest {
 	@Test
 	public void shouldNotUpdateNonTerminals() {
 		Rule actual = new Conjunction();
-		actual.addChild(new Terminal(this.TERMINAL));
-		actual.addChild(new Terminal("hello", "world"));
-		actual.addChild(new Terminal(this.TERMINAL));
+		actual.addChild(new CharacterValue(this.TERMINAL));
+		actual.addChild(CharacterValue.alternatives(false, "hello", "world"));
+		actual.addChild(new CharacterValue(this.TERMINAL));
 		RuleVisitor visitor = build(this.rules.values());
 		actual.visit(visitor);
 
 		Rule expected = new Conjunction();
-		expected.addChild(new Terminal(this.TERMINAL));
-		expected.addChild(new Terminal("hello", "world"));
-		expected.addChild(new Terminal(this.TERMINAL));
+		expected.addChild(new CharacterValue(this.TERMINAL));
+		expected.addChild(CharacterValue.alternatives(false, "hello", "world"));
+		expected.addChild(new CharacterValue(this.TERMINAL));
 		assertEquals(expected, actual);
 	}
 
@@ -229,15 +229,15 @@ public class UpdateNonTerminalReferencesTest extends RuleVisitorTest {
 	public void shouldOnlyUpdateRegisteredNonTerminals() {
 		Rule actual = new Conjunction();
 		actual.addChild(new NonTerminal(this.NON_TERMINAL));
-		actual.addChild(new Terminal(this.TERMINAL));
-		actual.addChild(new NonTerminal("unregistered", new Terminal(this.TERMINAL)));
+		actual.addChild(new CharacterValue(this.TERMINAL));
+		actual.addChild(new NonTerminal("unregistered", new CharacterValue(this.TERMINAL)));
 		RuleVisitor visitor = build(this.rules.values());
 		actual.visit(visitor);
 
 		Rule expected = new Conjunction();
 		expected.addChild(this.rules.get(this.NON_TERMINAL));
-		expected.addChild(new Terminal(this.TERMINAL));
-		expected.addChild(new NonTerminal("unregistered", new Terminal(this.TERMINAL)));
+		expected.addChild(new CharacterValue(this.TERMINAL));
+		expected.addChild(new NonTerminal("unregistered", new CharacterValue(this.TERMINAL)));
 		assertEquals(expected, actual);
 	}
 

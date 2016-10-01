@@ -7,9 +7,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.claas.parser.Rule;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
@@ -45,7 +47,7 @@ public class RuleEqualityTest extends RuleVisitorTest {
 
 	@Before
 	public void before() {
-		this.defaultChild = new Terminal("child");
+		this.defaultChild = new CharacterValue("child");
 	}
 
 	@Override
@@ -131,10 +133,10 @@ public class RuleEqualityTest extends RuleVisitorTest {
 
 	@Override
 	public void shouldHandleTerminalRule() {
-		Object obj = new Terminal(true, "child", "node");
+		Object obj = CharacterValue.alternatives(true, "child", "node");
 
 		RuleEquality visitor = build(obj);
-		Rule rule = new Terminal(true, "child", "node");
+		Rule rule = CharacterValue.alternatives(true, "child", "node");
 		rule.visit(visitor);
 		assertTrue(visitor.isEquality());
 
@@ -146,15 +148,15 @@ public class RuleEqualityTest extends RuleVisitorTest {
 
 	@Override
 	public void shouldHandleRules() {
-		Rule asterics = new Terminal("*");
-		Rule digit = new NonTerminal("digit", new Terminal('0', '9'));
+		Rule asterics = new CharacterValue("*");
+		Rule digit = new NonTerminal("digit", new NumberValue(16, '0', '9'));
 		Rule digits = new Repetition(digit);
 		Rule repeat = new NonTerminal("repeat",
 				new Disjunction(new Conjunction(digit, digits), new Conjunction(digits, asterics, digits)));
 
 		RuleEquality visitor = build(repeat);
-		asterics = new Terminal("*");
-		digit = new NonTerminal("digit", new Terminal('0', '9'));
+		asterics = new CharacterValue("*");
+		digit = new NonTerminal("digit", new NumberValue(16, '0', '9'));
 		digits = new Repetition(digit);
 		repeat = new NonTerminal("repeat",
 				new Disjunction(new Conjunction(digit, digits), new Conjunction(digits, asterics, digits)));

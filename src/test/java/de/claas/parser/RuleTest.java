@@ -10,6 +10,7 @@ import java.util.Iterator;
 
 import org.junit.Test;
 
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Terminal;
 import de.claas.parser.visitors.Parser;
 
@@ -115,9 +116,9 @@ public abstract class RuleTest {
 	@Test
 	public void shouldManageChildren() {
 		Rule rule = build();
-		Rule childA = new Terminal("A");
-		Rule childB = new Terminal("B");
-		Rule childC = new Terminal("C");
+		Rule childA = new CharacterValue("A");
+		Rule childB = new CharacterValue("B");
+		Rule childC = new CharacterValue("C");
 		assertTrue(rule.addChild(childA));
 		assertTrue(rule.addChild(childB));
 		assertTrue(rule.addChild(childC));

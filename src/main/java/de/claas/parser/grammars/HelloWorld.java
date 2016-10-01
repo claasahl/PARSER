@@ -2,10 +2,10 @@ package de.claas.parser.grammars;
 
 import de.claas.parser.Grammar;
 import de.claas.parser.Node;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
-import de.claas.parser.rules.Terminal;
 
 /**
  * The class {@link HelloWorld}. It is mainly intended for educational purposes.
@@ -42,13 +42,13 @@ public class HelloWorld extends Grammar {
 	 */
 	private static NonTerminal grammar() {
 		NonTerminal de = new NonTerminal("de",
-				new Conjunction(new Terminal("hallo"), new Terminal(" "), new Terminal("welt")));
+				new Conjunction(new CharacterValue("hallo"), new CharacterValue(" "), new CharacterValue("welt")));
 		NonTerminal en = new NonTerminal("en",
-				new Conjunction(new Terminal("hello"), new Terminal(" "), new Terminal("world")));
+				new Conjunction(new CharacterValue("hello"), new CharacterValue(" "), new CharacterValue("world")));
 		NonTerminal se = new NonTerminal("se",
-				new Conjunction(new Terminal("hallå"), new Terminal(" "), new Terminal("värld")));
+				new Conjunction(new CharacterValue("hallå"), new CharacterValue(" "), new CharacterValue("värld")));
 		NonTerminal es = new NonTerminal("es",
-				new Conjunction(new Terminal("hola"), new Terminal(" "), new Terminal("mundo")));
+				new Conjunction(new CharacterValue("hola"), new CharacterValue(" "), new CharacterValue("mundo")));
 		return new NonTerminal("hello-world", new Disjunction(de, en, se, es));
 	}
 

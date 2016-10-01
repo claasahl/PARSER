@@ -13,6 +13,7 @@ import de.claas.parser.exceptions.InterpretingException;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
@@ -492,7 +493,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			if (quotedString.startsWith("\"") && quotedString.endsWith("\"")) {
 				int length = quotedString.length();
 				String quote = quotedString.substring(1, length - 1);
-				rule = new Terminal(false, quote);
+				rule = new CharacterValue(false, quote);
 			} else {
 				throw new InterpretingException(
 						"Expected 'quoted-string' to start and end with double quote, but it did not.");
@@ -522,7 +523,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			if (quotedString.startsWith("\"") && quotedString.endsWith("\"")) {
 				int length = quotedString.length();
 				String quote = quotedString.substring(1, length - 1);
-				rule = new Terminal(true, quote);
+				rule = new CharacterValue(true, quote);
 			} else {
 				throw new InterpretingException(
 						"Expected 'quoted-string' to start and end with double quote, but it did not.");
@@ -644,7 +645,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			for (int number = rangeStart; number <= rangeEnd; number++)
 				terminals.add("" + (char) number);
 		}
-		return new Terminal(true, terminals.toArray(new String[0]));
+		return CharacterValue.alternatives(true, terminals.toArray(new String[0]));
 	}
 
 	private Rule visitProseVal(NonTerminalNode node) {
@@ -654,7 +655,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		if (quotedString.startsWith("<") && quotedString.endsWith(">")) {
 			int length = quotedString.length();
 			String quote = quotedString.substring(1, length - 1);
-			rule = new Terminal(true, quote);
+			rule = new CharacterValue(true, quote);
 		} else {
 			throw new InterpretingException("Expected 'prose-val' to start with '<' and end with '>', but it did not.");
 		}

@@ -22,7 +22,7 @@ public class DisjunctionTest extends RuleTest {
 
 	@Override
 	protected Rule[] defaultChildren() {
-		return new Rule[] { new Terminal("hello"), new Terminal("world") };
+		return new Rule[] { new CharacterValue("hello"), new CharacterValue("world") };
 	}
 
 	@Override

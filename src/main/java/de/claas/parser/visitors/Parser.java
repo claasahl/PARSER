@@ -1,7 +1,6 @@
 package de.claas.parser.visitors;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import de.claas.parser.Node;
@@ -12,9 +11,11 @@ import de.claas.parser.exceptions.CyclicRuleException;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
@@ -30,6 +31,28 @@ import de.claas.parser.rules.Terminal;
  * {@link Node} (that represents the processed state) is returned. If
  * unsuccessful (i.e. state does not fulfills this rule), then the state remains
  * unchanged and <code>null</code> is returned.
+ * <p>
+ * <ul>
+ * <li>{@link Conjunction}: This rule will only successfully process a given
+ * state if all children have successfully been processed.</li>
+ * <li>{@link Disjunction}: This rule will successfully process a given state as
+ * long as any child can successfully be processed. This rule is greedy and thus
+ * it gives preference to the child that processes most data.</li>
+ * <li>{@link NonTerminal}: This rule acts like any other rule. The only
+ * difference is that it has a name and an optional comment.</li>
+ * <li>{@link Optional}: This rule will successfully process a given state
+ * regardless of whether the decorated rule can be successfully processed (or
+ * not). Making the decorated rule optional.</li>
+ * <li>{@link Repetition}: This rules default settings are such that it will
+ * successfully process a given state regardless of how often the decorated rule
+ * can be processed (i.e. minimum number of repetitions is {@value 0} and
+ * maximum number of repetitions is {@value Integer#MAX_VALUE}). Making the
+ * decorated rule optional and repeatable at the same time.</li>
+ * <li>{@link Terminal}: This rule will successfully process a given state if
+ * the processed token equals any of the terminal symbols (see
+ * {@link #getTerminals()}). This rule is greedy and thus it gives preference to
+ * longer terminal symbols.</li>
+ * </ul>
  * <p>
  * This visitor is meant for one-time use, only. As such, it should not be used
  * to parse trees more than once.
@@ -222,13 +245,36 @@ public class Parser implements RuleVisitor {
 	}
 
 	@Override
-	public void visitTerminal(Terminal rule) {
+	public void visitTerminal(CharacterValue rule) {
 		this.state.beginGroup();
 		try {
-			Iterator<String> terminals = rule.getTerminals();
-			while (terminals.hasNext()) {
-				String terminal = terminals.next();
-				String token = this.state.process(rule.isCaseSensitive(), terminal);
+			String terminal = rule.getTerminal();
+			String token = this.state.process(rule.isCaseSensitive(), terminal);
+			if (token != null) {
+				setResult(new TerminalNode(token));
+				return;
+			}
+			clearResult();
+		} finally {
+			this.state.endGroup();
+		}
+	}
+
+	@Override
+	public void visitTerminal(NumberValue rule) {
+		this.state.beginGroup();
+		try {
+			if (rule.getTerminal() != null) {
+				String terminal = rule.getTerminal();
+				String token = this.state.process(true, terminal);
+				if (token != null) {
+					setResult(new TerminalNode(token));
+					return;
+				}
+			} else {
+				char rangeStart = rule.getRangeStart().charValue();
+				char rangeEnd = rule.getRangeEnd().charValue();
+				String token = this.state.process(rangeStart, rangeEnd);
 				if (token != null) {
 					setResult(new TerminalNode(token));
 					return;

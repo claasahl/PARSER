@@ -6,8 +6,8 @@ import org.junit.Test;
 
 import de.claas.parser.Node;
 import de.claas.parser.Rule;
-import de.claas.parser.grammars.AugmentedBackusNaurInterpreter;
 import de.claas.parser.results.NonTerminalNode;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
@@ -41,13 +41,13 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 	@Override
 	public void shouldHandleNodes() {
 		NonTerminal de = new NonTerminal("de",
-				new Conjunction(new Terminal("hallo"), new Terminal(" "), new Terminal("welt")));
+				new Conjunction(new CharacterValue("hallo"), new CharacterValue(" "), new CharacterValue("welt")));
 		NonTerminal en = new NonTerminal("en",
-				new Conjunction(new Terminal("hello"), new Terminal(" "), new Terminal("world")));
+				new Conjunction(new CharacterValue("hello"), new CharacterValue(" "), new CharacterValue("world")));
 		NonTerminal se = new NonTerminal("se",
-				new Conjunction(new Terminal("hallå"), new Terminal(" "), new Terminal("värld")));
+				new Conjunction(new CharacterValue("hallå"), new CharacterValue(" "), new CharacterValue("värld")));
 		NonTerminal es = new NonTerminal("es",
-				new Conjunction(new Terminal("hola"), new Terminal(" "), new Terminal("mundo")));
+				new Conjunction(new CharacterValue("hola"), new CharacterValue(" "), new CharacterValue("mundo")));
 		NonTerminal expected = new NonTerminal("hello-world", new Disjunction(de, en, se, es));
 
 		AugmentedBackusNaurInterpreter interpreter = build();
@@ -58,8 +58,8 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 
 	@Test
 	public void shouldBeConjunction() {
-		Rule hel = new Terminal("hel");
-		Rule lo = new Terminal("lo");
+		Rule hel = new CharacterValue("hel");
+		Rule lo = new CharacterValue("lo");
 		Rule rule = new Conjunction(hel, lo);
 		NonTerminal expected = new NonTerminal("rule", rule);
 
@@ -78,8 +78,8 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 
 	@Test
 	public void shouldBeDisjunction() {
-		Rule hel = new Terminal("hel");
-		Rule lo = new Terminal("lo");
+		Rule hel = new CharacterValue("hel");
+		Rule lo = new CharacterValue("lo");
 		Rule rule = new Disjunction(hel, lo);
 		NonTerminal expected = new NonTerminal("rule", rule);
 
@@ -91,7 +91,7 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 
 	@Test
 	public void shouldBeNonTerminal() {
-		Rule hello = new Terminal("hello");
+		Rule hello = new CharacterValue("hello");
 		NonTerminal rule = new NonTerminal("hello", hello);
 		NonTerminal expected = new NonTerminal("rule", rule);
 
@@ -103,7 +103,7 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 
 	@Test
 	public void shouldBeOptional() {
-		Rule hel = new Terminal("hel");
+		Rule hel = new CharacterValue("hel");
 		Rule rule = new Optional(hel);
 		NonTerminal expected = new NonTerminal("rule", rule);
 
@@ -115,7 +115,7 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 
 	@Test
 	public void shouldBeRepetition() {
-		Rule hel = new Terminal("hel");
+		Rule hel = new CharacterValue("hel");
 		Rule rule = new Repetition(hel);
 		NonTerminal expected = new NonTerminal("rule", rule);
 
@@ -127,7 +127,7 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 
 	@Test
 	public void shouldBeTerminal() {
-		Rule rule = new Terminal("hello world");
+		Rule rule = new CharacterValue("hello world");
 		NonTerminal expected = new NonTerminal("rule", rule);
 
 		AugmentedBackusNaurInterpreter interpreter = build();

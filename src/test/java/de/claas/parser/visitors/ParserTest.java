@@ -12,12 +12,13 @@ import de.claas.parser.exceptions.CyclicRuleException;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
-import de.claas.parser.rules.Terminal;
 
 /**
  *
@@ -33,7 +34,7 @@ public class ParserTest extends RuleVisitorTest {
 	private static final String WORLD = "world";
 	private static final String HELLO = "hello";
 	private static final String DATA = HELLO + WORLD;
-	private static final Rule[] CHILDREN = new Rule[] { new Terminal(HELLO), new Terminal(WORLD) };
+	private static final Rule[] CHILDREN = new Rule[] { new CharacterValue(HELLO), new CharacterValue(WORLD) };
 
 	/**
 	 * Returns an instantiated {@link Parser} class with the specified data.
@@ -158,7 +159,7 @@ public class ParserTest extends RuleVisitorTest {
 
 	@Test
 	public void optionalShouldRepeatAtMostOnc() {
-		Rule rule = new Optional(new Terminal(HELLO));
+		Rule rule = new Optional(new CharacterValue(HELLO));
 		Parser parser = build(HELLO + HELLO + WORLD);
 		rule.visit(parser);
 
@@ -192,7 +193,7 @@ public class ParserTest extends RuleVisitorTest {
 
 	@Test
 	public void repetitionShouldRepeat() {
-		Rule rule = new Repetition(new Terminal("re"));
+		Rule rule = new Repetition(new CharacterValue("re"));
 		Parser parser = build("rererererererere??");
 		rule.visit(parser);
 
@@ -210,7 +211,7 @@ public class ParserTest extends RuleVisitorTest {
 
 	@Test
 	public void repetitionShouldRepeatAtMostOnce() {
-		Rule rule = new Repetition(new Terminal("re"), 0, 1);
+		Rule rule = new Repetition(new CharacterValue("re"), 0, 1);
 		Parser parser = build("rerere??");
 		rule.visit(parser);
 
@@ -221,7 +222,7 @@ public class ParserTest extends RuleVisitorTest {
 
 	@Test
 	public void repetitionShouldRepeatExactlyTwice() {
-		Rule rule = new Repetition(new Terminal("re"), 2, 2);
+		Rule rule = new Repetition(new CharacterValue("re"), 2, 2);
 		Parser parser = build("rerere??");
 		rule.visit(parser);
 
@@ -233,7 +234,7 @@ public class ParserTest extends RuleVisitorTest {
 
 	@Test
 	public void repetitionShouldRepeatAtLeastThrice() {
-		Rule rule = new Repetition(new Terminal("re"), 3, Integer.MAX_VALUE);
+		Rule rule = new Repetition(new CharacterValue("re"), 3, Integer.MAX_VALUE);
 		Parser parser = build("rererererererere??");
 		rule.visit(parser);
 
@@ -251,7 +252,7 @@ public class ParserTest extends RuleVisitorTest {
 
 	@Test
 	public void repetitionShouldRepeatWithinRange() {
-		Rule rule = new Repetition(new Terminal("re"), 2, 4);
+		Rule rule = new Repetition(new CharacterValue("re"), 2, 4);
 		Parser parser = build("rererererererere??");
 		rule.visit(parser);
 
@@ -265,7 +266,7 @@ public class ParserTest extends RuleVisitorTest {
 
 	@Override
 	public void shouldHandleTerminalRule() {
-		Rule rule = new Terminal(DATA);
+		Rule rule = new CharacterValue(DATA);
 		Parser parser = build(DATA);
 		rule.visit(parser);
 
@@ -275,34 +276,29 @@ public class ParserTest extends RuleVisitorTest {
 
 	@Test
 	public void terminalShouldSucceedIfAnyTerminalMatches() {
-		Rule rule = new Terminal(HELLO, WORLD, "b");
+		Rule rule = CharacterValue.alternatives(false, HELLO, WORLD, "b");
 		Parser parser = build(HELLO);
 		rule.visit(parser);
-		Node expected = new TerminalNode(HELLO);
+		Node expected = new IntermediateNode();
+		expected.addChild(new TerminalNode(HELLO));
 		assertEquals(expected, parser.getResult());
 
 		parser = build(WORLD);
 		rule.visit(parser);
-		expected = new TerminalNode(WORLD);
+		expected = new IntermediateNode();
+		expected.addChild(new TerminalNode(WORLD));
 		assertEquals(expected, parser.getResult());
 
 		parser = build("b");
 		rule.visit(parser);
-		expected = new TerminalNode("b");
+		expected = new IntermediateNode();
+		expected.addChild(new TerminalNode("b"));
 		assertEquals(expected, parser.getResult());
 	}
 
 	@Test
-	public void terminalShouldFailWithoutTerminals() {
-		Rule rule = new Terminal();
-		Parser parser = build(HELLO + WORLD);
-		rule.visit(parser);
-		assertNull(parser.getResult());
-	}
-	
-	@Test
 	public void terminalShouldHaveCaseInsenstiveTerminals() {
-		Rule rule = new Terminal(false, "hello");
+		Rule rule = new CharacterValue(false, "hello");
 		Parser parser = build("HELLO");
 		rule.visit(parser);
 		Node expected = new TerminalNode("HELLO");
@@ -311,7 +307,7 @@ public class ParserTest extends RuleVisitorTest {
 
 	@Test
 	public void terminalShouldSucceedIfTerminalsAreWithinRange() {
-		Rule rule = new Terminal('a', 'z');
+		Rule rule = new NumberValue(16, 'a', 'z');
 		Parser parser = build("a");
 		rule.visit(parser);
 		Node expected = new TerminalNode("a");
@@ -335,25 +331,16 @@ public class ParserTest extends RuleVisitorTest {
 
 	@Test
 	public void terminalShouldFailIfTerminalsAreOutsideOfRange() {
-		Rule rule = new Terminal(true, 'a', 'z');
+		Rule rule = new NumberValue(16, 'a', 'z');
 		Parser parser = build("A");
 		rule.visit(parser);
 		assertNull(parser.getResult());
 	}
-	
-	@Test
-	public void terminalShouldHaveCaseInsenstiveRange() {
-		Rule rule = new Terminal(false, 'a', 'z');
-		Parser parser = build("A");
-		rule.visit(parser);
-		Node expected = new TerminalNode("A");
-		assertEquals(expected, parser.getResult());
-	}
 
 	@Override
 	public void shouldHandleRules() {
-		Rule plus = new Terminal("+");
-		Rule digit = new NonTerminal("digit", new Terminal('0', '9'));
+		Rule plus = new CharacterValue("+");
+		Rule digit = new NonTerminal("digit", new NumberValue(16, '0', '9'));
 		Rule number = new NonTerminal("number", new Conjunction(new Optional(plus), new Repetition(digit, 1, 10)));
 		Parser parser = build("+321");
 		number.visit(parser);

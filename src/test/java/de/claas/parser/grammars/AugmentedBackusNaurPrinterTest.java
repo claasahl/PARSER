@@ -9,13 +9,13 @@ import org.junit.Test;
 
 import de.claas.parser.Rule;
 import de.claas.parser.exceptions.CyclicRuleException;
-import de.claas.parser.grammars.AugmentedBackusNaurPrinter;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
-import de.claas.parser.rules.Terminal;
 import de.claas.parser.visitors.RuleVisitorTest;
 
 /**
@@ -30,8 +30,8 @@ import de.claas.parser.visitors.RuleVisitorTest;
 public class AugmentedBackusNaurPrinterTest extends RuleVisitorTest {
 
 	private static final String NAME = "ruleName";
-	private static final Terminal ALPHA = new Terminal("A", "B", "C");
-	private static final Terminal NUM = new Terminal("1", "2", "3");
+	private static final Rule ALPHA = CharacterValue.alternatives(false, "A", "B", "C");
+	private static final Rule NUM = new NumberValue(16, '0', '3');
 
 	@Override
 	public void shouldHandleNoRule() {
@@ -43,7 +43,7 @@ public class AugmentedBackusNaurPrinterTest extends RuleVisitorTest {
 		NonTerminal rule = new NonTerminal(NAME, new Conjunction(ALPHA, NUM));
 		AugmentedBackusNaurPrinter printer = new AugmentedBackusNaurPrinter();
 		rule.visit(printer);
-		assertEquals("ruleName = (('A' / 'B' / 'C') ('1' / '2' / '3'))", printer.toString());
+		assertEquals("ruleName = (('A' / 'B' / 'C') %x30-33)", printer.toString());
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class AugmentedBackusNaurPrinterTest extends RuleVisitorTest {
 		NonTerminal rule = new NonTerminal(NAME, new Disjunction(ALPHA, NUM));
 		AugmentedBackusNaurPrinter printer = new AugmentedBackusNaurPrinter();
 		rule.visit(printer);
-		assertEquals("ruleName = (('A' / 'B' / 'C') / ('1' / '2' / '3'))", printer.toString());
+		assertEquals("ruleName = (('A' / 'B' / 'C') / %x30-33)", printer.toString());
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class AugmentedBackusNaurPrinterTest extends RuleVisitorTest {
 		NonTerminal rule = new NonTerminal(NAME, NUM);
 		AugmentedBackusNaurPrinter printer = new AugmentedBackusNaurPrinter();
 		rule.visit(printer);
-		assertEquals("ruleName = ('1' / '2' / '3')", printer.toString());
+		assertEquals("ruleName = %x30-33", printer.toString());
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class AugmentedBackusNaurPrinterTest extends RuleVisitorTest {
 
 	@Override
 	public void shouldHandleRules() {
-		Rule asterics = new Terminal("*");
+		Rule asterics = new CharacterValue("*");
 		Rule digit = new NonTerminal("digit", NUM);
 		Rule digits = new Repetition(digit);
 		NonTerminal repeat = new NonTerminal("repeat",
@@ -97,8 +97,8 @@ public class AugmentedBackusNaurPrinterTest extends RuleVisitorTest {
 		repeat.visit(printer);
 
 		List<String> lines = new ArrayList<>();
-		lines.add("repeat = ((digit *(digit)) / (*(digit) ('*') *(digit)))");
-		lines.add("digit = ('1' / '2' / '3')");
+		lines.add("repeat = ((digit *(digit)) / (*(digit) '*' *(digit)))");
+		lines.add("digit = %x30-33");
 		assertEquals(String.join("\n", lines), printer.toString());
 	}
 
@@ -128,7 +128,7 @@ public class AugmentedBackusNaurPrinterTest extends RuleVisitorTest {
 		rule.setRule(new Disjunction(rule, NUM));
 		AugmentedBackusNaurPrinter printer = new AugmentedBackusNaurPrinter();
 		rule.visit(printer);
-		assertEquals("ruleName = (ruleName / ('1' / '2' / '3'))", printer.toString());
+		assertEquals("ruleName = (ruleName / %x30-33)", printer.toString());
 	}
 
 	@Override

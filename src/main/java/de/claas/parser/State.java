@@ -46,16 +46,18 @@ public class State {
 	}
 
 	/**
-	 * Returns <code>true</code> if the specified token was successfully
-	 * processed. Otherwise, <code>false</code> is returned.
+	 * Returns the actually processed token if the specified token was
+	 * successfully processed. The specified token and actually processed token
+	 * may be different depending on the case sensitivity. Otherwise,
+	 * <code>null</code> is returned.
 	 * 
 	 * @param caseSensitive
 	 *            whether the token is case sensitive (or not)
 	 * @param token
 	 *            the token
 	 * 
-	 * @return <code>true</code> if the specified token was successfully
-	 *         processed and <code>false</code> otherwise
+	 * @return the actually processed token if the specified token was
+	 *         successfully processed, otherwise <code>null</code>
 	 */
 	public String process(boolean caseSensitive, String token) {
 		String localData = caseSensitive ? this.data : this.dataUpperCase;
@@ -68,6 +70,34 @@ public class State {
 				this.steps.push(new Integer(sum));
 			}
 			return actualToken;
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the processed character if the current character falls within the
+	 * specified boundaries. Otherwise, <code>null</code> is returned.
+	 * 
+	 * @param rangeStart
+	 *            lower boundary of allowed characters
+	 * @param rangeEnd
+	 *            upper boundary of allowed characters
+	 * 
+	 * @return the processed character if the current character falls within the
+	 *         specified boundaries, otherwise <code>null</code>
+	 */
+	public String process(char rangeStart, char rangeEnd) {
+		if(this.offset >= this.data.length())
+			return null;
+		
+		char currentChar = this.data.charAt(this.offset);
+		if (currentChar >= rangeStart && currentChar <= rangeEnd) {
+			this.offset += 1;
+			if (!this.steps.isEmpty()) {
+				int sum = this.steps.pop().intValue() + 1;
+				this.steps.push(new Integer(sum));
+			}
+			return Character.toString(currentChar);
 		}
 		return null;
 	}

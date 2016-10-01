@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -17,12 +16,15 @@ import de.claas.parser.Node;
 import de.claas.parser.Rule;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
+import de.claas.parser.visitors.NodeToString;
 
 /**
  * 
@@ -45,8 +47,8 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = \"hel\" / \"lo\"\r\n", false);
 
-		Rule hel = new Terminal("hel");
-		Rule lo = new Terminal("lo");
+		Rule hel = new CharacterValue("hel");
+		Rule lo = new CharacterValue("lo");
 		Rule disjunction = new Disjunction(hel, lo);
 		NonTerminal rule = new NonTerminal("rule", disjunction);
 		Node expected = generateNodes(rule);
@@ -58,8 +60,8 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = \"hel\" \"lo\"\r\n", false);
 
-		Rule hel = new Terminal("hel");
-		Rule lo = new Terminal("lo");
+		Rule hel = new CharacterValue("hel");
+		Rule lo = new CharacterValue("lo");
 		Rule conjunction = new Conjunction(hel, lo);
 		NonTerminal rule = new NonTerminal("rule", conjunction);
 		Node expected = generateNodes(rule);
@@ -71,7 +73,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = *\"R\"\r\n", false);
 
-		Rule r = new Terminal("R");
+		Rule r = new CharacterValue("R");
 		Rule repetition = new Repetition(r);
 		NonTerminal rule = new NonTerminal("rule", repetition);
 		Node expected = generateNodes(rule);
@@ -83,7 +85,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = 4\"R\"\r\n", false);
 
-		Rule r = new Terminal("R");
+		Rule r = new CharacterValue("R");
 		Rule repetition = new Repetition(r, 4, 4);
 		NonTerminal rule = new NonTerminal("rule", repetition);
 		Node expected = generateNodes(rule);
@@ -95,7 +97,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = 23*\"R\"\r\n", false);
 
-		Rule r = new Terminal("R");
+		Rule r = new CharacterValue("R");
 		Rule repetition = new Repetition(r, 23, Integer.MAX_VALUE);
 		NonTerminal rule = new NonTerminal("rule", repetition);
 		Node expected = generateNodes(rule);
@@ -107,7 +109,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = *2\"R\"\r\n", false);
 
-		Rule r = new Terminal("R");
+		Rule r = new CharacterValue("R");
 		Rule repetition = new Repetition(r, 0, 2);
 		NonTerminal rule = new NonTerminal("rule", repetition);
 		Node expected = generateNodes(rule);
@@ -119,7 +121,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = \"hello\" world\r\n", false);
 
-		Rule hello = new Terminal("hello");
+		Rule hello = new CharacterValue("hello");
 		Rule world = new NonTerminal("world");
 		Rule conjunction = new Conjunction(hello, world);
 		NonTerminal rule = new NonTerminal("rule", conjunction);
@@ -132,7 +134,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = (\"hello\")\r\n", false);
 
-		Rule hello = new Conjunction(new Terminal("hello"));
+		Rule hello = new Conjunction(new CharacterValue("hello"));
 		Rule conjunction = new Conjunction(hello);
 		NonTerminal rule = new NonTerminal("rule", conjunction);
 		Node expected = generateNodes(rule);
@@ -144,30 +146,30 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = [\"hello\"]\r\n", false);
 
-		Rule hello = new Terminal("hello");
+		Rule hello = new CharacterValue("hello");
 		Rule optional = new Optional(hello);
 		NonTerminal rule = new NonTerminal("rule", optional);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	public void shouldHandleCaseSensitiveCharVal() {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = %s\"helLO\"\r\n", false);
 
-		Rule hello = new Terminal(true, "helLO");
+		Rule hello = new CharacterValue(true, "helLO");
 		NonTerminal rule = new NonTerminal("rule", hello);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	public void shouldHandleCaseInsensitiveCharVal() {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = \"helLO\"\r\n", false);
 
-		Rule hello = new Terminal(false, "helLO");
+		Rule hello = new CharacterValue(false, "helLO");
 		NonTerminal rule = new NonTerminal("rule", hello);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
@@ -176,31 +178,31 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 	@Test
 	public void shouldHandleSingleBinaryValue() {
 		Grammar grammar = build();
-		Node actual = grammar.parse("rule = %b010101\r\n", false);
+		Node actual = grammar.parse("rule = %b10101\r\n", false);
 
-		Rule value = new Terminal(false, "010101");
+		Rule value = new NumberValue(2, (char) 0b10101);
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	public void shouldHandleMultipleBinaryValues() {
 		Grammar grammar = build();
-		Node actual = grammar.parse("rule = %b01.11.00\r\n", false);
+		Node actual = grammar.parse("rule = %b1.11.0\r\n", false);
 
-		Rule value = new Terminal(false, "01", "11", "00");
+		Rule value = new NumberValue(2, (char) 0b01, (char) 0b11, (char) 0b00);
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	public void shouldHandleRangeOfBinaryValues() {
 		Grammar grammar = build();
-		Node actual = grammar.parse("rule = %b01-11\r\n", false);
+		Node actual = grammar.parse("rule = %b1-11\r\n", false);
 
-		Rule value = new Terminal(false, "01", "10", "11");
+		Rule value = new NumberValue(2, 0b1, 0b11);
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
@@ -211,62 +213,80 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = %d123\r\n", false);
 
-		Rule value = new Terminal(false, "123");
+		Rule value = new NumberValue(10, (char) 123);
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	public void shouldHandleMultipleDecimalValues() {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = %d12.3\r\n", false);
 
-		Rule value = new Terminal(false, "12", "3");
+		Rule value = new NumberValue(10, new char[]{ 12, 3});
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
+		
+		NodeToString r = new NodeToString();
+		actual.visit(r);
+		String a = r.toString();
+		r = new NodeToString();
+		expected.visit(r);
+		String b = r.toString();
+
+		assertEquals(b, a);
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	public void shouldHandleRangeOfDecimalValues() {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = %d2-4\r\n", false);
 
-		Rule value = new Terminal(false, "2", "3", "4");
+		Rule value = new NumberValue(10, 2, 4);
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	public void shouldHandleSingleHexValue() {
 		Grammar grammar = build();
-		Node actual = grammar.parse("rule = %xFF\r\n", false);
+		Node actual = grammar.parse("rule = %xff\r\n", false);
 
-		Rule value = new Terminal(false, "FF");
+		Rule value = new NumberValue(16, (char) 0xff);
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	public void shouldHandleMultipleHexValues() {
 		Grammar grammar = build();
-		Node actual = grammar.parse("rule = %xA.BB\r\n", false);
+		Node actual = grammar.parse("rule = %xa.bb\r\n", false);
 
-		Rule value = new Terminal(false, "A", "BB");
+		Rule value = new NumberValue(16, new char[]{ 0xa,  0xbb });
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
+		
+		NodeToString r = new NodeToString();
+		actual.visit(r);
+		String a = r.toString();
+		r = new NodeToString();
+		expected.visit(r);
+		String b = r.toString();
+
+		assertEquals(b, a);
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	public void shouldHandleRangeOfHexValues() {
 		Grammar grammar = build();
-		Node actual = grammar.parse("rule = %xFE-FF\r\n", false);
+		Node actual = grammar.parse("rule = %xf0-ff\r\n", false);
 
-		Rule value = new Terminal(false, "FE", "FF");
+		Rule value = new NumberValue(16, 0xf0, 0xff);
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
@@ -277,9 +297,9 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = \"hel\"\r\nrule =/ \"lo\"\r\n", false);
 
-		Terminal hel = new Terminal("hel");
+		Terminal hel = new CharacterValue("hel");
 		NonTerminal rule1 = new NonTerminal("rule", hel);
-		Terminal lo = new Terminal("lo");
+		Terminal lo = new CharacterValue("lo");
 		NonTerminal rule2 = new NonTerminal("rule", lo);
 		Node expected = generateNodes(rule1, rule2);
 		assertEquals(expected, actual);
@@ -290,7 +310,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = \"R\"; rrrrrrrr RRRR\r\n", false);
 
-		Rule r = new Terminal("R");
+		Rule r = new CharacterValue("R");
 		NonTerminal rule = new NonTerminal("rule", "rrrrrrrr RRRR", r);
 		Node expected = generateNodes(rule);
 		assertEquals(expected, actual);
@@ -430,27 +450,6 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 				alternation.addChild(concatenation);
 				firstChild = false;
 			}
-		} else if (actualRule.getClass().isAssignableFrom(Terminal.class)) {
-			Terminal rule = (Terminal) actualRule;
-			Iterator<String> terminals = rule.getTerminals();
-			boolean firstTerminal = true;
-
-			while (terminals.hasNext()) {
-				if (!firstTerminal) {
-					Node wsp = new NonTerminalNode("wsp");
-					wsp.addChild(new TerminalNode(" "));
-					Node cwsp = new NonTerminalNode("c-wsp");
-					cwsp.addChild(wsp);
-					alternation.addChild(cwsp);
-					alternation.addChild(new TerminalNode("/"));
-					alternation.addChild(cwsp);
-				}
-
-				String terminal = terminals.next();
-				Node concatenation = generateConcatenation(new Terminal(rule.isCaseSensitive(), terminal));
-				alternation.addChild(concatenation);
-				firstTerminal = false;
-			}
 		} else {
 			alternation.addChild(generateConcatenation(actualRule));
 		}
@@ -538,16 +537,15 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 				rulename.addChild(alpha);
 			}
 			element.addChild(rulename);
-		} else if (actualRule.getClass().isAssignableFrom(Terminal.class)) {
-			Terminal rule = (Terminal) actualRule;
-			Iterator<String> terminals = rule.getTerminals();
-			String terminal = terminals.next();
+		} else if (actualRule.getClass().isAssignableFrom(CharacterValue.class)) {
+			CharacterValue rule = (CharacterValue) actualRule;
+			String terminal = rule.getTerminal();
 
 			Node charVal = new NonTerminalNode("char-val");
 			String name = rule.isCaseSensitive() ? "case-sensitive-string" : "case-insensitive-string";
 			Node caseString = new NonTerminalNode(name);
 			charVal.addChild(caseString);
-			if(rule.isCaseSensitive())
+			if (rule.isCaseSensitive())
 				caseString.addChild(new TerminalNode("%s"));
 			Node quotedString = new NonTerminalNode("quoted-string");
 			caseString.addChild(quotedString);
@@ -561,10 +559,59 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 			}
 			quotedString.addChild(dQuote);
 			element.addChild(charVal);
+		} else if (actualRule.getClass().isAssignableFrom(NumberValue.class)) {
+			NumberValue rule = (NumberValue) actualRule;
+			int radix = rule.getRadix();
 
-			if (terminals.hasNext()) {
-				throw new IllegalStateException("only one terminal is currently support!");
+			String name = "";
+			name = radix == 16 ? "hex-val" : name;
+			name = radix == 10 ? "dec-val" : name;
+			name = radix == 2 ? "bin-val" : name;
+			Node value = new NonTerminalNode(name);
+
+			String marker = "";
+			marker = radix == 16 ? "x" : marker;
+			marker = radix == 10 ? "d" : marker;
+			marker = radix == 2 ? "b" : marker;
+			value.addChild(new TerminalNode(marker));
+
+			String numType = "";
+			numType = radix == 16 ? "hexdig" : numType;
+			numType = radix == 10 ? "digit" : numType;
+			numType = radix == 2 ? "bit" : numType;
+			if (rule.getTerminal() != null) {
+				String terminal = rule.getTerminal();
+				for (int index = 0; index < terminal.length(); index++) {
+					String number = Integer.toString(terminal.charAt(index), radix);
+					for (char digitOfNumber : number.toCharArray()) {
+						NonTerminalNode digit = new NonTerminalNode(numType);
+						digit.addChild(new TerminalNode(Character.toString(digitOfNumber)));
+						value.addChild(digit);
+					}
+					if (index + 1 < terminal.length())
+						value.addChild(new TerminalNode("."));
+				}
+			} else {
+				String start = Integer.toString(rule.getRangeStart().charValue(), radix);
+				String end = Integer.toString(rule.getRangeEnd().charValue(), radix);
+
+				for (char digitOfNumber : start.toCharArray()) {
+					NonTerminalNode digit = new NonTerminalNode(numType);
+					digit.addChild(new TerminalNode(Character.toString(digitOfNumber)));
+					value.addChild(digit);
+				}
+				value.addChild(new TerminalNode("-"));
+				for (char digitOfNumber : end.toCharArray()) {
+					NonTerminalNode digit = new NonTerminalNode(numType);
+					digit.addChild(new TerminalNode(Character.toString(digitOfNumber)));
+					value.addChild(digit);
+				}
 			}
+
+			Node numVal = new NonTerminalNode("num-val");
+			numVal.addChild(new TerminalNode("%"));
+			numVal.addChild(value);
+			element.addChild(numVal);
 		} else if (actualRule.getClass().isAssignableFrom(Optional.class)) {
 			Optional rule = (Optional) actualRule;
 
