@@ -6,13 +6,14 @@ import java.util.Set;
 
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
+import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
 import de.claas.parser.rules.Decorator;
 import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
+import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
-import de.claas.parser.rules.Terminal;
 
 /**
  * 
@@ -158,7 +159,7 @@ public class RuleEquality implements RuleVisitor {
 	}
 
 	@Override
-	public void visitTerminal(Terminal rule) {
+	public void visitTerminal(CharacterValue rule) {
 		this.visited = true;
 		if (rule == this.obj)
 			return;
@@ -166,33 +167,62 @@ public class RuleEquality implements RuleVisitor {
 			this.equality = false;
 			return;
 		}
-		Terminal other = (Terminal) this.obj;
+		CharacterValue other = (CharacterValue) this.obj;
 		if (rule.isCaseSensitive() != other.isCaseSensitive()) {
 			this.equality = false;
 			return;
 		}
-		if (rule.getTerminals() == null) {
-			if (other.getTerminals() != null) {
+		if (rule.getTerminal() == null) {
+			if (other.getTerminal() != null) {
 				this.equality = false;
 				return;
 			}
-		} else {
-			Iterator<String> terminals = rule.getTerminals();
-			Iterator<String> otherTerminals = other.getTerminals();
-			while (terminals.hasNext() && otherTerminals.hasNext()) {
-				String terminal = terminals.next();
-				String otherTerminal = otherTerminals.next();
-				if (terminal == null) {
-					if (otherTerminal != null) {
-						this.equality = false;
-						return;
-					}
-				} else if (!terminal.equals(otherTerminal)) {
-					this.equality = false;
-					return;
-				}
+		} else if (!rule.getTerminal().equals(other.getTerminal())) {
+			this.equality = false;
+			return;
+		}
+	}
+	
+	@Override
+	public void visitTerminal(NumberValue rule) {
+		this.visited = true;
+		if (rule == this.obj)
+			return;
+		if (this.obj == null || rule.getClass() != this.obj.getClass()) {
+			this.equality = false;
+			return;
+		}
+		NumberValue other = (NumberValue) this.obj;
+		if (rule.getRadix() != other.getRadix()) {
+			this.equality = false;
+			return;
+		}
+		if (rule.getTerminal() == null) {
+			if (other.getTerminal() != null) {
+				this.equality = false;
+				return;
 			}
-			this.equality = terminals.hasNext() == otherTerminals.hasNext();
+		} else if (!rule.getTerminal().equals(other.getTerminal())) {
+			this.equality = false;
+			return;
+		}
+		if (rule.getRangeStart() == null) {
+			if (other.getRangeStart() != null) {
+				this.equality = false;
+				return;
+			}
+		} else if (!rule.getRangeStart().equals(other.getRangeStart())) {
+			this.equality = false;
+			return;
+		}
+		if (rule.getRangeEnd() == null) {
+			if (other.getRangeEnd() != null) {
+				this.equality = false;
+				return;
+			}
+		} else if (!rule.getRangeEnd().equals(other.getRangeEnd())) {
+			this.equality = false;
+			return;
 		}
 	}
 
