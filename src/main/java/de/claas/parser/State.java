@@ -87,9 +87,9 @@ public class State {
 	 *         specified boundaries, otherwise <code>null</code>
 	 */
 	public String process(char rangeStart, char rangeEnd) {
-		if(this.offset >= this.data.length())
+		if (this.offset >= this.data.length())
 			return null;
-		
+
 		char currentChar = this.data.charAt(this.offset);
 		if (currentChar >= rangeStart && currentChar <= rangeEnd) {
 			this.offset += 1;
@@ -131,9 +131,8 @@ public class State {
 	/**
 	 * Returns the data that is being processed by this state. The returned data
 	 * corresponds to what was specified during construction. While the data is
-	 * being processed (i.e. {@link #hasUnprocessedData()} is
-	 * <code>true</code>), the data can be split into two parts: the processed
-	 * part and the unprocessed part. See {@link #getProcessedData()} and
+	 * being processed, the data can be split into two parts: the processed part
+	 * and the unprocessed part. See {@link #getProcessedData()} and
 	 * {@link #getUnprocessedData()} for more details on their semantics.
 	 * 
 	 * @return the data that is being processed by this state
