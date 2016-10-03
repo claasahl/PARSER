@@ -45,7 +45,7 @@ import de.claas.parser.rules.Terminal;
  * concatenated bit values or single ONEOF range</li>
  * <li>dec-val = "d" 1*DIGIT [ 1*("." 1*DIGIT) / ("-" 1*DIGIT) ]</li>
  * <li>hex-val = "x" 1*HEXDIG [ 1*("." 1*HEXDIG) / ("-" 1*HEXDIG) ]</li>
- * <li>prose-val = "<" *(%x20-3D / %x3F-7E) ">" ; bracketed string of SP and
+ * <li>prose-val = "&lt;" *(%x20-3D / %x3F-7E) "&gt;" ; bracketed string of SP and
  * VCHAR without angles prose description, to be used as last resort</li>
  * <li>ALPHA = %x41-5A / %x61-7A ; A-Z / a-z</li>
  * <li>BIT = "0" / "1"</li>
