@@ -18,7 +18,6 @@ import de.claas.parser.rules.NonTerminal;
 import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
-import de.claas.parser.rules.Terminal;
 
 /**
  * 
@@ -31,7 +30,6 @@ import de.claas.parser.rules.Terminal;
  * {@link Node} (that represents the processed state) is returned. If
  * unsuccessful (i.e. state does not fulfills this rule), then the state remains
  * unchanged and <code>null</code> is returned.
- * <p>
  * <ul>
  * <li>{@link Conjunction}: This rule will only successfully process a given
  * state if all children have successfully been processed.</li>
@@ -45,13 +43,18 @@ import de.claas.parser.rules.Terminal;
  * not). Making the decorated rule optional.</li>
  * <li>{@link Repetition}: This rules default settings are such that it will
  * successfully process a given state regardless of how often the decorated rule
- * can be processed (i.e. minimum number of repetitions is {@value 0} and
- * maximum number of repetitions is {@value Integer#MAX_VALUE}). Making the
- * decorated rule optional and repeatable at the same time.</li>
- * <li>{@link Terminal}: This rule will successfully process a given state if
- * the processed token equals any of the terminal symbols (see
- * {@link #getTerminals()}). This rule is greedy and thus it gives preference to
- * longer terminal symbols.</li>
+ * can be processed (i.e. minimum number of repetitions is zero (0) and maximum
+ * number of repetitions is {@link Integer#MAX_VALUE}). Making the decorated
+ * rule optional and repeatable at the same time.</li>
+ * <li>{@link CharacterValue}: This rule will successfully process a given state
+ * if the next token equals the terminal symbol that this rule represents (see
+ * {@link CharacterValue#getTerminal()}).</li>
+ * <li>{@link NumberValue}: This rule will successfully process a given state if
+ * the next token either equals the terminal symbols that this rule represents
+ * (see {@link NumberValue#getTerminal()}) or if the next token falls within the
+ * specified range that this rule represent (see
+ * {@link NumberValue#getRangeStart()} and
+ * {@link NumberValue#getRangeEnd()}).</li>
  * </ul>
  * <p>
  * This visitor is meant for one-time use, only. As such, it should not be used

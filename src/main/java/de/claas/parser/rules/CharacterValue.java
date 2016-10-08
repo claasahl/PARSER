@@ -21,8 +21,8 @@ public class CharacterValue extends Terminal {
 	 * 
 	 * Constructs a new {@link CharacterValue} with default parameters. Calling
 	 * this constructor is equivalent to calling
-	 * <code>{@link CharacterValue#Terminal(boolean, String...)}</code> without
-	 * case sensitivity.
+	 * <code>{@link CharacterValue#CharacterValue(boolean, String)}</code>
+	 * without case sensitivity.
 	 * 
 	 * @param terminal
 	 *            the terminal symbol

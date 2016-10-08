@@ -39,9 +39,9 @@ public class RuleToString implements RuleVisitor {
 	/**
 	 * Constructs a new {@link RuleToString} with default parameters. Calling
 	 * this constructor is equivalent to calling
-	 * <code>{@link #RuleToString(String, String)}</code> with {@value #DEFAULT_
-	 * LEVEL_SEPARATOR} as default level separator and the system's line
-	 * separator (property {@literal line.separator}).
+	 * <code>{@link #RuleToString(String, String)}</code> with
+	 * {@link #DEFAULT_LEVEL_SEPARATOR} as default level separator and the
+	 * system's line separator (property {@literal line.separator}).
 	 */
 	public RuleToString() {
 		this(DEFAULT_LEVEL_SEPARATOR, System.getProperty("line.separator", DEFAULT_LINE_NEWLINE));
@@ -127,7 +127,7 @@ public class RuleToString implements RuleVisitor {
 	public void visitTerminal(CharacterValue rule) {
 		appendRule(rule, rule.getTerminal());
 	}
-	
+
 	@Override
 	public void visitTerminal(NumberValue rule) {
 		int radix = rule.getRadix();
