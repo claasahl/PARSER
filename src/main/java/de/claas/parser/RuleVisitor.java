@@ -90,9 +90,7 @@ public interface RuleVisitor {
 	 * @param rule
 	 *            the rule
 	 */
-	default void visitTerminal(CharacterValue rule) {
-		return;
-	}
+	void visitTerminal(CharacterValue rule);
 	
 	/**
 	 * Called by {@link NumberValue}-rules.
@@ -100,8 +98,6 @@ public interface RuleVisitor {
 	 * @param rule
 	 *            the rule
 	 */
-	default void visitTerminal(NumberValue rule) {
-		return;
-	}
+	void visitTerminal(NumberValue rule);
 
 }
