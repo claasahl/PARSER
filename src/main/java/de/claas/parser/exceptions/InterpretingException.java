@@ -4,7 +4,7 @@ import de.claas.parser.visitors.Interpreter;
 
 /**
  * 
- * The class {@link ParsingException}. It is thrown to indicate that an
+ * The class {@link ParserException}. It is thrown to indicate that an
  * {@link Interpreter} cannot (fully) interpret the data that was passed into
  * it. The data is considered invalid, e.g. it contains illegal tokens or the
  * data is otherwise not in accordance with the grammar.

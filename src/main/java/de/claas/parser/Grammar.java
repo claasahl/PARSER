@@ -1,6 +1,6 @@
 package de.claas.parser;
 
-import de.claas.parser.exceptions.ParsingException;
+import de.claas.parser.exceptions.ParserException;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.rules.NonTerminal;
 import de.claas.parser.visitors.Parser;
@@ -55,7 +55,7 @@ public class Grammar {
 	 * represents the specified data. Any intermediate nodes (and thus
 	 * non-essential nodes) are removed. Any preceding and trailing whitespace
 	 * are removed as well. If the given data is in any way invalid, then a
-	 * {@link ParsingException} is thrown.
+	 * {@link ParserException} is thrown.
 	 * <p>
 	 * Calling this method is equivalent <code>parse(data, false)</code> (see
 	 * {@link #parse(String, boolean)}).
@@ -64,7 +64,7 @@ public class Grammar {
 	 *            the data that is being parsed
 	 * @return the tree of terminals and non-terminals that represents the
 	 *         specified data
-	 * @throws ParsingException
+	 * @throws ParserException
 	 *             if the data is invalid (e.g. contains illegal tokens or the
 	 *             data is otherwise not in accordance with the grammar that was
 	 *             passed into the constructor)
@@ -105,7 +105,7 @@ public class Grammar {
 	 * represents the specified data. Optionally intermediate nodes (and thus
 	 * non-essential nodes) can be removed. Also optionally, preceding and
 	 * trailing whitespace can be removed. If the given data is in any way
-	 * invalid, then a {@link ParsingException} is thrown.
+	 * invalid, then a {@link ParserException} is thrown.
 	 * 
 	 * @param data
 	 *            the data that is being parsed
@@ -115,7 +115,7 @@ public class Grammar {
 	 *            nodes are desired
 	 * @return the tree of terminals and non-terminals that represents the
 	 *         specified data
-	 * @throws ParsingException
+	 * @throws ParserException
 	 *             if the data is invalid (e.g. contains illegal tokens or the
 	 *             data is otherwise not in accordance with the grammar that was
 	 *             passed into the constructor)
@@ -127,7 +127,7 @@ public class Grammar {
 		
 		Node result = parser.getResult();
 		if (result == null || !state.getUnprocessedData().isEmpty())
-			throw new ParsingException("Could not process all tokens.");
+			throw new ParserException("Could not process all tokens.");
 		if (!retainIntermediateNodes)
 			result.visit(new RemoveIntermediateNodes());
 		return result;

@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import de.claas.parser.Grammar;
 import de.claas.parser.GrammarTest;
-import de.claas.parser.exceptions.ParsingException;
+import de.claas.parser.exceptions.ParserException;
 
 /**
  * 
@@ -54,7 +54,7 @@ public class RepeatTest extends GrammarTest<Repeat> {
 		assertNotNull(grammar.parse("1"));
 	}
 
-	@Test(expected = ParsingException.class)
+	@Test(expected = ParserException.class)
 	public void shouldNotHandle() {
 		Grammar grammar = build();
 		grammar.parse("**");

@@ -7,7 +7,7 @@ import org.junit.Test;
 import de.claas.parser.Grammar;
 import de.claas.parser.GrammarTest;
 import de.claas.parser.Node;
-import de.claas.parser.exceptions.ParsingException;
+import de.claas.parser.exceptions.ParserException;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 
@@ -59,7 +59,7 @@ public class HelloWorldTest extends GrammarTest<HelloWorld> {
 		assertEquals(expected, actual);
 	}
 
-	@Test(expected = ParsingException.class)
+	@Test(expected = ParserException.class)
 	public void shouldNotHandleMixedLanguages() {
 		Grammar grammar = build();
 		grammar.parse("hallo mundo");

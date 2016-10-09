@@ -7,7 +7,7 @@ import org.junit.Test;
 import de.claas.parser.Grammar;
 import de.claas.parser.GrammarTest;
 import de.claas.parser.Node;
-import de.claas.parser.exceptions.ParsingException;
+import de.claas.parser.exceptions.ParserException;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 /**
@@ -57,13 +57,13 @@ public class NumberTest extends GrammarTest<Number> {
 		assertEquals(generateTree(false, "0", null, null, null, null), grammar.parse("0"));
 	}
 
-	@Test(expected = ParsingException.class)
+	@Test(expected = ParserException.class)
 	public void shouldNotHandleZeroAsFirstDigit() {
 		Grammar grammar = build();
 		grammar.parse("01");
 	}
 
-	@Test(expected = ParsingException.class)
+	@Test(expected = ParserException.class)
 	public void shouldNotHandlePlusAsFirstDigit() {
 		Grammar grammar = build();
 		grammar.parse("+1");
