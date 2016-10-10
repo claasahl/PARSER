@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.function.Function;
 
 import de.claas.parser.Node;
-import de.claas.parser.exceptions.InterpretingException;
+import de.claas.parser.exceptions.InterpreterException;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
@@ -106,7 +106,7 @@ public class NumberInterpreter extends Interpreter<java.lang.Number> {
 		}
 
 		if (integer == null)
-			throw new InterpretingException("NonTerminal with name 'integer' is required.");
+			throw new InterpreterException("NonTerminal with name 'integer' is required.");
 		else if (fraction != null && exponent != null)
 			return new Double(
 					(integer.doubleValue() + fraction.doubleValue()) * exponent.doubleValue() * sign.doubleValue());

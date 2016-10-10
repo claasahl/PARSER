@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 import de.claas.parser.Node;
 import de.claas.parser.Rule;
-import de.claas.parser.exceptions.InterpretingException;
+import de.claas.parser.exceptions.InterpreterException;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
@@ -112,7 +112,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 	private Rule visitRulelist(NonTerminalNode node) {
 		if (!node.hasChildren()) {
 			String msg = "At least one rule is required!";
-			throw new InterpretingException(msg);
+			throw new InterpreterException(msg);
 		}
 
 		Rule firstRule = null;
@@ -230,7 +230,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 				String slash = concatTerminals(child);
 				if (!"/".equals(slash)) {
 					String msg = String.format("Expected forward slash '/', but got '%s'", slash);
-					throw new InterpretingException(msg);
+					throw new InterpreterException(msg);
 				}
 				child = children.hasNext() ? children.next() : null;
 			}
@@ -334,7 +334,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			int repetitions = new Integer(repeat).intValue();
 			rule = new Repetition(null, repetitions, repetitions);
 		} else {
-			throw new InterpretingException("Invalid 'repeat'-rule: " + repeat);
+			throw new InterpreterException("Invalid 'repeat'-rule: " + repeat);
 		}
 		return rule;
 	}
@@ -374,7 +374,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			String bracket = concatTerminals(child);
 			if (!"(".equals(bracket)) {
 				String msg = String.format("Expected opening bracket '(', but got '%s'", bracket);
-				throw new InterpretingException(msg);
+				throw new InterpreterException(msg);
 			}
 			child = children.hasNext() ? children.next() : null;
 		}
@@ -403,7 +403,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			String bracket = concatTerminals(child);
 			if (!")".equals(bracket)) {
 				String msg = String.format("Expected closing bracket ')', but got '%s'", bracket);
-				throw new InterpretingException(msg);
+				throw new InterpreterException(msg);
 			}
 			child = children.hasNext() ? children.next() : null;
 		}
@@ -421,7 +421,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			String bracket = concatTerminals(child);
 			if (!"[".equals(bracket)) {
 				String msg = String.format("Expected opening bracket '[', but got '%s'", bracket);
-				throw new InterpretingException(msg);
+				throw new InterpreterException(msg);
 			}
 			child = children.hasNext() ? children.next() : null;
 		}
@@ -450,7 +450,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			String bracket = concatTerminals(child);
 			if (!"]".equals(bracket)) {
 				String msg = String.format("Expected closing bracket ']', but got '%s'", bracket);
-				throw new InterpretingException(msg);
+				throw new InterpreterException(msg);
 			}
 			child = children.hasNext() ? children.next() : null;
 		}
@@ -482,7 +482,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			String marker = concatTerminals(child);
 			if (!"%i".equals(marker)) {
 				String msg = String.format("Expected case insensitivity marker '%%i', but got '%s'", marker);
-				throw new InterpretingException(msg);
+				throw new InterpreterException(msg);
 			}
 			child = children.hasNext() ? children.next() : null;
 		}
@@ -495,7 +495,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 				String quote = quotedString.substring(1, length - 1);
 				rule = new CharacterValue(false, quote);
 			} else {
-				throw new InterpretingException(
+				throw new InterpreterException(
 						"Expected 'quoted-string' to start and end with double quote, but it did not.");
 			}
 		}
@@ -512,7 +512,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			String marker = concatTerminals(child);
 			if (!"%s".equals(marker)) {
 				String msg = String.format("Expected case sensitivity marker '%%s', but got '%s'", marker);
-				throw new InterpretingException(msg);
+				throw new InterpreterException(msg);
 			}
 			child = children.hasNext() ? children.next() : null;
 		}
@@ -525,7 +525,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 				String quote = quotedString.substring(1, length - 1);
 				rule = new CharacterValue(true, quote);
 			} else {
-				throw new InterpretingException(
+				throw new InterpreterException(
 						"Expected 'quoted-string' to start and end with double quote, but it did not.");
 			}
 		}
@@ -542,7 +542,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			String marker = concatTerminals(child);
 			if (!"%".equals(marker)) {
 				String msg = String.format("Expected number marker '%%', but got '%s'", marker);
-				throw new InterpretingException(msg);
+				throw new InterpreterException(msg);
 			}
 			child = children.hasNext() ? children.next() : null;
 		}
@@ -580,7 +580,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			String marker = concatTerminals(child);
 			if (!expectedMarker.equals(marker)) {
 				String msg = String.format("Expected number marker '%s', but got '%s'", expectedMarker, marker);
-				throw new InterpretingException(msg);
+				throw new InterpreterException(msg);
 			}
 			child = children.hasNext() ? children.next() : null;
 		}
@@ -618,7 +618,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 						String point = concatTerminals(child);
 						if (!".".equals(point)) {
 							String msg = String.format("Expected '.', but got '%s'", point);
-							throw new InterpretingException(msg);
+							throw new InterpreterException(msg);
 						}
 						child = children.hasNext() ? children.next() : null;
 					}
@@ -636,7 +636,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 				rangeEnd = Integer.parseInt(digits.toString(), radix);
 			} else {
 				String msg = String.format("Expected either '.' or '-', but got '%s'", marker);
-				throw new InterpretingException(msg);
+				throw new InterpreterException(msg);
 			}
 			child = children.hasNext() ? children.next() : null;
 		}
@@ -657,7 +657,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			String quote = quotedString.substring(1, length - 1);
 			rule = new CharacterValue(true, quote);
 		} else {
-			throw new InterpretingException("Expected 'prose-val' to start with '<' and end with '>', but it did not.");
+			throw new InterpreterException("Expected 'prose-val' to start with '<' and end with '>', but it did not.");
 		}
 		return rule;
 	}

@@ -9,7 +9,7 @@ import java.util.function.Function;
 import de.claas.parser.Node;
 import de.claas.parser.NodeVisitor;
 import de.claas.parser.exceptions.CyclicNodeException;
-import de.claas.parser.exceptions.InterpretingException;
+import de.claas.parser.exceptions.InterpreterException;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
@@ -158,13 +158,13 @@ public abstract class Interpreter<R> implements NodeVisitor {
 	 * the following contract: If successful (i.e. node can be interpreted),
 	 * then a result (that represents the node) is returned. If unsuccessful
 	 * (i.e. node cannot be interpreted), then either <code>null</code> is
-	 * returned or an {@link InterpretingException} is thrown.
+	 * returned or an {@link InterpreterException} is thrown.
 	 * 
 	 * @param node
 	 *            the node
 	 * @return the result that represents the node or <code>null</code> if the
 	 *         node cannot be interpreted to a valid result
-	 * @throws InterpretingException
+	 * @throws InterpreterException
 	 *             if the node cannot be interpreted, but the node should have
 	 *             yielded a valid result
 	 */
@@ -177,14 +177,14 @@ public abstract class Interpreter<R> implements NodeVisitor {
 	 * descendants can be interpreted), then a result (that represents the node
 	 * and its descendants) is returned. If unsuccessful (i.e. node cannot be
 	 * interpreted), then either <code>null</code> is returned or an
-	 * {@link InterpretingException} is thrown.
+	 * {@link InterpreterException} is thrown.
 	 * 
 	 * @param node
 	 *            the node
 	 * @return the result that represents the node and its descendants or
 	 *         <code>null</code> if the node cannot be interpreted to a valid
 	 *         result
-	 * @throws InterpretingException
+	 * @throws InterpreterException
 	 *             if the node cannot be interpreted, but the node should have
 	 *             yielded a valid result
 	 */
@@ -197,14 +197,14 @@ public abstract class Interpreter<R> implements NodeVisitor {
 	 * can be interpreted), then a result (that represents the node and its
 	 * descendants) is returned. If unsuccessful (i.e. node cannot be
 	 * interpreted), then either <code>null</code> is returned or an
-	 * {@link InterpretingException} is thrown.
+	 * {@link InterpreterException} is thrown.
 	 * 
 	 * @param node
 	 *            the node
 	 * @return the result that represents the node and its descendants or
 	 *         <code>null</code> if the node cannot be interpreted to a valid
 	 *         result
-	 * @throws InterpretingException
+	 * @throws InterpreterException
 	 *             if the node cannot be interpreted, but the node should have
 	 *             yielded a valid result
 	 */
@@ -220,7 +220,7 @@ public abstract class Interpreter<R> implements NodeVisitor {
 	 *            a helper function for determining the actual consumer for the
 	 *            specified node
 	 * 
-	 * @throws InterpretingException
+	 * @throws InterpreterException
 	 *             if the specified node is unexpected
 	 * @throws CyclicNodeException
 	 *             if the specified node is cyclic
@@ -235,7 +235,7 @@ public abstract class Interpreter<R> implements NodeVisitor {
 				}
 			} else {
 				String msg = "Unexpected node '%s'. %s";
-				throw new InterpretingException(String.format(msg, node, this.expected));
+				throw new InterpreterException(String.format(msg, node, this.expected));
 			}
 		} else {
 			throw new CyclicNodeException(node);

@@ -4,7 +4,7 @@ import de.claas.parser.visitors.Interpreter;
 
 /**
  * 
- * The class {@link ParserException}. It is thrown to indicate that an
+ * The class {@link InterpreterException}. It is thrown to indicate that an
  * {@link Interpreter} cannot (fully) interpret the data that was passed into
  * it. The data is considered invalid, e.g. it contains illegal tokens or the
  * data is otherwise not in accordance with the grammar.
@@ -12,24 +12,24 @@ import de.claas.parser.visitors.Interpreter;
  * @author Claas Ahlrichs
  *
  */
-public class InterpretingException extends RuntimeException {
+public class InterpreterException extends RuntimeException {
 
 	private static final long serialVersionUID = 7967586094665395837L;
 
 	/**
-	 * Constructs a new {@link InterpretingException} with the specified
+	 * Constructs a new {@link InterpreterException} with the specified
 	 * parameter.
 	 * 
 	 * @param message
 	 *            the detail message (which is saved for later retrieval by the
 	 *            Throwable.getMessage() method)
 	 */
-	public InterpretingException(String message) {
+	public InterpreterException(String message) {
 		super(message);
 	}
 
 	/**
-	 * Constructs a new {@link InterpretingException} with the specified
+	 * Constructs a new {@link InterpreterException} with the specified
 	 * parameter.
 	 * 
 	 * @param cause
@@ -37,12 +37,12 @@ public class InterpretingException extends RuntimeException {
 	 *            Throwable.getCause() method). (A null value is permitted, and
 	 *            indicates that the cause is nonexistent or unknown.)
 	 */
-	public InterpretingException(Throwable cause) {
+	public InterpreterException(Throwable cause) {
 		super(cause);
 	}
 
 	/**
-	 * Constructs a new {@link InterpretingException} with the specified
+	 * Constructs a new {@link InterpreterException} with the specified
 	 * parameters.
 	 * 
 	 * @param message
@@ -53,7 +53,7 @@ public class InterpretingException extends RuntimeException {
 	 *            Throwable.getCause() method). (A null value is permitted, and
 	 *            indicates that the cause is nonexistent or unknown.)
 	 */
-	public InterpretingException(String message, Throwable cause) {
+	public InterpreterException(String message, Throwable cause) {
 		super(message, cause);
 	}
 

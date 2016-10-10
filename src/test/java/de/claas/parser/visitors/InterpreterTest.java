@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import de.claas.parser.Node;
 import de.claas.parser.exceptions.CyclicNodeException;
-import de.claas.parser.exceptions.InterpretingException;
+import de.claas.parser.exceptions.InterpreterException;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
@@ -93,7 +93,7 @@ public abstract class InterpreterTest<R> extends NodeVisitorTest {
 	}
 
 	@Override
-	@Test(expected = InterpretingException.class)
+	@Test(expected = InterpreterException.class)
 	public void shouldHandleTerminalNode() {
 		Interpreter<R> interpreter = build();
 		Node node = getTerminalNode();
@@ -101,7 +101,7 @@ public abstract class InterpreterTest<R> extends NodeVisitorTest {
 	}
 
 	@Override
-	@Test(expected = InterpretingException.class)
+	@Test(expected = InterpreterException.class)
 	public void shouldHandleIntermediateNode() {
 		Interpreter<R> interpreter = build();
 		Node node = getIntermediateNode();
@@ -109,7 +109,7 @@ public abstract class InterpreterTest<R> extends NodeVisitorTest {
 	}
 
 	@Override
-	@Test(expected = InterpretingException.class)
+	@Test(expected = InterpreterException.class)
 	public void shouldHandleNonTerminalNode() {
 		Interpreter<R> interpreter = build();
 		Node node = getNonTerminalNode();
@@ -126,7 +126,7 @@ public abstract class InterpreterTest<R> extends NodeVisitorTest {
 	}
 
 	@Override
-	@Test(expected = InterpretingException.class)
+	@Test(expected = InterpreterException.class)
 	public void shouldHandleCyclicIntermediateNode() {
 		Interpreter<R> interpreter = build();
 		Node node = new IntermediateNode();
