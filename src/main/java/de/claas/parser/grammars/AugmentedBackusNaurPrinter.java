@@ -94,8 +94,6 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 				rule.getRule().visit(this);
 			}
 			this.visitedPath.remove(rule);
-		} else {
-			// non terminal rule has already been printed
 		}
 	}
 
