@@ -10,7 +10,6 @@ import de.claas.parser.rules.NonTerminal;
 import de.claas.parser.rules.NumberValue;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
-import de.claas.parser.rules.Terminal;
 
 /**
  * The class {@link AugmentedBackusNaur}. It is mainly intended for educational

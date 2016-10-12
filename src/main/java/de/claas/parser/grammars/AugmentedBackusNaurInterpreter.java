@@ -19,7 +19,6 @@ import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
-import de.claas.parser.rules.Terminal;
 import de.claas.parser.visitors.Interpreter;
 import de.claas.parser.visitors.UpdateNonTerminalReferences;
 

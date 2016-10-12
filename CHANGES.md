@@ -3,6 +3,7 @@
 - Fixed issue [#12 Review: Code](https://github.com/claasahl/PARSER/issues/12)
 - Fixed issue [#13 Avoid unnecessary return statements](https://github.com/claasahl/PARSER/issues/13)
 - Fixed issue [#19 Avoid empty if statements](https://github.com/claasahl/PARSER/issues/19)
+- Fixed issue [#14 Avoid unused imports](https://github.com/claasahl/PARSER/issues/14)
 
 # Version 1 - Unicorn
 - Fixed issue [#1 Fix documentation errors while building](https://github.com/claasahl/PARSER/issues/1)
