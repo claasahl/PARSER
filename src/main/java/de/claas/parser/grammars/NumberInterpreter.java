@@ -56,7 +56,12 @@ public class NumberInterpreter extends Interpreter<java.lang.Number> {
 		case "digit":
 			return this::visitDigits;
 		case "e":
-			return this::skip;
+			return new Function<NonTerminalNode, java.lang.Number>() {
+				@Override
+				public java.lang.Number apply(NonTerminalNode t) {
+					return null;
+				}
+			};
 		default:
 			return null;
 		}
@@ -198,17 +203,5 @@ public class NumberInterpreter extends Interpreter<java.lang.Number> {
 		String digits = concatTerminals(node);
 		return new Integer(digits);
 	}
-
-	/**
-	 * Called by this interpreter with the intention of skipping the next
-	 * specified {@link NonTerminalNode}-nodes.
-	 * 
-	 * @param node
-	 *            the node
-	 * @return <code>null</code>
-	 */
-	private java.lang.Number skip(NonTerminalNode node) {
-		return null;
-	}
-
+	
 }
