@@ -102,7 +102,12 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		case "bit":
 		case "digit":
 		case "hexdig":
-			return this::skip;
+			return new Function<NonTerminalNode, Rule>() {
+				@Override
+				public Rule apply(NonTerminalNode t) {
+					return null;
+				}
+			};
 		default:
 			return null;
 		}
@@ -659,18 +664,6 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			throw new InterpreterException("Expected 'prose-val' to start with '<' and end with '>', but it did not.");
 		}
 		return rule;
-	}
-
-	/**
-	 * Called by this interpreter with the intention of skipping the next
-	 * specified {@link NonTerminalNode}-nodes.
-	 * 
-	 * @param node
-	 *            the node
-	 * @return <code>null</code>
-	 */
-	private Rule skip(NonTerminalNode node) {
-		return null;
 	}
 
 }
