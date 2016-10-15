@@ -2,11 +2,11 @@
 - Fixed issue [#4 Fix Javadoc warnings](https://github.com/claasahl/PARSER/issues/4)
 - Fixed issue [#12 Review: Code](https://github.com/claasahl/PARSER/issues/12)
 - Fixed issue [#13 Avoid unnecessary return statements](https://github.com/claasahl/PARSER/issues/13)
-- Fixed issue [#19 Avoid empty if statements](https://github.com/claasahl/PARSER/issues/19)
 - Fixed issue [#14 Avoid unused imports](https://github.com/claasahl/PARSER/issues/14)
 - Fixed issue [#16 Avoid using equals() to compare against null](https://github.com/claasahl/PARSER/issues/16)
 - Fixed issue [#17 Avoid unused method parameters](https://github.com/claasahl/PARSER/issues/17)
 - Fixed issue [#18 Avoid unused method parameters](https://github.com/claasahl/PARSER/issues/18)
+- Fixed issue [#19 Avoid empty if statements](https://github.com/claasahl/PARSER/issues/19)
 
 # Version 1 - Unicorn
 - Fixed issue [#1 Fix documentation errors while building](https://github.com/claasahl/PARSER/issues/1)
