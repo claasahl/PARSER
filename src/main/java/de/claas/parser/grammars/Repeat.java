@@ -47,7 +47,7 @@ public class Repeat extends Grammar {
 		List<String> lines = new ArrayList<>();
 		lines.add("repeat = 1*digit / (*digit \"*\" *digit)");
 		lines.add("digit = %x30-39 ; 0-9");
-		
+
 		String data = String.join("\r\n", lines) + "\r\n";
 		Node grammar = new AugmentedBackusNaur().parse(data);
 		AugmentedBackusNaurInterpreter interpreter = new AugmentedBackusNaurInterpreter();

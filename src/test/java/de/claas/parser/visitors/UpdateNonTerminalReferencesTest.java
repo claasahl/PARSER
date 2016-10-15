@@ -246,7 +246,7 @@ public class UpdateNonTerminalReferencesTest extends RuleVisitorTest {
 		Rule rule = new NonTerminal(this.NON_TERMINAL);
 		NonTerminal incomplete = new NonTerminal("incomplete", rule);
 		this.rules.put("incomplete", incomplete);
-		
+
 		Rule actual = new Conjunction();
 		actual.addChild(incomplete);
 		RuleVisitor visitor = build(this.rules.values());

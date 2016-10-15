@@ -102,7 +102,7 @@ public class RuleHashCode implements RuleVisitor {
 		if (rule.getTerminal() != null)
 			this.hashCode += rule.getTerminal().hashCode();
 	}
-	
+
 	@Override
 	public void visitTerminal(NumberValue rule) {
 		this.hashCode += rule.getClass().hashCode();

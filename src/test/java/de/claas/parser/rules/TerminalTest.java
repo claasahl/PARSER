@@ -9,8 +9,8 @@ import de.claas.parser.RuleTest;
 
 /**
  *
- * The JUnit test for class {@link Terminal}. It is intended to collect
- * and document a set of test cases for the tested class. Please refer to the
+ * The JUnit test for class {@link Terminal}. It is intended to collect and
+ * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
  * <p>
  * The tested class is abstract or an interface. Consequently, this JUnit test

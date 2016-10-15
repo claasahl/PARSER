@@ -203,5 +203,5 @@ public class NumberInterpreter extends Interpreter<java.lang.Number> {
 		String digits = concatTerminals(node);
 		return new Integer(digits);
 	}
-	
+
 }

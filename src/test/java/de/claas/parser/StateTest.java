@@ -106,7 +106,7 @@ public class StateTest {
 		state.revert();
 		assertEquals("helLO", state.process(false, "helLO"));
 	}
-	
+
 	@Test
 	public void shouldProcessNothing() {
 		State state = buildState("");

@@ -91,7 +91,7 @@ public interface RuleVisitor {
 	 *            the rule
 	 */
 	void visitTerminal(CharacterValue rule);
-	
+
 	/**
 	 * Called by {@link NumberValue}-rules.
 	 * 

@@ -23,7 +23,7 @@ public class NumberInterpreterTest extends InterpreterTest<java.lang.Number> {
 	protected NumberInterpreter build() {
 		return new NumberInterpreter();
 	}
-	
+
 	@Override
 	protected NonTerminalNode getNonTerminalNode() {
 		return new NonTerminalNode("number");

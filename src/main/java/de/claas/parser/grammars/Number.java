@@ -58,7 +58,7 @@ public class Number extends Grammar {
 		lines.add("minus = %x2D ; -");
 		lines.add("plus = %x2B ; +");
 		lines.add("zero = %x30 ; 0");
-		
+
 		String data = String.join("\r\n", lines) + "\r\n";
 		Node grammar = new AugmentedBackusNaur().parse(data);
 		AugmentedBackusNaurInterpreter interpreter = new AugmentedBackusNaurInterpreter();

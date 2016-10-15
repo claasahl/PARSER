@@ -35,7 +35,7 @@ public class NodeHashCode implements NodeVisitor {
 	@Override
 	public void visitIntermediateNode(IntermediateNode node) {
 		this.hashCode += node.getClass().hashCode();
-		
+
 		Integer uniqueId = new Integer(System.identityHashCode(node));
 		if (this.visitedPath.add(uniqueId)) {
 			for (Node child : node) {
@@ -49,7 +49,7 @@ public class NodeHashCode implements NodeVisitor {
 	public void visitNonTerminaNode(NonTerminalNode node) {
 		this.hashCode += node.getClass().hashCode();
 		this.hashCode += node.getName().hashCode();
-		
+
 		Integer uniqueId = new Integer(System.identityHashCode(node));
 		if (this.visitedPath.add(uniqueId)) {
 			for (Node child : node) {

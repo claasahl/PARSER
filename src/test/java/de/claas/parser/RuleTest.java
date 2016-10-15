@@ -262,7 +262,7 @@ public abstract class RuleTest {
 		assertTrue(ruleB.equals(ruleC));
 		assertTrue(ruleA.equals(ruleC));
 	}
-	
+
 	@Test
 	public void implementationOfHashCodeShouldBeReproducible() {
 		Rule rule = build();
@@ -270,13 +270,12 @@ public abstract class RuleTest {
 		int hashCode2 = rule.hashCode();
 		assertEquals(hashCode1, hashCode2);
 	}
-	
+
 	@Test
 	public void implementationOfHashCodeShouldBeConsistent() {
 		Rule ruleA = build();
 		Rule ruleB = build();
 		assertEquals(ruleA.hashCode(), ruleB.hashCode());
 	}
-
 
 }

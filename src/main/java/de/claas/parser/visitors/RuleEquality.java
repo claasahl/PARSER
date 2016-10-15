@@ -182,7 +182,7 @@ public class RuleEquality implements RuleVisitor {
 			return;
 		}
 	}
-	
+
 	@Override
 	public void visitTerminal(NumberValue rule) {
 		this.visited = true;

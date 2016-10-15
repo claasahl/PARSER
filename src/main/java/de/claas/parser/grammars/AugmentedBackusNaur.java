@@ -44,8 +44,8 @@ import de.claas.parser.rules.Repetition;
  * concatenated bit values or single ONEOF range</li>
  * <li>dec-val = "d" 1*DIGIT [ 1*("." 1*DIGIT) / ("-" 1*DIGIT) ]</li>
  * <li>hex-val = "x" 1*HEXDIG [ 1*("." 1*HEXDIG) / ("-" 1*HEXDIG) ]</li>
- * <li>prose-val = "&lt;" *(%x20-3D / %x3F-7E) "&gt;" ; bracketed string of SP and
- * VCHAR without angles prose description, to be used as last resort</li>
+ * <li>prose-val = "&lt;" *(%x20-3D / %x3F-7E) "&gt;" ; bracketed string of SP
+ * and VCHAR without angles prose description, to be used as last resort</li>
  * <li>ALPHA = %x41-5A / %x61-7A ; A-Z / a-z</li>
  * <li>BIT = "0" / "1"</li>
  * <li>CR = %x0D ; carriage return</li>
@@ -100,11 +100,13 @@ public class AugmentedBackusNaur extends Grammar {
 		Rule xNum = new CharacterValue("x");
 
 		// ALPHA = %x41-5A / %x61-7A ; A-Z / a-z
-		NonTerminal alpha = new NonTerminal("alpha", new Disjunction(new NumberValue(16, 'A', 'Z'), new NumberValue(16, 'a', 'z')));
+		NonTerminal alpha = new NonTerminal("alpha",
+				new Disjunction(new NumberValue(16, 'A', 'Z'), new NumberValue(16, 'a', 'z')));
 		// DIGIT = %x30-39 ; 0-9
 		NonTerminal digit = new NonTerminal("digit", new NumberValue(16, '0', '9'));
 		// WSP = SP / HTAB ; white space
-		NonTerminal wsp = new NonTerminal("wsp", CharacterValue.alternatives(false, "" + (char) 0x20, "" + (char) 0x09));
+		NonTerminal wsp = new NonTerminal("wsp",
+				CharacterValue.alternatives(false, "" + (char) 0x20, "" + (char) 0x09));
 		// CRLF = CR LF ; Internet standard newline
 		NonTerminal crlf = new NonTerminal("crlf", new CharacterValue("\r\n"));
 		// VCHAR = %x21-7E ; visible (printing) characters
@@ -114,8 +116,8 @@ public class AugmentedBackusNaur extends Grammar {
 		// BIT = "0" / "1"
 		NonTerminal bit = new NonTerminal("bit", CharacterValue.alternatives(false, "0", "1"));
 		// HEXDIG = DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
-		NonTerminal hexdig = new NonTerminal("hexdig", CharacterValue.alternatives(false, "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-				"A", "B", "C", "D", "E", "F"));
+		NonTerminal hexdig = new NonTerminal("hexdig", CharacterValue.alternatives(false, "0", "1", "2", "3", "4", "5",
+				"6", "7", "8", "9", "A", "B", "C", "D", "E", "F"));
 
 		Rule tmpRulename = new Conjunction();
 		Rule tmpAlternation = new Conjunction();
@@ -140,8 +142,11 @@ public class AugmentedBackusNaur extends Grammar {
 
 		// prose-val = "<" *(%x20-3D / %x3F-7E) ">" ; bracketed string of SP and
 		// VCHAR without angles prose description, to be used as last resort
-		NonTerminal proseVal = new NonTerminal("prose-val", new Conjunction(lll, new Repetition(
-				new Disjunction(new NumberValue(16, 0x20, 0x3d), new NumberValue(16, 0x3f, 0x7e))), rrr));
+		NonTerminal proseVal = new NonTerminal("prose-val",
+				new Conjunction(lll,
+						new Repetition(
+								new Disjunction(new NumberValue(16, 0x20, 0x3d), new NumberValue(16, 0x3f, 0x7e))),
+						rrr));
 
 		// dec-val = "d" 1*DIGIT [ 1*("." 1*DIGIT) / ("-" 1*DIGIT) ]
 		Rule rule32 = new Repetition(digit, 1, max);
@@ -165,9 +170,11 @@ public class AugmentedBackusNaur extends Grammar {
 
 		// quoted-string = DQUOTE *(%x20-21 / %x23-7E) DQUOTE ; quoted string of
 		// SP and VCHAR without DQUOTE
-		NonTerminal quotedString = new NonTerminal("quoted-string", new Conjunction(dQuote, new Repetition(
-				new Disjunction(new NumberValue(16, 0x20, 0x21), new NumberValue(16, 0x23, 0x7e))),
-				dQuote));
+		NonTerminal quotedString = new NonTerminal("quoted-string",
+				new Conjunction(dQuote,
+						new Repetition(
+								new Disjunction(new NumberValue(16, 0x20, 0x21), new NumberValue(16, 0x23, 0x7e))),
+						dQuote));
 
 		// case-insensitive-string = [ "%i" ] quoted-string
 		NonTerminal caseInsensitiveString = new NonTerminal("case-insensitive-string",

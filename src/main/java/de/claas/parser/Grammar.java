@@ -93,7 +93,7 @@ public class Grammar {
 		State state = new State(data);
 		Parser parser = new Parser(state);
 		this.start.visit(parser);
-		
+
 		Node result = parser.getResult();
 		if (result != null && !retainIntermediateNodes)
 			result.visit(new RemoveIntermediateNodes());
@@ -124,7 +124,7 @@ public class Grammar {
 		State state = new State(data);
 		Parser parser = new Parser(state);
 		this.start.visit(parser);
-		
+
 		Node result = parser.getResult();
 		if (result == null || !state.getUnprocessedData().isEmpty())
 			throw new ParserException("Could not process all tokens.");

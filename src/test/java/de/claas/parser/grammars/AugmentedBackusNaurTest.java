@@ -224,10 +224,10 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = %d12.3\r\n", false);
 
-		Rule value = new NumberValue(10, new char[]{ 12, 3});
+		Rule value = new NumberValue(10, new char[] { 12, 3 });
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
-		
+
 		NodeToString r = new NodeToString();
 		actual.visit(r);
 		String a = r.toString();
@@ -266,10 +266,10 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		Grammar grammar = build();
 		Node actual = grammar.parse("rule = %xa.bb\r\n", false);
 
-		Rule value = new NumberValue(16, new char[]{ 0xa,  0xbb });
+		Rule value = new NumberValue(16, new char[] { 0xa, 0xbb });
 		NonTerminal rule = new NonTerminal("rule", value);
 		Node expected = generateNodes(rule);
-		
+
 		NodeToString r = new NodeToString();
 		actual.visit(r);
 		String a = r.toString();

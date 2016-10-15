@@ -147,7 +147,7 @@ public abstract class NodeTest {
 		assertTrue(nodeB.equals(nodeC));
 		assertTrue(nodeA.equals(nodeC));
 	}
-	
+
 	@Test
 	public void implementationOfHashCodeShouldBeReproducible() {
 		Node node = build();
@@ -155,7 +155,7 @@ public abstract class NodeTest {
 		int hashCode2 = node.hashCode();
 		assertEquals(hashCode1, hashCode2);
 	}
-	
+
 	@Test
 	public void implementationOfHashCodeShouldBeConsistent() {
 		Node nodeA = build();
