@@ -2,7 +2,8 @@
 This is an open source library for parsing text-based inputs. PARSER makes use of context-free grammars to validate and parse sentences. Having specified such a grammar, the library takes care of parsing text-based inputs and returns a tree of nodes that represents the parsed sentence. Furthermore, it provides ways for interpreting and refining the returned tree of nodes. In essence, the library aims to remove the pain of parsing and instead allow focusing on processing and interpreting parsed results.
 
 
-## Build Status
+## Build Status and Code Quality
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/22eff15195f64ea2b3c9375f5dea82a0)](https://www.codacy.com/app/PARSER-Team/PARSER?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=claasahl/PARSER&amp;utm_campaign=Badge_Grade)
 ### develop-branch
 [![Build Status](https://travis-ci.org/claasahl/PARSER.svg?branch=develop)](https://travis-ci.org/claasahl/PARSER)
 ### master-branch
