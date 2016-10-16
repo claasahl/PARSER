@@ -236,7 +236,7 @@ public abstract class RuleTest {
 	@Test
 	public void implementationOfEqualsShouldHandleNull() {
 		Rule rule = build(defaultChildren());
-		assertFalse(rule.equals(null));
+		assertNull(rule);
 	}
 
 	@Test
