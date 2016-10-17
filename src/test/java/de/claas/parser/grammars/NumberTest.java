@@ -99,7 +99,7 @@ public class NumberTest extends GrammarTest<Number> {
 
 		if (integer != null) {
 			Node nInteger = new NonTerminalNode("integer");
-			if (integer.equals("0")) {
+			if ("0".equals(integer)) {
 				Node tZero = new TerminalNode("0");
 				Node nZero = new NonTerminalNode("zero");
 				nZero.addChild(tZero);

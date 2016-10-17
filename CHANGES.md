@@ -8,6 +8,7 @@
 - Fixed issue [#18 Avoid unused method parameters](https://github.com/claasahl/PARSER/issues/18)
 - Fixed issue [#19 Avoid empty if statements](https://github.com/claasahl/PARSER/issues/19)
 - Fixed issue [#20 Avoid using equals() to compare against null](https://github.com/claasahl/PARSER/issues/20)
+- Fixed issue [#21 Position literals first in String comparisons](https://github.com/claasahl/PARSER/issues/21)
 
 # Version 1 - Unicorn
 - Fixed issue [#1 Fix documentation errors while building](https://github.com/claasahl/PARSER/issues/1)
