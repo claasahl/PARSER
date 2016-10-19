@@ -140,7 +140,7 @@ public class NumberTest extends GrammarTest<Number> {
 			nE.addChild(tE);
 			nExp.addChild(nE);
 
-			if (sign != null && (sign.equals("-") || sign.equals("+"))) {
+			if (sign != null && ("-".equals(sign) || "+".equals(sign))) {
 				Node tSign = new TerminalNode("-".equals(sign) ? "-" : "+");
 				Node nSign = new NonTerminalNode(sign.equals("-") ? "minus" : "plus");
 				nSign.addChild(tSign);
