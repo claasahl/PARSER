@@ -370,7 +370,7 @@ public class AugmentedBackusNaurTest extends GrammarTest<AugmentedBackusNaur> {
 		assertNotNull(grammar.parse(data, false));
 	}
 
-	static Node generateNodes(NonTerminal... actualRules) {
+	protected static Node generateNodes(NonTerminal... actualRules) {
 		Set<String> visitedRules = new HashSet<>();
 		Node rulelist = new NonTerminalNode("rulelist");
 		for (NonTerminal actualRule : actualRules) {

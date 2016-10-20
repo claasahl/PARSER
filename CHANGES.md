@@ -11,6 +11,7 @@
 - Fixed issue [#21 Position literals first in String comparisons](https://github.com/claasahl/PARSER/issues/21)
 - Fixed issue [#22 Position literals first in String comparisons](https://github.com/claasahl/PARSER/issues/22)
 - Fixed issue [#23 Position literals first in String comparisons](https://github.com/claasahl/PARSER/issues/23)
+- Fixed issue [#24 Use explicit scoping instead of the default package private level](https://github.com/claasahl/PARSER/issues/24)
 
 # Version 1 - Unicorn
 - Fixed issue [#1 Fix documentation errors while building](https://github.com/claasahl/PARSER/issues/1)
