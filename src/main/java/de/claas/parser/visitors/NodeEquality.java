@@ -43,34 +43,20 @@ public class NodeEquality implements NodeVisitor {
 
 	@Override
 	public void visitTerminalNode(TerminalNode node) {
-		this.visited = true;
-		if (node == this.obj)
+		markAsVisited();
+		if (preliminaryComparison(node, this.obj))
 			return;
-		if (this.obj == null || node.getClass() != this.obj.getClass()) {
-			this.equality = false;
-			return;
-		}
+
 		TerminalNode other = (TerminalNode) this.obj;
-		if (node.getTerminal() == null) {
-			if (other.getTerminal() != null) {
-				this.equality = false;
-				return;
-			}
-		} else if (!node.getTerminal().equals(other.getTerminal())) {
-			this.equality = false;
-			return;
-		}
+		if (isUnequal(node.getTerminal(), other.getTerminal()))
+			return; // already marked as unequal
 	}
 
 	@Override
 	public void visitIntermediateNode(IntermediateNode node) {
-		this.visited = true;
-		if (node == this.obj)
+		markAsVisited();
+		if (preliminaryComparison(node, this.obj))
 			return;
-		if (this.obj == null || node.getClass() != this.obj.getClass()) {
-			this.equality = false;
-			return;
-		}
 
 		IntermediateNode other = (IntermediateNode) this.obj;
 		Integer uniqueId = new Integer(System.identityHashCode(node));
@@ -82,29 +68,85 @@ public class NodeEquality implements NodeVisitor {
 
 	@Override
 	public void visitNonTerminaNode(NonTerminalNode node) {
-		this.visited = true;
-		if (node == this.obj)
+		markAsVisited();
+		if (preliminaryComparison(node, this.obj))
 			return;
-		if (this.obj == null || node.getClass() != this.obj.getClass()) {
-			this.equality = false;
-			return;
-		}
 
 		NonTerminalNode other = (NonTerminalNode) this.obj;
-		if (node.getName() == null) {
-			if (other.getName() != null) {
-				this.equality = false;
-				return;
-			}
-		} else if (!node.getName().equals(other.getName())) {
-			this.equality = false;
-			return;
-		}
+		if (isUnequal(node.getName(), other.getName()))
+			return; // already marked as unequal
 		Integer uniqueId = new Integer(System.identityHashCode(node));
 		if (this.visitedPath.add(uniqueId)) {
 			visitChildren(node, other);
 			this.visitedPath.remove(uniqueId);
 		}
+	}
+
+	/**
+	 * Marks the two rules as unequal.
+	 */
+	private void markAsUnequal() {
+		this.equality = false;
+	}
+
+	/**
+	 * Marks this visitor as visited. Be default it is assumed that two nodes
+	 * are equal, unless proven otherwise. However, this assumption required the
+	 * visitor to be visited (otherwise any two nodes would be assumed to be
+	 * equal).
+	 */
+	private void markAsVisited() {
+		this.visited = true;
+	}
+
+	/**
+	 * Returns <code>true</code> if the two objects can already be said to be
+	 * equal (or unequal). Otherwise, <code>false</code> is returned.
+	 * <p>
+	 * <b>Side effect</b>: this method may call {@link #markAsUnequal()}
+	 * 
+	 * @param node
+	 *            the original node
+	 * @param other
+	 *            the reference node with which the original node is compared
+	 * @return <code>true</code> if the two object can already be said to be
+	 *         equal (or unequal). Otherwise, <code>false</code> is returned
+	 */
+	private boolean preliminaryComparison(Node node, Object other) {
+		if (node == other)
+			return true; // "this.equality" is already "true"
+		if (other == null || node.getClass() != other.getClass()) {
+			markAsUnequal();
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Returns <code>true</code> if the two objects can be said to be unequal.
+	 * Otherwise, <code>false</code> is returned.
+	 * <p>
+	 * <b>Side effect</b>: this method may call {@link #markAsUnequal()}
+	 * 
+	 * @param original
+	 *            the original object (e.g. name of node, terminal symbol, etc.)
+	 * @param other
+	 *            the reference object with which the original object is
+	 *            compared
+	 * @return <code>true</code> if the two objects can be said to be unequal.
+	 *         Otherwise, <code>false</code> is returned.
+	 */
+	private boolean isUnequal(Object original, Object other) {
+		if (original == null) {
+			if (other != null) {
+				markAsUnequal();
+				return true;
+			}
+		} else if (!original.equals(other)) {
+			markAsUnequal();
+			return true;
+		}
+		return false;
 	}
 
 	/**

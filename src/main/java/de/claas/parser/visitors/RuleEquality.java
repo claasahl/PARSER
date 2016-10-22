@@ -47,13 +47,9 @@ public class RuleEquality implements RuleVisitor {
 
 	@Override
 	public void visitConjunction(Conjunction rule) {
-		this.visited = true;
-		if (rule == this.obj)
+		markAsVisited();
+		if (preliminaryComparison(rule, this.obj))
 			return;
-		if (this.obj == null || rule.getClass() != this.obj.getClass()) {
-			this.equality = false;
-			return;
-		}
 
 		Conjunction other = (Conjunction) this.obj;
 		Integer uniqueId = new Integer(System.identityHashCode(rule));
@@ -65,13 +61,9 @@ public class RuleEquality implements RuleVisitor {
 
 	@Override
 	public void visitDisjunction(Disjunction rule) {
-		this.visited = true;
-		if (rule == this.obj)
+		markAsVisited();
+		if (preliminaryComparison(rule, this.obj))
 			return;
-		if (this.obj == null || rule.getClass() != this.obj.getClass()) {
-			this.equality = false;
-			return;
-		}
 
 		Disjunction other = (Disjunction) this.obj;
 		Integer uniqueId = new Integer(System.identityHashCode(rule));
@@ -83,33 +75,15 @@ public class RuleEquality implements RuleVisitor {
 
 	@Override
 	public void visitNonTerminal(NonTerminal rule) {
-		this.visited = true;
-		if (rule == this.obj)
+		markAsVisited();
+		if (preliminaryComparison(rule, this.obj))
 			return;
-		if (this.obj == null || rule.getClass() != this.obj.getClass()) {
-			this.equality = false;
-			return;
-		}
 
 		NonTerminal other = (NonTerminal) this.obj;
-		if (rule.getName() == null) {
-			if (other.getName() != null) {
-				this.equality = false;
-				return;
-			}
-		} else if (!rule.getName().equals(other.getName())) {
-			this.equality = false;
-			return;
-		}
-		if (rule.getComment() == null) {
-			if (other.getComment() != null) {
-				this.equality = false;
-				return;
-			}
-		} else if (!rule.getComment().equals(other.getComment())) {
-			this.equality = false;
-			return;
-		}
+		if (isUnequal(rule.getName(), other.getName()))
+			return; // already marked as unequal
+		if (isUnequal(rule.getComment(), other.getComment()))
+			return; // already marked as unequal
 		Integer uniqueId = new Integer(System.identityHashCode(rule));
 		if (this.visitedPath.add(uniqueId)) {
 			visitChild(rule, other);
@@ -119,13 +93,9 @@ public class RuleEquality implements RuleVisitor {
 
 	@Override
 	public void visitOptional(Optional rule) {
-		this.visited = true;
-		if (rule == this.obj)
+		markAsVisited();
+		if (preliminaryComparison(rule, this.obj))
 			return;
-		if (this.obj == null || rule.getClass() != this.obj.getClass()) {
-			this.equality = false;
-			return;
-		}
 
 		Optional other = (Optional) this.obj;
 		Integer uniqueId = new Integer(System.identityHashCode(rule));
@@ -137,18 +107,14 @@ public class RuleEquality implements RuleVisitor {
 
 	@Override
 	public void visitRepetition(Repetition rule) {
-		this.visited = true;
-		if (rule == this.obj)
+		markAsVisited();
+		if (preliminaryComparison(rule, this.obj))
 			return;
-		if (this.obj == null || rule.getClass() != this.obj.getClass()) {
-			this.equality = false;
-			return;
-		}
 
 		Repetition other = (Repetition) this.obj;
 		if (rule.getMinimumNumberOfRepetions() != other.getMinimumNumberOfRepetions()
 				|| rule.getMaximumNumberOfRepetions() != other.getMaximumNumberOfRepetions()) {
-			this.equality = false;
+			markAsUnequal();
 			return;
 		}
 		Integer uniqueId = new Integer(System.identityHashCode(rule));
@@ -160,70 +126,103 @@ public class RuleEquality implements RuleVisitor {
 
 	@Override
 	public void visitTerminal(CharacterValue rule) {
-		this.visited = true;
-		if (rule == this.obj)
+		markAsVisited();
+		if (preliminaryComparison(rule, this.obj))
 			return;
-		if (this.obj == null || rule.getClass() != this.obj.getClass()) {
-			this.equality = false;
-			return;
-		}
+
 		CharacterValue other = (CharacterValue) this.obj;
 		if (rule.isCaseSensitive() != other.isCaseSensitive()) {
-			this.equality = false;
+			markAsUnequal();
 			return;
 		}
-		if (rule.getTerminal() == null) {
-			if (other.getTerminal() != null) {
-				this.equality = false;
-				return;
-			}
-		} else if (!rule.getTerminal().equals(other.getTerminal())) {
-			this.equality = false;
-			return;
-		}
+		if (isUnequal(rule.getTerminal(), other.getTerminal()))
+			return; // already marked as unequal
 	}
 
 	@Override
 	public void visitTerminal(NumberValue rule) {
-		this.visited = true;
-		if (rule == this.obj)
+		markAsVisited();
+		if (preliminaryComparison(rule, this.obj))
 			return;
-		if (this.obj == null || rule.getClass() != this.obj.getClass()) {
-			this.equality = false;
-			return;
-		}
+
 		NumberValue other = (NumberValue) this.obj;
 		if (rule.getRadix() != other.getRadix()) {
-			this.equality = false;
+			markAsUnequal();
 			return;
 		}
-		if (rule.getTerminal() == null) {
-			if (other.getTerminal() != null) {
-				this.equality = false;
-				return;
+		if (isUnequal(rule.getTerminal(), other.getTerminal()))
+			return; // already marked as unequal
+		if (isUnequal(rule.getRangeStart(), other.getRangeStart()))
+			return; // already marked as unequal
+		if (isUnequal(rule.getRangeEnd(), other.getRangeEnd()))
+			return; // already marked as unequal
+	}
+
+	/**
+	 * Marks the two rules as unequal.
+	 */
+	private void markAsUnequal() {
+		this.equality = false;
+	}
+
+	/**
+	 * Marks this visitor as visited. Be default it is assumed that two rules
+	 * are equal, unless proven otherwise. However, this assumption required the
+	 * visitor to be visited (otherwise any two rules would be assumed to be
+	 * equal).
+	 */
+	private void markAsVisited() {
+		this.visited = true;
+	}
+
+	/**
+	 * Returns <code>true</code> if the two objects can already be said to be
+	 * equal (or unequal). Otherwise, <code>false</code> is returned.
+	 * <p>
+	 * <b>Side effect</b>: this method may call {@link #markAsUnequal()}
+	 * 
+	 * @param rule
+	 *            the original rule
+	 * @param other
+	 *            the reference rule with which the original rule is compared
+	 * @return <code>true</code> if the two object can already be said to be
+	 *         equal (or unequal). Otherwise, <code>false</code> is returned
+	 */
+	private boolean preliminaryComparison(Rule rule, Object other) {
+		if (rule == other)
+			return true; // "this.equality" is already "true"
+		if (other == null || rule.getClass() != other.getClass()) {
+			markAsUnequal();
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Returns <code>true</code> if the two objects can be said to be unequal.
+	 * Otherwise, <code>false</code> is returned.
+	 * <p>
+	 * <b>Side effect</b>: this method may call {@link #markAsUnequal()}
+	 * 
+	 * @param original
+	 *            the original object (e.g. name of rule, terminal symbol, etc.)
+	 * @param other
+	 *            the reference object with which the original object is
+	 *            compared
+	 * @return <code>true</code> if the two objects can be said to be unequal.
+	 *         Otherwise, <code>false</code> is returned.
+	 */
+	private boolean isUnequal(Object original, Object other) {
+		if (original == null) {
+			if (other != null) {
+				markAsUnequal();
+				return true;
 			}
-		} else if (!rule.getTerminal().equals(other.getTerminal())) {
-			this.equality = false;
-			return;
+		} else if (!original.equals(other)) {
+			markAsUnequal();
+			return true;
 		}
-		if (rule.getRangeStart() == null) {
-			if (other.getRangeStart() != null) {
-				this.equality = false;
-				return;
-			}
-		} else if (!rule.getRangeStart().equals(other.getRangeStart())) {
-			this.equality = false;
-			return;
-		}
-		if (rule.getRangeEnd() == null) {
-			if (other.getRangeEnd() != null) {
-				this.equality = false;
-				return;
-			}
-		} else if (!rule.getRangeEnd().equals(other.getRangeEnd())) {
-			this.equality = false;
-			return;
-		}
+		return false;
 	}
 
 	/**
