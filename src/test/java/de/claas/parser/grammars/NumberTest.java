@@ -89,73 +89,85 @@ public class NumberTest extends GrammarTest<Number> {
 	 */
 	protected static Node generateTree(boolean minus, String integer, String frac, String e, String sign, String exp) {
 		Node expected = new NonTerminalNode("number");
-
 		if (minus) {
-			Node tMinus = new TerminalNode("-");
-			Node nMinus = new NonTerminalNode("minus");
-			nMinus.addChild(tMinus);
-			expected.addChild(nMinus);
+			expected.addChild(generateMinus());
 		}
-
 		if (integer != null) {
-			Node nInteger = new NonTerminalNode("integer");
-			if ("0".equals(integer)) {
-				Node tZero = new TerminalNode("0");
-				Node nZero = new NonTerminalNode("zero");
-				nZero.addChild(tZero);
-				nInteger.addChild(nZero);
-			} else {
-				for (int i = 0; i < integer.length(); i++) {
-					Node tDigit = new TerminalNode(integer.substring(i, i + 1));
-					Node nDigit = new NonTerminalNode(i == 0 ? "digit1-9" : "digit");
-					nDigit.addChild(tDigit);
-					nInteger.addChild(nDigit);
-				}
-			}
-			expected.addChild(nInteger);
+			expected.addChild(generateIntegerPart(integer));
 		}
-
 		if (frac != null) {
-			Node nFrac = new NonTerminalNode("frac");
-
-			Node tPoint = new TerminalNode(".");
-			Node nPoint = new NonTerminalNode("decimal-point");
-			nPoint.addChild(tPoint);
-			nFrac.addChild(nPoint);
-
-			for (int i = 0; i < frac.length(); i++) {
-				Node tDigit = new TerminalNode(frac.substring(i, i + 1));
-				Node nDigit = new NonTerminalNode("digit");
-				nDigit.addChild(tDigit);
-				nFrac.addChild(nDigit);
-			}
-			expected.addChild(nFrac);
+			expected.addChild(generateFractionalPart(frac));
 		}
-
 		if (exp != null) {
-			Node nExp = new NonTerminalNode("exp");
-
-			Node tE = new TerminalNode(e);
-			Node nE = new NonTerminalNode("e");
-			nE.addChild(tE);
-			nExp.addChild(nE);
-
-			if (sign != null && ("-".equals(sign) || "+".equals(sign))) {
-				Node tSign = new TerminalNode("-".equals(sign) ? "-" : "+");
-				Node nSign = new NonTerminalNode("-".equals(sign) ? "minus" : "plus");
-				nSign.addChild(tSign);
-				nExp.addChild(nSign);
-			}
-
-			for (int i = 0; i < exp.length(); i++) {
-				Node tDigit = new TerminalNode(exp.substring(i, i + 1));
-				Node nDigit = new NonTerminalNode("digit");
-				nDigit.addChild(tDigit);
-				nExp.addChild(nDigit);
-			}
-			expected.addChild(nExp);
+			expected.addChild(generateExponentPart(e, sign, exp));
 		}
 		return expected;
+	}
+
+	private static Node generateMinus() {
+		Node tMinus = new TerminalNode("-");
+		Node nMinus = new NonTerminalNode("minus");
+		nMinus.addChild(tMinus);
+		return nMinus;
+	}
+
+	private static Node generateIntegerPart(String integer) {
+		Node nInteger = new NonTerminalNode("integer");
+		if ("0".equals(integer)) {
+			Node tZero = new TerminalNode("0");
+			Node nZero = new NonTerminalNode("zero");
+			nZero.addChild(tZero);
+			nInteger.addChild(nZero);
+		} else {
+			for (int i = 0; i < integer.length(); i++) {
+				Node tDigit = new TerminalNode(integer.substring(i, i + 1));
+				Node nDigit = new NonTerminalNode(i == 0 ? "digit1-9" : "digit");
+				nDigit.addChild(tDigit);
+				nInteger.addChild(nDigit);
+			}
+		}
+		return nInteger;
+	}
+
+	private static Node generateFractionalPart(String frac) {
+		Node nFrac = new NonTerminalNode("frac");
+
+		Node tPoint = new TerminalNode(".");
+		Node nPoint = new NonTerminalNode("decimal-point");
+		nPoint.addChild(tPoint);
+		nFrac.addChild(nPoint);
+
+		for (int i = 0; i < frac.length(); i++) {
+			Node tDigit = new TerminalNode(frac.substring(i, i + 1));
+			Node nDigit = new NonTerminalNode("digit");
+			nDigit.addChild(tDigit);
+			nFrac.addChild(nDigit);
+		}
+		return nFrac;
+	}
+
+	private static Node generateExponentPart(String e, String sign, String exp) {
+		Node nExp = new NonTerminalNode("exp");
+
+		Node tE = new TerminalNode(e);
+		Node nE = new NonTerminalNode("e");
+		nE.addChild(tE);
+		nExp.addChild(nE);
+
+		if (sign != null && ("-".equals(sign) || "+".equals(sign))) {
+			Node tSign = new TerminalNode("-".equals(sign) ? "-" : "+");
+			Node nSign = new NonTerminalNode("-".equals(sign) ? "minus" : "plus");
+			nSign.addChild(tSign);
+			nExp.addChild(nSign);
+		}
+
+		for (int i = 0; i < exp.length(); i++) {
+			Node tDigit = new TerminalNode(exp.substring(i, i + 1));
+			Node nDigit = new NonTerminalNode("digit");
+			nDigit.addChild(tDigit);
+			nExp.addChild(nDigit);
+		}
+		return nExp;
 	}
 
 }

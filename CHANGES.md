@@ -14,6 +14,7 @@
 - Fixed issue [#24 Use explicit scoping instead of the default package private level](https://github.com/claasahl/PARSER/issues/24)
 - Fixed issue [#25 Use explicit scoping instead of the default package private level](https://github.com/claasahl/PARSER/issues/25)
 - Fixed issue [#26 The method visitTerminal() has an NPath complexity of 768](https://github.com/claasahl/PARSER/issues/26)
+- Fixed issue [#33 The method generateTree() has an NPath complexity of 2736](https://github.com/claasahl/PARSER/issues/33)
 
 # Version 1 - Unicorn
 - Fixed issue [#1 Fix documentation errors while building](https://github.com/claasahl/PARSER/issues/1)
