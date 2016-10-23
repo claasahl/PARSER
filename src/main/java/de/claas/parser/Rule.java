@@ -72,7 +72,7 @@ public abstract class Rule implements Iterable<Rule> {
 	 */
 	public boolean addChild(Rule rule) {
 		invalidateHashCode();
-		return rule != null ? this.children.add(rule) : false;
+		return rule != null && this.children.add(rule);
 	}
 
 	/**
