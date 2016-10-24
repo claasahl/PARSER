@@ -3,6 +3,8 @@ package de.claas.parser.visitors;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.IntFunction;
+import java.util.stream.Collectors;
 
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
@@ -131,26 +133,57 @@ public class RuleToString implements RuleVisitor {
 	@Override
 	public void visitTerminal(NumberValue rule) {
 		int radix = rule.getRadix();
-		String marker = "";
-		marker = radix == 16 ? "x" : marker;
-		marker = radix == 10 ? "d" : marker;
-		marker = radix == 2 ? "b" : marker;
 		if (rule.getTerminal() != null) {
 			String terminal = rule.getTerminal();
-			StringBuilder stringBuilder = new StringBuilder();
-			stringBuilder.append("%");
-			stringBuilder.append(marker);
-			for (int index = 0; index < terminal.length(); index++) {
-				String number = Integer.toString(terminal.charAt(index), radix);
-				stringBuilder.append(number);
-				if (index + 1 < terminal.length())
-					stringBuilder.append(".");
-			}
-			appendRule(rule, stringBuilder.toString());
+			appendRule(rule, stringifyTerminal(radix, terminal));
 		} else {
 			String start = Integer.toString(rule.getRangeStart().charValue(), radix);
 			String end = Integer.toString(rule.getRangeEnd().charValue(), radix);
-			appendRule(rule, String.format("%%%s%s-%s", marker, start, end));
+			appendRule(rule, String.format("%%%s%s-%s", marker(radix), start, end));
+		}
+	}
+
+	/**
+	 * A support function that returns a textual representation of the specified
+	 * terminal symbol.
+	 * 
+	 * @param radix
+	 *            the radix
+	 * @param terminal
+	 *            the terminal symbol
+	 * @return a textual representation of the specified terminal symbol
+	 */
+	private static String stringifyTerminal(int radix, String terminal) {
+		IntFunction<? extends String> mapper = (c) -> Integer.toString(c, radix);
+		String value = terminal.chars().mapToObj(mapper).collect(Collectors.joining("."));
+
+		StringBuilder builder = new StringBuilder();
+		builder.append("%");
+		builder.append(marker(radix));
+		builder.append(value);
+		return builder.toString();
+	}
+
+	/**
+	 * A support function that returns the ABFN marker for the specified radix.
+	 * Only radix 16, 10 and 2 are supported! Any other radix will return an
+	 * empty string.
+	 * 
+	 * @param radix
+	 *            the radix
+	 * @return the ABFN marker for the specified radix, an empty string if the
+	 *         radix is not valid / supported
+	 */
+	private static String marker(int radix) {
+		switch (radix) {
+		case 16:
+			return "x";
+		case 10:
+			return "d";
+		case 2:
+			return "b";
+		default:
+			return "";
 		}
 	}
 
