@@ -237,5 +237,28 @@ public class AugmentedBackusNaur extends Grammar {
 		NonTerminal ruleList = new NonTerminal("rulelist", new Repetition(rule34, 1, max));
 		return ruleList;
 	}
+	
+	/**
+	 * A support function that returns the ABFN marker for the specified radix.
+	 * Only radix 16, 10 and 2 are supported! Any other radix will return an
+	 * empty string.
+	 * 
+	 * @param radix
+	 *            the radix
+	 * @return the ABFN marker for the specified radix, an empty string if the
+	 *         radix is not valid / supported
+	 */
+	protected static String marker(int radix) {
+		switch (radix) {
+		case 16:
+			return "x";
+		case 10:
+			return "d";
+		case 2:
+			return "b";
+		default:
+			return "";
+		}
+	}
 
 }

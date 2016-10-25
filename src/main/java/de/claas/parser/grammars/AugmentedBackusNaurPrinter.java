@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.IntFunction;
+import java.util.stream.Collectors;
 
 import de.claas.parser.Grammar;
 import de.claas.parser.Rule;
@@ -246,20 +248,15 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 		@Override
 		public void visitTerminal(NumberValue rule) {
 			int radix = rule.getRadix();
-			String marker = "";
-			marker = radix == 16 ? "x" : marker;
-			marker = radix == 10 ? "d" : marker;
-			marker = radix == 2 ? "b" : marker;
+			String marker = AugmentedBackusNaur.marker(radix);
 			if (rule.getTerminal() != null) {
 				String terminal = rule.getTerminal();
+				IntFunction<? extends String> mapper = (c) -> Integer.toString(c, radix);
+				String value = terminal.chars().mapToObj(mapper).collect(Collectors.joining("."));
+				
 				this.stringBuilder.append("%");
 				this.stringBuilder.append(marker);
-				for (int index = 0; index < terminal.length(); index++) {
-					String number = Integer.toString(terminal.charAt(index), radix);
-					this.stringBuilder.append(number);
-					if (index + 1 < terminal.length())
-						this.stringBuilder.append(".");
-				}
+				this.stringBuilder.append(value);
 			} else {
 				String start = Integer.toString(rule.getRangeStart().charValue(), radix);
 				String end = Integer.toString(rule.getRangeEnd().charValue(), radix);
