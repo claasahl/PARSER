@@ -76,39 +76,22 @@ public class NumberInterpreter extends Interpreter<java.lang.Number> {
 	 * @return the number that the specified node represents
 	 */
 	private java.lang.Number visitNumber(NonTerminalNode node) {
-		java.lang.Number sign = new Integer(1);
-		java.lang.Number integer = null;
-		java.lang.Number exponent = null;
-		java.lang.Number fraction = null;
 		Iterator<Node> children = node.iterator();
-		Node child = children.hasNext() ? children.next() : null;
+		Node child = nextChild(true, null, children);
 
-		expectNonTerminalNode("minus");
-		if (child != null && isExpected(child)) {
-			child.visit(this);
-			sign = getResult();
-			child = children.next();
+		java.lang.Number sign = handleSign(child);
+		child = nextChild(sign != null, child, children);
+		if (sign == null) {
+			sign = new Integer(1);
 		}
 
-		expectNonTerminalNode("integer");
-		if (child != null) {
-			child.visit(this);
-			integer = getResult();
-			child = children.hasNext() ? children.next() : null;
-		}
+		java.lang.Number integer = handleInteger(child);
+		child = nextChild(integer != null, child, children);
 
-		expectNonTerminalNode("frac");
-		if (child != null && isExpected(child)) {
-			child.visit(this);
-			fraction = getResult();
-			child = children.hasNext() ? children.next() : null;
-		}
+		java.lang.Number fraction = handleFraction(child);
+		child = nextChild(fraction != null, child, children);
 
-		expectNonTerminalNode("exp");
-		if (child != null && isExpected(child)) {
-			child.visit(this);
-			exponent = getResult();
-		}
+		java.lang.Number exponent = handleExponent(child);
 
 		if (integer == null)
 			throw new InterpreterException("NonTerminal with name 'integer' is required.");
@@ -121,6 +104,106 @@ public class NumberInterpreter extends Interpreter<java.lang.Number> {
 			return new Double(integer.doubleValue() * exponent.doubleValue() * sign.doubleValue());
 		else
 			return new Integer(integer.intValue() * sign.intValue());
+	}
+
+	/**
+	 * A support method that tries to process the specified node as minus sign.
+	 * Returns the number negative one if the specified node can interpreted as
+	 * minus sign. Otherwise <code>null</code> is returned.
+	 * 
+	 * @param child
+	 *            the node
+	 * @return the number negative one if the specified node can interpreted as
+	 *         minus sign, otherwise <code>null</code>
+	 */
+	private java.lang.Number handleSign(Node child) {
+		java.lang.Number sign = null;
+		expectNonTerminalNode("minus");
+		if (child != null && isExpected(child)) {
+			child.visit(this);
+			sign = getResult();
+		}
+		return sign;
+	}
+
+	/**
+	 * A support method that tries to process the specified node as integer-part
+	 * of a number. Returns the corresponding number if the specified node can
+	 * be interpreted as integer-part. Otherwise <code>null</code> is returned.
+	 * 
+	 * @param child
+	 *            the node
+	 * @return the corresponding number if the specified node can interpreted as
+	 *         integer-part, otherwise <code>null</code>
+	 */
+	private java.lang.Number handleInteger(Node child) {
+		java.lang.Number integer = null;
+		expectNonTerminalNode("integer");
+		if (child != null) {
+			child.visit(this);
+			integer = getResult();
+		}
+		return integer;
+	}
+
+	/**
+	 * A support method that tries to process the specified node as
+	 * fractional-part of a number. Returns the fractional-part as integer if
+	 * the specified node can be interpreted as fractional-part. Otherwise
+	 * <code>null</code> is returned.
+	 * 
+	 * @param child
+	 *            the node
+	 * @return the fractional-part as integer if the specified node can
+	 *         interpreted as fractional-part, otherwise <code>null</code>
+	 */
+	private java.lang.Number handleFraction(Node child) {
+		java.lang.Number fraction = null;
+		expectNonTerminalNode("frac");
+		if (child != null && isExpected(child)) {
+			child.visit(this);
+			fraction = getResult();
+		}
+		return fraction;
+	}
+
+	/**
+	 * A support method that tries to process the specified node as
+	 * exponent-part of a number. Returns the exponent-part as integer if the
+	 * specified node can be interpreted as exponent-part. Otherwise
+	 * <code>null</code> is returned.
+	 * 
+	 * @param child
+	 *            the node
+	 * @return the exponent-part as integer if the specified node can
+	 *         interpreted as exponent-part, otherwise <code>null</code>
+	 */
+	private java.lang.Number handleExponent(Node child) {
+		java.lang.Number exponent = null;
+		expectNonTerminalNode("exp");
+		if (child != null && isExpected(child)) {
+			child.visit(this);
+			exponent = getResult();
+		}
+		return exponent;
+	}
+
+	/**
+	 * A support method that tries to simplify the process of moving to the next
+	 * child. Returns the next child if the condition is fulfilled and there is
+	 * a next child. Otherwise, the current / most recent child is returned.
+	 * 
+	 * @param condition
+	 *            whether the next child should be attempted to be retrieved
+	 * @param child
+	 *            the current / most recent child
+	 * @param children
+	 *            the "list" of children
+	 * @return the next child if the condition is fulfilled and there is a next
+	 *         child, otherwise the current / most recent child
+	 */
+	private static Node nextChild(boolean condition, Node child, Iterator<Node> children) {
+		return condition && children.hasNext() ? children.next() : child;
 	}
 
 	/**
