@@ -30,32 +30,32 @@ public class NumberTest extends GrammarTest<Number> {
 	@Test
 	public void shouldHandleIntegers() {
 		Grammar grammar = build();
-		assertEquals(generateTree(false, "23", null, null, null, null), grammar.parse("23"));
-		assertEquals(generateTree(true, "42", null, null, null, null), grammar.parse("-42"));
+		assertEquals(generate(false, "23", null, null, null, null), grammar.parse("23"));
+		assertEquals(generate(true, "42", null, null, null, null), grammar.parse("-42"));
 	}
 
 	@Test
 	public void shouldHandleFractionalNumbers() {
 		Grammar grammar = build();
-		assertEquals(generateTree(false, "23", "43", null, null, null), grammar.parse("23.43"));
-		assertEquals(generateTree(true, "42", "111111111111111111111111112", null, null, null),
+		assertEquals(generate(false, "23", "43", null, null, null), grammar.parse("23.43"));
+		assertEquals(generate(true, "42", "111111111111111111111111112", null, null, null),
 				grammar.parse("-42.111111111111111111111111112"));
 	}
 
 	@Test
 	public void shouldHandleExponentialNumbers() {
 		Grammar grammar = build();
-		assertEquals(generateTree(false, "23", null, "e", "-", "9"), grammar.parse("23e-9"));
-		assertEquals(generateTree(true, "42", null, "E", "+", "8"), grammar.parse("-42E+8"));
-		assertEquals(generateTree(false, "23", "43", "E", null, "777"), grammar.parse("23.43E777"));
-		assertEquals(generateTree(true, "42", "111111111111111111111111112", "e", "-", "66"),
+		assertEquals(generate(false, "23", null, "e", "-", "9"), grammar.parse("23e-9"));
+		assertEquals(generate(true, "42", null, "E", "+", "8"), grammar.parse("-42E+8"));
+		assertEquals(generate(false, "23", "43", "E", null, "777"), grammar.parse("23.43E777"));
+		assertEquals(generate(true, "42", "111111111111111111111111112", "e", "-", "66"),
 				grammar.parse("-42.111111111111111111111111112e-66"));
 	}
 
 	@Test
 	public void shouldHandleZero() {
 		Grammar grammar = build();
-		assertEquals(generateTree(false, "0", null, null, null, null), grammar.parse("0"));
+		assertEquals(generate(false, "0", null, null, null, null), grammar.parse("0"));
 	}
 
 	@Test(expected = ParserException.class)
@@ -71,7 +71,8 @@ public class NumberTest extends GrammarTest<Number> {
 	}
 
 	/**
-	 * Returns a tree of nodes for the specified number.
+	 * A support function for generating a node that encapsulates a complete
+	 * number as represented by the {@link Number}-grammar.
 	 * 
 	 * @param minus
 	 *            whether (or not) a minus sign needs to be prefixed
@@ -85,9 +86,10 @@ public class NumberTest extends GrammarTest<Number> {
 	 *            the sign of the number's exponential part (if any)
 	 * @param exp
 	 *            the number's exponential part
-	 * @return
+	 * @return a node that encapsulates a complete number as represented by the
+	 *         {@link Number}-grammar
 	 */
-	protected static Node generateTree(boolean minus, String integer, String frac, String e, String sign, String exp) {
+	protected static Node generate(boolean minus, String integer, String frac, String e, String sign, String exp) {
 		Node expected = new NonTerminalNode("number");
 		if (minus) {
 			expected.addChild(generateMinus());
@@ -104,6 +106,11 @@ public class NumberTest extends GrammarTest<Number> {
 		return expected;
 	}
 
+	/**
+	 * A support function for generating a node that encapsulates a minus sign.
+	 * 
+	 * @return a node that encapsulates a minus sign
+	 */
 	private static Node generateMinus() {
 		Node tMinus = new TerminalNode("-");
 		Node nMinus = new NonTerminalNode("minus");
@@ -111,6 +118,14 @@ public class NumberTest extends GrammarTest<Number> {
 		return nMinus;
 	}
 
+	/**
+	 * A support function for generating a node that encapsulates the
+	 * integer-part of a number.
+	 * 
+	 * @param integer
+	 *            the integer-part
+	 * @return a node that encapsulates the integer-part of a number
+	 */
 	private static Node generateIntegerPart(String integer) {
 		Node nInteger = new NonTerminalNode("integer");
 		if ("0".equals(integer)) {
@@ -129,6 +144,14 @@ public class NumberTest extends GrammarTest<Number> {
 		return nInteger;
 	}
 
+	/**
+	 * A support function for generating a node that encapsulates the
+	 * fractional-part of a number.
+	 * 
+	 * @param frac
+	 *            the fractional-part
+	 * @return a node that encapsulates the fraction-part of a number
+	 */
 	private static Node generateFractionalPart(String frac) {
 		Node nFrac = new NonTerminalNode("frac");
 
@@ -146,6 +169,18 @@ public class NumberTest extends GrammarTest<Number> {
 		return nFrac;
 	}
 
+	/**
+	 * A support function for generating a node that encapsulates the
+	 * exponent-part of a number.
+	 * 
+	 * @param e
+	 *            the 'e'-sign of the number's exponential part (if any)
+	 * @param sign
+	 *            the sign of the number's exponential part (if any)
+	 * @param exp
+	 *            the number's exponential part
+	 * @return a node that encapsulates the exponent-part of a number
+	 */
 	private static Node generateExponentPart(String e, String sign, String exp) {
 		Node nExp = new NonTerminalNode("exp");
 
