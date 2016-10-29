@@ -132,11 +132,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			}
 
 			// skip whitespace
-			expectNonTerminalNode("c-wsp");
-			while (isExpected(child) && children.hasNext()) {
-				child.visit(this);
-				child = children.next();
-			}
+			child = visitWhitespace(child, children);
 			expectNonTerminalNode("c-nl");
 			child.visit(this);
 		}
@@ -201,11 +197,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			child = children.hasNext() ? children.next() : null;
 		}
 
-		expectNonTerminalNode("c-wsp");
-		while (child != null && isExpected(child) && children.hasNext()) {
-			child.visit(this);
-			child = children.next();
-		}
+		child = visitWhitespace(child, children);
 		return rule;
 	}
 
@@ -223,12 +215,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		}
 
 		while (child != null && rule != null) {
-			expectNonTerminalNode("c-wsp");
-			while (child != null && isExpected(child) && children.hasNext()) {
-				child.visit(this);
-				child = children.next();
-			}
-
+			child = visitWhitespace(child, children);
 			expectTerminalNode();
 			if (child != null) {
 				String slash = concatTerminals(child);
@@ -239,12 +226,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 				child = children.hasNext() ? children.next() : null;
 			}
 
-			expectNonTerminalNode("c-wsp");
-			while (child != null && isExpected(child) && children.hasNext()) {
-				child.visit(this);
-				child = children.next();
-			}
-
+			child = visitWhitespace(child, children);
 			expectNonTerminalNode("concatenation");
 			if (child != null) {
 				child.visit(this);
@@ -383,12 +365,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			child = children.hasNext() ? children.next() : null;
 		}
 
-		expectNonTerminalNode("c-wsp");
-		while (child != null && isExpected(child) && children.hasNext()) {
-			child.visit(this);
-			child = children.next();
-		}
-
+		child = visitWhitespace(child, children);
 		expectNonTerminalNode("alternation");
 		if (child != null) {
 			child.visit(this);
@@ -396,12 +373,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			child = children.hasNext() ? children.next() : null;
 		}
 
-		expectNonTerminalNode("c-wsp");
-		while (child != null && isExpected(child) && children.hasNext()) {
-			child.visit(this);
-			child = children.next();
-		}
-
+		child = visitWhitespace(child, children);
 		expectTerminalNode();
 		if (child != null) {
 			String bracket = concatTerminals(child);
@@ -430,12 +402,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			child = children.hasNext() ? children.next() : null;
 		}
 
-		expectNonTerminalNode("c-wsp");
-		while (child != null && isExpected(child) && children.hasNext()) {
-			child.visit(this);
-			child = children.next();
-		}
-
+		child = visitWhitespace(child, children);
 		expectNonTerminalNode("alternation");
 		if (child != null) {
 			child.visit(this);
@@ -443,12 +410,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			child = children.hasNext() ? children.next() : null;
 		}
 
-		expectNonTerminalNode("c-wsp");
-		while (child != null && isExpected(child) && children.hasNext()) {
-			child.visit(this);
-			child = children.next();
-		}
-
+		child = visitWhitespace(child, children);
 		expectTerminalNode();
 		if (child != null) {
 			String bracket = concatTerminals(child);
@@ -664,6 +626,15 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			throw new InterpreterException("Expected 'prose-val' to start with '<' and end with '>', but it did not.");
 		}
 		return rule;
+	}
+
+	private Node visitWhitespace(Node child, Iterator<Node> children) {
+		expectNonTerminalNode("c-wsp");
+		while (child != null && isExpected(child) && children.hasNext()) {
+			child.visit(this);
+			child = children.next();
+		}
+		return child;
 	}
 
 }
