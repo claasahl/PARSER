@@ -113,6 +113,14 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		}
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "rulelist".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the rule(s) that the specified node represents
+	 */
 	private Rule visitRulelist(NonTerminalNode node) {
 		if (!node.hasChildren()) {
 			String msg = "At least one rule is required!";
@@ -132,7 +140,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			}
 
 			// skip whitespace
-			child = visitWhitespace(child, children);
+			child = skipWhitespace(child, children);
 			expectNonTerminalNode("c-nl");
 			child.visit(this);
 		}
@@ -143,6 +151,14 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		return firstRule;
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "rule".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the rule that the specified node represents
+	 */
 	private Rule visitRule(NonTerminalNode node) {
 		NonTerminal rule = null;
 		String ruleName = null;
@@ -185,6 +201,14 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		return rule;
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "elements".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the rule that the specified node represents
+	 */
 	private Rule visitElements(NonTerminalNode node) {
 		Rule rule = null;
 		Iterator<Node> children = node.iterator();
@@ -197,10 +221,18 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			child = children.hasNext() ? children.next() : null;
 		}
 
-		child = visitWhitespace(child, children);
+		child = skipWhitespace(child, children);
 		return rule;
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "alternation".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the rule that the specified node represents
+	 */
 	private Rule visitAlternation(NonTerminalNode node) {
 		boolean createdDisjunction = false;
 		Rule rule = null;
@@ -215,7 +247,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		}
 
 		while (child != null && rule != null) {
-			child = visitWhitespace(child, children);
+			child = skipWhitespace(child, children);
 			expectTerminalNode();
 			if (child != null) {
 				String slash = concatTerminals(child);
@@ -226,7 +258,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 				child = children.hasNext() ? children.next() : null;
 			}
 
-			child = visitWhitespace(child, children);
+			child = skipWhitespace(child, children);
 			expectNonTerminalNode("concatenation");
 			if (child != null) {
 				child.visit(this);
@@ -242,6 +274,14 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		return rule;
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "concatenation".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the rule that the specified node represents
+	 */
 	private Rule visitConcatenation(NonTerminalNode node) {
 		boolean createdConjunction = false;
 		Rule rule = null;
@@ -278,6 +318,14 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		return rule;
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "repetition".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the rule that the specified node represents
+	 */
 	private Rule visitRepetition(NonTerminalNode node) {
 		Rule rule = null;
 		int minRepetitions = 1;
@@ -306,6 +354,14 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		return rule;
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "repeat".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the rule that the specified node represents
+	 */
 	private Rule visitRepeat(NonTerminalNode node) {
 		Rule rule = null;
 		String repeat = concatTerminals(node);
@@ -325,6 +381,14 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		return rule;
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "element".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the rule that the specified node represents
+	 */
 	private Rule visitElement(NonTerminalNode node) {
 		Rule rule = null;
 		Iterator<Node> children = node.iterator();
@@ -349,8 +413,15 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		return rule;
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "group".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the rule that the specified node represents
+	 */
 	private Rule visitGroup(NonTerminalNode node) {
-		// "(" *c-wsp alternation *c-wsp ")"
 		Rule rule = null;
 		Iterator<Node> children = node.iterator();
 		Node child = children.hasNext() ? children.next() : null;
@@ -365,7 +436,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			child = children.hasNext() ? children.next() : null;
 		}
 
-		child = visitWhitespace(child, children);
+		child = skipWhitespace(child, children);
 		expectNonTerminalNode("alternation");
 		if (child != null) {
 			child.visit(this);
@@ -373,7 +444,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			child = children.hasNext() ? children.next() : null;
 		}
 
-		child = visitWhitespace(child, children);
+		child = skipWhitespace(child, children);
 		expectTerminalNode();
 		if (child != null) {
 			String bracket = concatTerminals(child);
@@ -387,6 +458,14 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		return rule;
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "option".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the rule that the specified node represents
+	 */
 	private Rule visitOption(NonTerminalNode node) {
 		Rule rule = null;
 		Iterator<Node> children = node.iterator();
@@ -402,7 +481,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			child = children.hasNext() ? children.next() : null;
 		}
 
-		child = visitWhitespace(child, children);
+		child = skipWhitespace(child, children);
 		expectNonTerminalNode("alternation");
 		if (child != null) {
 			child.visit(this);
@@ -410,7 +489,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			child = children.hasNext() ? children.next() : null;
 		}
 
-		child = visitWhitespace(child, children);
+		child = skipWhitespace(child, children);
 		expectTerminalNode();
 		if (child != null) {
 			String bracket = concatTerminals(child);
@@ -424,6 +503,14 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		return rule;
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "char-val".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the rule that the specified node represents
+	 */
 	private Rule visitCharVal(NonTerminalNode node) {
 		Rule rule = null;
 		Iterator<Node> children = node.iterator();
@@ -438,6 +525,14 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		return rule;
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "case-insensitive-string".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the rule that the specified node represents
+	 */
 	private Rule visitCaseInsensitiveString(NonTerminalNode node) {
 		Rule rule = null;
 		Iterator<Node> children = node.iterator();
@@ -468,6 +563,14 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		return rule;
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "case-sensitive-string".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the rule that the specified node represents
+	 */
 	private Rule visitCaseSensitiveString(NonTerminalNode node) {
 		Rule rule = null;
 		Iterator<Node> children = node.iterator();
@@ -498,6 +601,14 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		return rule;
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "num-val".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the rule that the specified node represents
+	 */
 	private Rule visitNumVal(NonTerminalNode node) {
 		Rule rule = null;
 		Iterator<Node> children = node.iterator();
@@ -522,18 +633,78 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		return rule;
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "bin-val".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the rule that the specified node represents
+	 */
 	private Rule visitBinVal(NonTerminalNode node) {
 		return visitNumericVal(node, "b", "bit", 2);
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "dec-val".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the rule that the specified node represents
+	 */
 	private Rule visitDecVal(NonTerminalNode node) {
 		return visitNumericVal(node, "d", "digit", 10);
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "hex-val".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the rule that the specified node represents
+	 */
 	private Rule visitHexVal(NonTerminalNode node) {
 		return visitNumericVal(node, "x", "hexdig", 16);
 	}
 
+	/**
+	 * Called by this interpreter with the intention of interpreting
+	 * {@link NonTerminalNode}-nodes of type "prose-val".
+	 * 
+	 * @param node
+	 *            the node
+	 * @return the rule that the specified node represents
+	 */
+	private Rule visitProseVal(NonTerminalNode node) {
+		Rule rule = null;
+
+		String quotedString = concatTerminals(node);
+		if (quotedString.startsWith("<") && quotedString.endsWith(">")) {
+			int length = quotedString.length();
+			String quote = quotedString.substring(1, length - 1);
+			rule = new CharacterValue(true, quote);
+		} else {
+			throw new InterpreterException("Expected 'prose-val' to start with '<' and end with '>', but it did not.");
+		}
+		return rule;
+	}
+
+	/**
+	 * A support method that tries to process the specified node as numeric
+	 * value of the specified type (i.e. radix, marker, etc.).
+	 * 
+	 * @param node
+	 *            the node
+	 * @param expectedMarker
+	 *            the expected marker (e.g. "b" for binary values)
+	 * @param expectedNonTerminal
+	 *            the expected non-terminal (e.g. "bit" for binary values)
+	 * @param radix
+	 *            the radix of the numeric value (e.g. 2 for binary values)
+	 * @return the rule that the specified node represents
+	 */
 	private Rule visitNumericVal(NonTerminalNode node, String expectedMarker, String expectedNonTerminal, int radix) {
 		List<String> terminals = new ArrayList<>();
 		int rangeStart = -1;
@@ -614,21 +785,17 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		return CharacterValue.alternatives(true, terminals.toArray(new String[0]));
 	}
 
-	private Rule visitProseVal(NonTerminalNode node) {
-		Rule rule = null;
-
-		String quotedString = concatTerminals(node);
-		if (quotedString.startsWith("<") && quotedString.endsWith(">")) {
-			int length = quotedString.length();
-			String quote = quotedString.substring(1, length - 1);
-			rule = new CharacterValue(true, quote);
-		} else {
-			throw new InterpreterException("Expected 'prose-val' to start with '<' and end with '>', but it did not.");
-		}
-		return rule;
-	}
-
-	private Node visitWhitespace(Node child, Iterator<Node> children) {
+	/**
+	 * A support function that skips any number of "c-wsp"-nodes. Returns the
+	 * first child is not a "c-wsp"-node.
+	 * 
+	 * @param child
+	 *            the current / most recent child
+	 * @param children
+	 *            the "list" of children
+	 * @return the first child is not a "c-wsp"-node
+	 */
+	private Node skipWhitespace(Node child, Iterator<Node> children) {
 		expectNonTerminalNode("c-wsp");
 		while (child != null && isExpected(child) && children.hasNext()) {
 			child.visit(this);
