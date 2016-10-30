@@ -161,17 +161,12 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 	 */
 	private Rule visitRule(NonTerminalNode node) {
 		NonTerminal rule = null;
-		String ruleName = null;
 		boolean alternative = false;
 		Iterator<Node> children = node.iterator();
 		Node child = children.hasNext() ? children.next() : null;
 
-		expectNonTerminalNode("rulename");
-		if (child != null) {
-			child.visit(this);
-			ruleName = concatTerminals(child);
-			child = children.hasNext() ? children.next() : null;
-		}
+		String ruleName = handleRuleName(child, false);
+		child = nextChild(ruleName != null, child, children);
 
 		expectNonTerminalNode("defined-as");
 		if (child != null) {
@@ -392,16 +387,15 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 	private Rule visitElement(NonTerminalNode node) {
 		Rule rule = null;
 		Iterator<Node> children = node.iterator();
-		Node child = children.hasNext() ? children.next() : null;
+		Node child = nextChild(true, null, children);
 
-		expectNonTerminalNode("rulename");
-		if (child != null && isExpected(child)) {
-			String ruleName = concatTerminals(child);
+		String ruleName = handleRuleName(child, true);
+		if (ruleName != null) {
 			if (!this.rules.containsKey(ruleName)) {
 				this.rules.put(ruleName, new NonTerminal(ruleName));
 			}
 			rule = this.rules.get(ruleName);
-			child = children.hasNext() ? children.next() : null;
+			child = nextChild(true, child, children);
 		}
 
 		expectNonTerminalNode("group", "option", "char-val", "num-val", "prose-val");
@@ -786,6 +780,25 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 	}
 
 	/**
+	 * A support function that tries to simplify the process of moving to the
+	 * next child. Returns the next child if the condition is fulfilled and
+	 * there is a next child. Otherwise, the current / most recent child is
+	 * returned.
+	 * 
+	 * @param condition
+	 *            whether the next child should be attempted to be retrieved
+	 * @param child
+	 *            the current / most recent child
+	 * @param children
+	 *            the "list" of children
+	 * @return the next child if the condition is fulfilled and there is a next
+	 *         child, otherwise the current / most recent child
+	 */
+	private static Node nextChild(boolean condition, Node child, Iterator<Node> children) {
+		return condition && children.hasNext() ? children.next() : child;
+	}
+
+	/**
 	 * A support function that skips any number of "c-wsp"-nodes. Returns the
 	 * first child is not a "c-wsp"-node.
 	 * 
@@ -802,6 +815,16 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			child = children.next();
 		}
 		return child;
+	}
+
+	private String handleRuleName(Node node, boolean optional) {
+		String ruleName = null;
+		expectNonTerminalNode("rulename");
+		if (node != null && (isExpected(node) && optional || !optional)) {
+			node.visit(this);
+			ruleName = concatTerminals(node);
+		}
+		return ruleName;
 	}
 
 }
