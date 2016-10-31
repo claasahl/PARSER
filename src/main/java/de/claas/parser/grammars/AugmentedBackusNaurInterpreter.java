@@ -134,8 +134,9 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			expectNonTerminalNode("rule");
 			if (isExpected(child)) {
 				child.visit(this);
-				if (firstRule == null)
+				if (firstRule == null) {
 					firstRule = getResult();
+				}
 				continue;
 			}
 
@@ -146,8 +147,9 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		}
 
 		// update references to NonTerminals
-		if (firstRule != null)
+		if (firstRule != null) {
 			firstRule.visit(new UpdateNonTerminalReferences(this.rules.values()));
+		}
 		return firstRule;
 	}
 
@@ -339,10 +341,11 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		expectNonTerminalNode("element");
 		if (child != null) {
 			child.visit(this);
-			if (minRepetitions == 1 && maxRepetitions == 1)
+			if (minRepetitions == 1 && maxRepetitions == 1) {
 				rule = getResult();
-			else
+			} else {
 				rule = new Repetition(getResult(), minRepetitions, maxRepetitions);
+			}
 			child = nextChild(true, null, children);
 		}
 		return rule;
@@ -772,8 +775,9 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		}
 
 		if (rangeStart >= 0 && rangeEnd >= rangeStart) {
-			for (int number = rangeStart; number <= rangeEnd; number++)
+			for (int number = rangeStart; number <= rangeEnd; number++) {
 				terminals.add("" + (char) number);
+			}
 		}
 		return CharacterValue.alternatives(true, terminals.toArray(new String[0]));
 	}
