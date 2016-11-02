@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 import de.claas.parser.Node;
 import de.claas.parser.Rule;
@@ -32,11 +33,12 @@ import de.claas.parser.rules.Repetition;
  *
  */
 public class AugmentedBackusNaurBuilder {
-	
+
 	private final List<NonTerminal> rules = new ArrayList<>();
 
 	/**
-	 * Constructs a new {@link AugmentedBackusNaurBuilder} with default parameters.
+	 * Constructs a new {@link AugmentedBackusNaurBuilder} with default
+	 * parameters.
 	 */
 	public AugmentedBackusNaurBuilder() {
 	}
@@ -66,56 +68,49 @@ public class AugmentedBackusNaurBuilder {
 			boolean isIncrementalAlternative = !visitedRules.add(name);
 
 			Node rulename = new NonTerminalNode("rulename");
-			for (int index = 0; index < name.length(); index++) {
-				Node alpha = new NonTerminalNode("alpha");
-				String terminal = name.substring(index, index + 1);
-				alpha.addChild(new TerminalNode(terminal));
-				rulename.addChild(alpha);
-			}
+			append(rulename, "alpha", name);
 
 			Node definedAs = new NonTerminalNode("defined-as");
 			Node wsp = new NonTerminalNode("wsp");
-			wsp.addChild(new TerminalNode(" "));
+			append(wsp, " ");
 			Node cwsp = new NonTerminalNode("c-wsp");
-			cwsp.addChild(wsp);
-			definedAs.addChild(cwsp);
+			append(cwsp, wsp);
+			append(definedAs, cwsp);
 			if (isIncrementalAlternative)
-				definedAs.addChild(new TerminalNode("=/"));
+				append(definedAs, "=/");
 			else
-				definedAs.addChild(new TerminalNode("="));
-			definedAs.addChild(cwsp);
+				append(definedAs, "=");
+			append(definedAs, cwsp);
 
 			Node elements = new NonTerminalNode("elements");
-			elements.addChild(generateAlternation(actualRule.getRule()));
+			append(elements, generateAlternation(actualRule.getRule()));
 
 			Node CRLF = new NonTerminalNode("crlf");
-			CRLF.addChild(new TerminalNode("\r\n"));
+			append(CRLF, "\r\n");
 			Node NL = new NonTerminalNode("c-nl");
 			if (actualRule.getComment() != null) {
-				Node comment = new NonTerminalNode("comment");
-				comment.addChild(new TerminalNode(";"));
-				comment.addChild(wsp);
-
 				String actualComment = actualRule.getComment();
-				for (int index = 0; index < actualComment.length(); index++) {
-					String terminal = actualComment.substring(index, index + 1);
-					boolean isWhitespace = terminal.trim().isEmpty();
-					Node vchar = new NonTerminalNode(isWhitespace ? "wsp" : "vchar");
-					vchar.addChild(new TerminalNode(terminal));
-					comment.addChild(vchar);
-				}
-				comment.addChild(CRLF);
-				NL.addChild(comment);
+				Node comment = new NonTerminalNode("comment");
+				append(comment, ";");
+				append(comment, wsp);
+				appendChildren(comment, (terminal) -> {
+					String childName = terminal.trim().isEmpty() ? "wsp" : "vchar";
+					Node alpha = new NonTerminalNode(childName);
+					append(alpha, terminal);
+					return alpha;
+				}, actualComment);
+				append(comment, CRLF);
+				append(NL, comment);
 			} else {
-				NL.addChild(CRLF);
+				append(NL, CRLF);
 			}
 
 			Node rule = new NonTerminalNode("rule");
-			rule.addChild(rulename);
-			rule.addChild(definedAs);
-			rule.addChild(elements);
-			rule.addChild(NL);
-			rulelist.addChild(rule);
+			append(rule, rulename);
+			append(rule, definedAs);
+			append(rule, elements);
+			append(rule, NL);
+			append(rulelist, rule);
 		}
 		return rulelist;
 	}
@@ -126,20 +121,13 @@ public class AugmentedBackusNaurBuilder {
 			boolean firstChild = true;
 			for (Rule child : actualRule) {
 				if (!firstChild) {
-					Node wsp = new NonTerminalNode("wsp");
-					wsp.addChild(new TerminalNode(" "));
-					Node cwsp = new NonTerminalNode("c-wsp");
-					cwsp.addChild(wsp);
-					alternation.addChild(cwsp);
-					alternation.addChild(new TerminalNode("/"));
-					alternation.addChild(cwsp);
+					appendDelimiter(alternation, "/");
 				}
-				Node concatenation = generateConcatenation(child);
-				alternation.addChild(concatenation);
+				append(alternation, generateConcatenation(child));
 				firstChild = false;
 			}
 		} else {
-			alternation.addChild(generateConcatenation(actualRule));
+			append(alternation, generateConcatenation(actualRule));
 		}
 		return alternation;
 	}
@@ -150,19 +138,13 @@ public class AugmentedBackusNaurBuilder {
 			boolean firstChild = true;
 			for (Rule child : actualRule) {
 				if (!firstChild) {
-					Node wsp = new NonTerminalNode("wsp");
-					wsp.addChild(new TerminalNode(" "));
-					Node cwsp = new NonTerminalNode("c-wsp");
-					cwsp.addChild(wsp);
-					concatenation.addChild(cwsp);
+					appendDelimiter(concatenation, null);
 				}
-
-				Node repetition = generateRepetition(child);
-				concatenation.addChild(repetition);
+				append(concatenation, generateRepetition(child));
 				firstChild = false;
 			}
 		} else {
-			concatenation.addChild(generateRepetition(actualRule));
+			append(concatenation, generateRepetition(actualRule));
 		}
 		return concatenation;
 	}
@@ -177,37 +159,22 @@ public class AugmentedBackusNaurBuilder {
 			int max = rule.getMaximumNumberOfRepetions();
 			if (min == max) {
 				String number = Integer.toString(min);
-				for (int index = 0; index < number.length(); index++) {
-					String n = number.substring(index, index + 1);
-					Node digit = new NonTerminalNode("digit");
-					digit.addChild(new TerminalNode(n));
-					repeat.addChild(digit);
-				}
+				append(repeat, "digit", number);
 			} else {
 				if (min != 0) {
 					String number = Integer.toString(min);
-					for (int index = 0; index < number.length(); index++) {
-						String n = number.substring(index, index + 1);
-						Node digit = new NonTerminalNode("digit");
-						digit.addChild(new TerminalNode(n));
-						repeat.addChild(digit);
-					}
+					append(repeat, "digit", number);
 				}
-				repeat.addChild(new TerminalNode("*"));
+				append(repeat, "*");
 				if (max != Integer.MAX_VALUE) {
 					String number = Integer.toString(max);
-					for (int index = 0; index < number.length(); index++) {
-						String n = number.substring(index, index + 1);
-						Node digit = new NonTerminalNode("digit");
-						digit.addChild(new TerminalNode(n));
-						repeat.addChild(digit);
-					}
+					append(repeat, "digit", number);
 				}
 			}
-			repetition.addChild(repeat);
-			repetition.addChild(generateElement(rule.getRule()));
+			append(repetition, repeat);
+			append(repetition, generateElement(rule.getRule()));
 		} else {
-			repetition.addChild(generateElement(actualRule));
+			append(repetition, generateElement(actualRule));
 		}
 		return repetition;
 	}
@@ -217,14 +184,8 @@ public class AugmentedBackusNaurBuilder {
 		if (actualRule.getClass().isAssignableFrom(NonTerminal.class)) {
 			NonTerminal rule = (NonTerminal) actualRule;
 			Node rulename = new NonTerminalNode("rulename");
-			String name = rule.getName();
-			for (int index = 0; index < name.length(); index++) {
-				Node alpha = new NonTerminalNode("alpha");
-				String terminal = name.substring(index, index + 1);
-				alpha.addChild(new TerminalNode(terminal));
-				rulename.addChild(alpha);
-			}
-			element.addChild(rulename);
+			append(rulename, "alpha", rule.getName());
+			append(element, rulename);
 		} else if (actualRule.getClass().isAssignableFrom(CharacterValue.class)) {
 			CharacterValue rule = (CharacterValue) actualRule;
 			String terminal = rule.getTerminal();
@@ -232,89 +193,129 @@ public class AugmentedBackusNaurBuilder {
 			Node charVal = new NonTerminalNode("char-val");
 			String name = rule.isCaseSensitive() ? "case-sensitive-string" : "case-insensitive-string";
 			Node caseString = new NonTerminalNode(name);
-			charVal.addChild(caseString);
+			append(charVal, caseString);
 			if (rule.isCaseSensitive())
-				caseString.addChild(new TerminalNode("%s"));
+				append(caseString, "%s");
 			Node quotedString = new NonTerminalNode("quoted-string");
-			caseString.addChild(quotedString);
+			append(caseString, quotedString);
 
 			Node dQuote = new NonTerminalNode("dQuote");
-			dQuote.addChild(new TerminalNode("\""));
-			quotedString.addChild(dQuote);
-			for (int index = 0; index < terminal.length(); index++) {
-				String character = terminal.substring(index, index + 1);
-				quotedString.addChild(new TerminalNode(character));
-			}
-			quotedString.addChild(dQuote);
-			element.addChild(charVal);
+			append(dQuote, "\"");
+			append(quotedString, dQuote);
+			appendChildren(quotedString, terminal);
+			append(quotedString, dQuote);
+			append(element, charVal);
 		} else if (actualRule.getClass().isAssignableFrom(NumberValue.class)) {
 			NumberValue rule = (NumberValue) actualRule;
 			int radix = rule.getRadix();
+			String name = nameForRadix(radix);
+			String marker = markerForRadix(radix);
+			String numType = typeForRadix(radix);
 
-			String name = "";
-			name = radix == 16 ? "hex-val" : name;
-			name = radix == 10 ? "dec-val" : name;
-			name = radix == 2 ? "bin-val" : name;
 			Node value = new NonTerminalNode(name);
-
-			String marker = "";
-			marker = radix == 16 ? "x" : marker;
-			marker = radix == 10 ? "d" : marker;
-			marker = radix == 2 ? "b" : marker;
-			value.addChild(new TerminalNode(marker));
-
-			String numType = "";
-			numType = radix == 16 ? "hexdig" : numType;
-			numType = radix == 10 ? "digit" : numType;
-			numType = radix == 2 ? "bit" : numType;
+			append(value, marker);
 			if (rule.getTerminal() != null) {
 				String terminal = rule.getTerminal();
 				for (int index = 0; index < terminal.length(); index++) {
 					String number = Integer.toString(terminal.charAt(index), radix);
-					for (char digitOfNumber : number.toCharArray()) {
-						NonTerminalNode digit = new NonTerminalNode(numType);
-						digit.addChild(new TerminalNode(Character.toString(digitOfNumber)));
-						value.addChild(digit);
-					}
+					append(value, numType, number);
 					if (index + 1 < terminal.length())
-						value.addChild(new TerminalNode("."));
+						append(value, ".");
 				}
 			} else {
 				String start = Integer.toString(rule.getRangeStart().charValue(), radix);
 				String end = Integer.toString(rule.getRangeEnd().charValue(), radix);
 
-				for (char digitOfNumber : start.toCharArray()) {
-					NonTerminalNode digit = new NonTerminalNode(numType);
-					digit.addChild(new TerminalNode(Character.toString(digitOfNumber)));
-					value.addChild(digit);
-				}
-				value.addChild(new TerminalNode("-"));
-				for (char digitOfNumber : end.toCharArray()) {
-					NonTerminalNode digit = new NonTerminalNode(numType);
-					digit.addChild(new TerminalNode(Character.toString(digitOfNumber)));
-					value.addChild(digit);
-				}
+				append(value, numType, start);
+				append(value, "-");
+				append(value, numType, end);
 			}
 
 			Node numVal = new NonTerminalNode("num-val");
-			numVal.addChild(new TerminalNode("%"));
-			numVal.addChild(value);
-			element.addChild(numVal);
+			append(numVal, "%");
+			append(numVal, value);
+			append(element, numVal);
 		} else if (actualRule.getClass().isAssignableFrom(Optional.class)) {
 			Optional rule = (Optional) actualRule;
-
-			Node option = new NonTerminalNode("option");
-			option.addChild(new TerminalNode("["));
-			option.addChild(generateAlternation(rule.getRule()));
-			option.addChild(new TerminalNode("]"));
-			element.addChild(option);
+			Node child = generateAlternation(rule.getRule());
+			appendChildren(element, "option", "[", child, "]");
 		} else {
-			Node option = new NonTerminalNode("group");
-			option.addChild(new TerminalNode("("));
-			option.addChild(generateAlternation(actualRule));
-			option.addChild(new TerminalNode(")"));
-			element.addChild(option);
+			Node child = generateAlternation(actualRule);
+			appendChildren(element, "group", "(", child, ")");
 		}
 		return element;
+	}
+
+	private static String typeForRadix(int radix) {
+		String numType = "";
+		numType = radix == 16 ? "hexdig" : numType;
+		numType = radix == 10 ? "digit" : numType;
+		numType = radix == 2 ? "bit" : numType;
+		return numType;
+	}
+
+	private static String markerForRadix(int radix) {
+		String marker = "";
+		marker = radix == 16 ? "x" : marker;
+		marker = radix == 10 ? "d" : marker;
+		marker = radix == 2 ? "b" : marker;
+		return marker;
+	}
+
+	private static String nameForRadix(int radix) {
+		String name = "";
+		name = radix == 16 ? "hex-val" : name;
+		name = radix == 10 ? "dec-val" : name;
+		name = radix == 2 ? "bin-val" : name;
+		return name;
+	}
+
+	private static void append(Node parent, String childName, String childContent) {
+		appendChildren(parent, (terminal) -> {
+			Node alpha = new NonTerminalNode(childName);
+			append(alpha, terminal);
+			return alpha;
+		}, childContent);
+	}
+
+	private static void appendChildren(Node parent, String childContent) {
+		appendChildren(parent, (terminal) -> new TerminalNode(terminal), childContent);
+	}
+
+	private static void appendChildren(Node parent, Function<String, Node> mapper, String childContent) {
+		for (int index = 0; index < childContent.length(); index++) {
+			String terminal = childContent.substring(index, index + 1);
+			append(parent, mapper.apply(terminal));
+		}
+	}
+
+	private static void appendDelimiter(Node parent, String delimiter) {
+		Node wsp = new NonTerminalNode("wsp");
+		append(wsp, " ");
+
+		Node cwsp = new NonTerminalNode("c-wsp");
+		append(cwsp, wsp);
+
+		append(parent, cwsp);
+		if (delimiter != null) {
+			append(parent, delimiter);
+			append(parent, cwsp);
+		}
+	}
+
+	private static void appendChildren(Node parent, String childName, String prefix, Node child, String suffix) {
+		Node intermediate = new NonTerminalNode(childName);
+		append(intermediate, prefix);
+		append(intermediate, child);
+		append(intermediate, suffix);
+		append(parent, intermediate);
+	}
+
+	private static void append(Node parent, String terminal) {
+		parent.addChild(new TerminalNode(terminal));
+	}
+
+	private static void append(Node parent, Node child) {
+		parent.addChild(child);
 	}
 }
