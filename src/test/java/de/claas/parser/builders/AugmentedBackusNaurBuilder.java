@@ -37,13 +37,6 @@ public class AugmentedBackusNaurBuilder {
 	private final List<NonTerminal> rules = new ArrayList<>();
 
 	/**
-	 * Constructs a new {@link AugmentedBackusNaurBuilder} with default
-	 * parameters.
-	 */
-	public AugmentedBackusNaurBuilder() {
-	}
-
-	/**
 	 * Adds the specified rule to this builder's ABNF-grammar.
 	 * 
 	 * @param rule
@@ -65,51 +58,19 @@ public class AugmentedBackusNaurBuilder {
 		Node rulelist = new NonTerminalNode("rulelist");
 		for (NonTerminal actualRule : this.rules) {
 			String name = actualRule.getName();
-			boolean isIncrementalAlternative = !visitedRules.add(name);
-
-			Node rulename = new NonTerminalNode("rulename");
-			append(rulename, "alpha", name);
-
-			Node definedAs = new NonTerminalNode("defined-as");
-			Node wsp = new NonTerminalNode("wsp");
-			append(wsp, " ");
-			Node cwsp = new NonTerminalNode("c-wsp");
-			append(cwsp, wsp);
-			append(definedAs, cwsp);
-			if (isIncrementalAlternative)
-				append(definedAs, "=/");
-			else
-				append(definedAs, "=");
-			append(definedAs, cwsp);
+			boolean incremental = !visitedRules.add(name);
 
 			Node elements = new NonTerminalNode("elements");
 			append(elements, generateAlternation(actualRule.getRule()));
 
-			Node CRLF = new NonTerminalNode("crlf");
-			append(CRLF, "\r\n");
-			Node NL = new NonTerminalNode("c-nl");
-			if (actualRule.getComment() != null) {
-				String actualComment = actualRule.getComment();
-				Node comment = new NonTerminalNode("comment");
-				append(comment, ";");
-				append(comment, wsp);
-				appendChildren(comment, (terminal) -> {
-					String childName = terminal.trim().isEmpty() ? "wsp" : "vchar";
-					Node alpha = new NonTerminalNode(childName);
-					append(alpha, terminal);
-					return alpha;
-				}, actualComment);
-				append(comment, CRLF);
-				append(NL, comment);
-			} else {
-				append(NL, CRLF);
-			}
+			Node newLine = new NonTerminalNode("c-nl");
+			append(newLine, generateNewLine(actualRule.getComment()));
 
 			Node rule = new NonTerminalNode("rule");
-			append(rule, rulename);
-			append(rule, definedAs);
+			append(rule, generate(actualRule));
+			append(rule, generateDefinedAs(incremental));
 			append(rule, elements);
-			append(rule, NL);
+			append(rule, newLine);
 			append(rulelist, rule);
 		}
 		return rulelist;
@@ -183,65 +144,22 @@ public class AugmentedBackusNaurBuilder {
 		Node element = new NonTerminalNode("element");
 		if (actualRule.getClass().isAssignableFrom(NonTerminal.class)) {
 			NonTerminal rule = (NonTerminal) actualRule;
-			Node rulename = new NonTerminalNode("rulename");
-			append(rulename, "alpha", rule.getName());
-			append(element, rulename);
+			append(element, generate(rule));
 		} else if (actualRule.getClass().isAssignableFrom(CharacterValue.class)) {
 			CharacterValue rule = (CharacterValue) actualRule;
-			String terminal = rule.getTerminal();
-
-			Node charVal = new NonTerminalNode("char-val");
-			String name = rule.isCaseSensitive() ? "case-sensitive-string" : "case-insensitive-string";
-			Node caseString = new NonTerminalNode(name);
-			append(charVal, caseString);
-			if (rule.isCaseSensitive())
-				append(caseString, "%s");
-			Node quotedString = new NonTerminalNode("quoted-string");
-			append(caseString, quotedString);
-
-			Node dQuote = new NonTerminalNode("dQuote");
-			append(dQuote, "\"");
-			append(quotedString, dQuote);
-			appendChildren(quotedString, terminal);
-			append(quotedString, dQuote);
-			append(element, charVal);
+			append(element, generate(rule));
 		} else if (actualRule.getClass().isAssignableFrom(NumberValue.class)) {
 			NumberValue rule = (NumberValue) actualRule;
-			int radix = rule.getRadix();
-			String name = nameForRadix(radix);
-			String marker = markerForRadix(radix);
-			String numType = typeForRadix(radix);
-
-			Node value = new NonTerminalNode(name);
-			append(value, marker);
-			if (rule.getTerminal() != null) {
-				String terminal = rule.getTerminal();
-				for (int index = 0; index < terminal.length(); index++) {
-					String number = Integer.toString(terminal.charAt(index), radix);
-					append(value, numType, number);
-					if (index + 1 < terminal.length())
-						append(value, ".");
-				}
-			} else {
-				String start = Integer.toString(rule.getRangeStart().charValue(), radix);
-				String end = Integer.toString(rule.getRangeEnd().charValue(), radix);
-
-				append(value, numType, start);
-				append(value, "-");
-				append(value, numType, end);
-			}
-
-			Node numVal = new NonTerminalNode("num-val");
-			append(numVal, "%");
-			append(numVal, value);
-			append(element, numVal);
+			append(element, generate(rule));
 		} else if (actualRule.getClass().isAssignableFrom(Optional.class)) {
 			Optional rule = (Optional) actualRule;
-			Node child = generateAlternation(rule.getRule());
-			appendChildren(element, "option", "[", child, "]");
+			append(element, generate(rule));
 		} else {
-			Node child = generateAlternation(actualRule);
-			appendChildren(element, "group", "(", child, ")");
+			Node intermediate = new NonTerminalNode("group");
+			append(intermediate, "(");
+			append(intermediate, generateAlternation(actualRule));
+			append(intermediate, ")");
+			append(element, intermediate);
 		}
 		return element;
 	}
@@ -290,8 +208,7 @@ public class AugmentedBackusNaurBuilder {
 	}
 
 	private static void appendDelimiter(Node parent, String delimiter) {
-		Node wsp = new NonTerminalNode("wsp");
-		append(wsp, " ");
+		Node wsp = generateWSP();
 
 		Node cwsp = new NonTerminalNode("c-wsp");
 		append(cwsp, wsp);
@@ -303,14 +220,6 @@ public class AugmentedBackusNaurBuilder {
 		}
 	}
 
-	private static void appendChildren(Node parent, String childName, String prefix, Node child, String suffix) {
-		Node intermediate = new NonTerminalNode(childName);
-		append(intermediate, prefix);
-		append(intermediate, child);
-		append(intermediate, suffix);
-		append(parent, intermediate);
-	}
-
 	private static void append(Node parent, String terminal) {
 		parent.addChild(new TerminalNode(terminal));
 	}
@@ -318,4 +227,106 @@ public class AugmentedBackusNaurBuilder {
 	private static void append(Node parent, Node child) {
 		parent.addChild(child);
 	}
+
+	private static Node generateWSP() {
+		Node wsp = new NonTerminalNode("wsp");
+		append(wsp, " ");
+		return wsp;
+	}
+
+	private static Node generateDefinedAs(boolean incremental) {
+		Node definedAs = new NonTerminalNode("defined-as");
+		Node cwsp = new NonTerminalNode("c-wsp");
+		append(cwsp, generateWSP());
+		append(definedAs, cwsp);
+		append(definedAs, incremental ? "=/" : "=");
+		append(definedAs, cwsp);
+		return definedAs;
+	}
+
+	private static Node generateNewLine(String actualComment) {
+		Node crlf = new NonTerminalNode("crlf");
+		append(crlf, "\r\n");
+		if (actualComment != null) {
+			Node comment = new NonTerminalNode("comment");
+			append(comment, ";");
+			append(comment, generateWSP());
+			appendChildren(comment, (terminal) -> {
+				String childName = terminal.trim().isEmpty() ? "wsp" : "vchar";
+				Node alpha = new NonTerminalNode(childName);
+				append(alpha, terminal);
+				return alpha;
+			}, actualComment);
+			append(comment, crlf);
+			return comment;
+		}
+		return crlf;
+	}
+
+	private static Node generate(NonTerminal rule) {
+		Node rulename = new NonTerminalNode("rulename");
+		append(rulename, "alpha", rule.getName());
+		return rulename;
+	}
+
+	private static Node generate(CharacterValue rule) {
+		String terminal = rule.getTerminal();
+		Node charVal = new NonTerminalNode("char-val");
+		String name = rule.isCaseSensitive() ? "case-sensitive-string" : "case-insensitive-string";
+		Node caseString = new NonTerminalNode(name);
+		append(charVal, caseString);
+		if (rule.isCaseSensitive()) {
+			append(caseString, "%s");
+		}
+		Node quotedString = new NonTerminalNode("quoted-string");
+		append(caseString, quotedString);
+
+		Node dQuote = new NonTerminalNode("dQuote");
+		append(dQuote, "\"");
+		append(quotedString, dQuote);
+		appendChildren(quotedString, terminal);
+		append(quotedString, dQuote);
+		return charVal;
+	}
+
+	private static Node generate(NumberValue rule) {
+		int radix = rule.getRadix();
+		String name = nameForRadix(radix);
+		String marker = markerForRadix(radix);
+		String numType = typeForRadix(radix);
+
+		Node value = new NonTerminalNode(name);
+		append(value, marker);
+		if (rule.getTerminal() == null) {
+			String start = Integer.toString(rule.getRangeStart().charValue(), radix);
+			String end = Integer.toString(rule.getRangeEnd().charValue(), radix);
+
+			append(value, numType, start);
+			append(value, "-");
+			append(value, numType, end);
+		} else {
+			String terminal = rule.getTerminal();
+			for (int index = 0; index < terminal.length(); index++) {
+				String number = Integer.toString(terminal.charAt(index), radix);
+				append(value, numType, number);
+				if (index + 1 < terminal.length()) {
+					append(value, ".");
+				}
+			}
+		}
+
+		Node numVal = new NonTerminalNode("num-val");
+		append(numVal, "%");
+		append(numVal, value);
+		return numVal;
+	}
+
+	private static Node generate(Optional rule) {
+		Node intermediate = new NonTerminalNode("option");
+		append(intermediate, "[");
+		append(intermediate, generateAlternation(rule.getRule()));
+		append(intermediate, "]");
+		return intermediate;
+	}
+
 }
