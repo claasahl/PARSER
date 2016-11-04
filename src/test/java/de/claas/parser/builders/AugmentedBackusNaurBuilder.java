@@ -76,11 +76,19 @@ public class AugmentedBackusNaurBuilder {
 		return rulelist;
 	}
 
-	private static Node generateAlternation(Rule actualRule) {
+	/**
+	 * A support function for generating a node that encapsulates an alternation
+	 * within an ABNF-grammar.
+	 * 
+	 * @param rule
+	 *            the rule that might represent an alternation
+	 * @return a node that encapsulates an alternation within an ABNF-grammar
+	 */
+	private static Node generateAlternation(Rule rule) {
 		Node alternation = new NonTerminalNode("alternation");
-		if (actualRule.getClass().isAssignableFrom(Disjunction.class)) {
+		if (rule.getClass().isAssignableFrom(Disjunction.class)) {
 			boolean firstChild = true;
-			for (Rule child : actualRule) {
+			for (Rule child : rule) {
 				if (!firstChild) {
 					appendDelimiter(alternation, "/");
 				}
@@ -88,16 +96,24 @@ public class AugmentedBackusNaurBuilder {
 				firstChild = false;
 			}
 		} else {
-			append(alternation, generateConcatenation(actualRule));
+			append(alternation, generateConcatenation(rule));
 		}
 		return alternation;
 	}
 
-	private static Node generateConcatenation(Rule actualRule) {
+	/**
+	 * A support function for generating a node that encapsulates a
+	 * concatenation within an ABNF-grammar.
+	 * 
+	 * @param rule
+	 *            the rule that might represent a concatenation
+	 * @return a node that encapsulates a concatenation within an ABNF-grammar
+	 */
+	private static Node generateConcatenation(Rule rule) {
 		Node concatenation = new NonTerminalNode("concatenation");
-		if (actualRule.getClass().isAssignableFrom(Conjunction.class)) {
+		if (rule.getClass().isAssignableFrom(Conjunction.class)) {
 			boolean firstChild = true;
-			for (Rule child : actualRule) {
+			for (Rule child : rule) {
 				if (!firstChild) {
 					appendDelimiter(concatenation, null);
 				}
@@ -105,19 +121,27 @@ public class AugmentedBackusNaurBuilder {
 				firstChild = false;
 			}
 		} else {
-			append(concatenation, generateRepetition(actualRule));
+			append(concatenation, generateRepetition(rule));
 		}
 		return concatenation;
 	}
 
-	private static Node generateRepetition(Rule actualRule) {
+	/**
+	 * A support function for generating a node that encapsulates a repetition
+	 * within an ABNF-grammar.
+	 * 
+	 * @param rule
+	 *            the rule that might represent a repetition
+	 * @return a node that encapsulates a repetition within an ABNF-grammar
+	 */
+	private static Node generateRepetition(Rule rule) {
 		Node repetition = new NonTerminalNode("repetition");
-		if (actualRule.getClass().isAssignableFrom(Repetition.class)) {
-			Repetition rule = (Repetition) actualRule;
+		if (rule.getClass().isAssignableFrom(Repetition.class)) {
+			Repetition actuakRule = (Repetition) rule;
 
 			Node repeat = new NonTerminalNode("repeat");
-			int min = rule.getMinimumNumberOfRepetions();
-			int max = rule.getMaximumNumberOfRepetions();
+			int min = actuakRule.getMinimumNumberOfRepetions();
+			int max = actuakRule.getMaximumNumberOfRepetions();
 			if (min == max) {
 				String number = Integer.toString(min);
 				append(repeat, "digit", number);
@@ -133,37 +157,53 @@ public class AugmentedBackusNaurBuilder {
 				}
 			}
 			append(repetition, repeat);
-			append(repetition, generateElement(rule.getRule()));
+			append(repetition, generateElement(actuakRule.getRule()));
 		} else {
-			append(repetition, generateElement(actualRule));
+			append(repetition, generateElement(rule));
 		}
 		return repetition;
 	}
 
-	private static Node generateElement(Rule actualRule) {
+	/**
+	 * A support function for generating a node that encapsulates an element
+	 * within an ABNF-grammar.
+	 * 
+	 * @param rule
+	 *            the rule that might represent an element
+	 * @return a node that encapsulates an element within an ABNF-grammar
+	 */
+	private static Node generateElement(Rule rule) {
 		Node element = new NonTerminalNode("element");
-		if (actualRule.getClass().isAssignableFrom(NonTerminal.class)) {
-			NonTerminal rule = (NonTerminal) actualRule;
-			append(element, generate(rule));
-		} else if (actualRule.getClass().isAssignableFrom(CharacterValue.class)) {
-			CharacterValue rule = (CharacterValue) actualRule;
-			append(element, generate(rule));
-		} else if (actualRule.getClass().isAssignableFrom(NumberValue.class)) {
-			NumberValue rule = (NumberValue) actualRule;
-			append(element, generate(rule));
-		} else if (actualRule.getClass().isAssignableFrom(Optional.class)) {
-			Optional rule = (Optional) actualRule;
-			append(element, generate(rule));
+		if (rule.getClass().isAssignableFrom(NonTerminal.class)) {
+			NonTerminal actualRule = (NonTerminal) rule;
+			append(element, generate(actualRule));
+		} else if (rule.getClass().isAssignableFrom(CharacterValue.class)) {
+			CharacterValue actualRule = (CharacterValue) rule;
+			append(element, generate(actualRule));
+		} else if (rule.getClass().isAssignableFrom(NumberValue.class)) {
+			NumberValue actualRule = (NumberValue) rule;
+			append(element, generate(actualRule));
+		} else if (rule.getClass().isAssignableFrom(Optional.class)) {
+			Optional actualRule = (Optional) rule;
+			append(element, generate(actualRule));
 		} else {
 			Node intermediate = new NonTerminalNode("group");
 			append(intermediate, "(");
-			append(intermediate, generateAlternation(actualRule));
+			append(intermediate, generateAlternation(rule));
 			append(intermediate, ")");
 			append(element, intermediate);
 		}
 		return element;
 	}
 
+	/**
+	 * A support function for determining the ABNF number type for the specified
+	 * radix.
+	 * 
+	 * @param radix
+	 *            the radix
+	 * @return the ABNF number type for the specified radix
+	 */
 	private static String typeForRadix(int radix) {
 		String numType = "";
 		numType = radix == 16 ? "hexdig" : numType;
@@ -172,6 +212,14 @@ public class AugmentedBackusNaurBuilder {
 		return numType;
 	}
 
+	/**
+	 * A support function for determining the ABNF-marker for the specified
+	 * radix.
+	 * 
+	 * @param radix
+	 *            the radix
+	 * @return the ABNF-marker for the specified radix
+	 */
 	private static String markerForRadix(int radix) {
 		String marker = "";
 		marker = radix == 16 ? "x" : marker;
@@ -180,6 +228,14 @@ public class AugmentedBackusNaurBuilder {
 		return marker;
 	}
 
+	/**
+	 * A support function for determining the ABNF rule name for the specified
+	 * radix.
+	 * 
+	 * @param radix
+	 *            the radix
+	 * @return the ABNF rule name for the specified radix
+	 */
 	private static String nameForRadix(int radix) {
 		String name = "";
 		name = radix == 16 ? "hex-val" : name;
@@ -188,25 +244,70 @@ public class AugmentedBackusNaurBuilder {
 		return name;
 	}
 
-	private static void append(Node parent, String childName, String childContent) {
+	/**
+	 * A support function for appending the specified content to the parent. The
+	 * content is split into individual characters, mapped to a
+	 * {@link NonTerminalNode} (with the specified name) and then appended to
+	 * the parent.
+	 * 
+	 * @param parent
+	 *            the parent
+	 * @param childName
+	 *            the name of the {@link NonTerminalNode}
+	 * @param content
+	 *            then content
+	 */
+	private static void append(Node parent, String childName, String content) {
 		appendChildren(parent, (terminal) -> {
 			Node alpha = new NonTerminalNode(childName);
 			append(alpha, terminal);
 			return alpha;
-		}, childContent);
+		}, content);
 	}
 
-	private static void appendChildren(Node parent, String childContent) {
-		appendChildren(parent, (terminal) -> new TerminalNode(terminal), childContent);
+	/**
+	 * A support function for appending the specified content to the parent. The
+	 * content is split into individual characters, mapped to a
+	 * {@link TerminalNode} and then appended to the parent.
+	 * 
+	 * @param parent
+	 *            the parent
+	 * @param content
+	 *            then content
+	 */
+	private static void appendChildren(Node parent, String content) {
+		appendChildren(parent, (terminal) -> new TerminalNode(terminal), content);
 	}
 
-	private static void appendChildren(Node parent, Function<String, Node> mapper, String childContent) {
-		for (int index = 0; index < childContent.length(); index++) {
-			String terminal = childContent.substring(index, index + 1);
+	/**
+	 * A support function for appending the specified content to the parent. The
+	 * content is split into individual characters, mapped to a {@link Node} and
+	 * then appended to the parent.
+	 * 
+	 * @param parent
+	 *            the parent
+	 * @param mapper
+	 *            the function that maps characters from the content to
+	 *            {@link Node}
+	 * @param content
+	 *            then content
+	 */
+	private static void appendChildren(Node parent, Function<String, Node> mapper, String content) {
+		for (int index = 0; index < content.length(); index++) {
+			String terminal = content.substring(index, index + 1);
 			append(parent, mapper.apply(terminal));
 		}
 	}
 
+	/**
+	 * A support function for appending a "white space"-node and optionally a
+	 * delimiter-node to the parent.
+	 * 
+	 * @param parent
+	 *            the parent
+	 * @param delimiter
+	 *            the optional delimiter
+	 */
 	private static void appendDelimiter(Node parent, String delimiter) {
 		Node wsp = generateWSP();
 
@@ -220,20 +321,51 @@ public class AugmentedBackusNaurBuilder {
 		}
 	}
 
+	/**
+	 * A support function for appending a {@link TerminalNode} to the parent.
+	 * 
+	 * @param parent
+	 *            the parent
+	 * @param terminal
+	 *            the {@link TerminalNode}'s terminal symbol
+	 */
 	private static void append(Node parent, String terminal) {
 		parent.addChild(new TerminalNode(terminal));
 	}
 
+	/**
+	 * A support function for appending the child to the parent.
+	 * 
+	 * @param parent
+	 *            the parent
+	 * @param child
+	 *            the child
+	 */
 	private static void append(Node parent, Node child) {
 		parent.addChild(child);
 	}
 
+	/**
+	 * A support function for generating a node that encapsulates a single white
+	 * space character.
+	 * 
+	 * @return a node that encapsulates a single white space character
+	 */
 	private static Node generateWSP() {
 		Node wsp = new NonTerminalNode("wsp");
 		append(wsp, " ");
 		return wsp;
 	}
 
+	/**
+	 * A support function for generating a node that encapsulates a rule
+	 * definition.
+	 * 
+	 * @param incremental
+	 *            whether the definition is incremental (i.e. "=/") or not (i.e.
+	 *            "=")
+	 * @return a node that encapsulates a rule definition
+	 */
 	private static Node generateDefinedAs(boolean incremental) {
 		Node definedAs = new NonTerminalNode("defined-as");
 		Node cwsp = new NonTerminalNode("c-wsp");
@@ -244,6 +376,15 @@ public class AugmentedBackusNaurBuilder {
 		return definedAs;
 	}
 
+	/**
+	 * A support function for generating a node that encapsulates a new line (at
+	 * the end of a rule definition) and optionally includes a comment.
+	 * 
+	 * @param actualComment
+	 *            the comment
+	 * @return a node that encapsulates a new line (at the end of a rule
+	 *         definition) and optionally includes a comment
+	 */
 	private static Node generateNewLine(String actualComment) {
 		Node crlf = new NonTerminalNode("crlf");
 		append(crlf, "\r\n");
@@ -263,12 +404,29 @@ public class AugmentedBackusNaurBuilder {
 		return crlf;
 	}
 
+	/**
+	 * A support function for generating a node that encapsulates a
+	 * {@link NonTerminal}-rule of a grammar.
+	 * 
+	 * @param rule
+	 *            the rule
+	 * @return a node that encapsulates a {@link NonTerminal}-rule of a grammar
+	 */
 	private static Node generate(NonTerminal rule) {
 		Node rulename = new NonTerminalNode("rulename");
 		append(rulename, "alpha", rule.getName());
 		return rulename;
 	}
 
+	/**
+	 * A support function for generating a node that encapsulates a
+	 * {@link CharacterValue}-rule of a grammar.
+	 * 
+	 * @param rule
+	 *            the rule
+	 * @return a node that encapsulates a {@link CharacterValue}-rule of a
+	 *         grammar
+	 */
 	private static Node generate(CharacterValue rule) {
 		String terminal = rule.getTerminal();
 		Node charVal = new NonTerminalNode("char-val");
@@ -289,6 +447,14 @@ public class AugmentedBackusNaurBuilder {
 		return charVal;
 	}
 
+	/**
+	 * A support function for generating a node that encapsulates a
+	 * {@link NumberValue}-rule of a grammar.
+	 * 
+	 * @param rule
+	 *            the rule
+	 * @return a node that encapsulates a {@link NumberValue}-rule of a grammar
+	 */
 	private static Node generate(NumberValue rule) {
 		int radix = rule.getRadix();
 		String name = nameForRadix(radix);
@@ -321,6 +487,14 @@ public class AugmentedBackusNaurBuilder {
 		return numVal;
 	}
 
+	/**
+	 * A support function for generating a node that encapsulates an
+	 * {@link Optional}-rule of a grammar.
+	 * 
+	 * @param rule
+	 *            the rule
+	 * @return a node that encapsulates an {@link Optional}-rule of a grammar
+	 */
 	private static Node generate(Optional rule) {
 		Node intermediate = new NonTerminalNode("option");
 		append(intermediate, "[");
