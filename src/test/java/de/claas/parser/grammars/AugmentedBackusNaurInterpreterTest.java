@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import de.claas.parser.Node;
 import de.claas.parser.Rule;
+import de.claas.parser.builders.AugmentedBackusNaurBuilder;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
@@ -50,7 +51,7 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 		NonTerminal expected = new NonTerminal("hello-world", new Disjunction(de, en, se, es));
 
 		AugmentedBackusNaurInterpreter interpreter = build();
-		Node grammar = AugmentedBackusNaurTest.generateNodes(expected, es, se, en, de);
+		Node grammar = new AugmentedBackusNaurBuilder().rule(expected).rule(es).rule(se).rule(en).rule(de).build();
 		grammar.visit(interpreter);
 		assertEquals(expected, interpreter.getResult());
 	}
@@ -63,7 +64,7 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 		NonTerminal expected = new NonTerminal("rule", rule);
 
 		AugmentedBackusNaurInterpreter interpreter = build();
-		Node grammar = AugmentedBackusNaurTest.generateNodes(expected);
+		Node grammar = new AugmentedBackusNaurBuilder().rule(expected).build();
 		grammar.visit(interpreter);
 
 		RuleToString r1 = new RuleToString();
@@ -83,7 +84,7 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 		NonTerminal expected = new NonTerminal("rule", rule);
 
 		AugmentedBackusNaurInterpreter interpreter = build();
-		Node grammar = AugmentedBackusNaurTest.generateNodes(expected);
+		Node grammar = new AugmentedBackusNaurBuilder().rule(expected).build();
 		grammar.visit(interpreter);
 		assertEquals(expected, interpreter.getResult());
 	}
@@ -95,7 +96,7 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 		NonTerminal expected = new NonTerminal("rule", rule);
 
 		AugmentedBackusNaurInterpreter interpreter = build();
-		Node grammar = AugmentedBackusNaurTest.generateNodes(expected, rule);
+		Node grammar = new AugmentedBackusNaurBuilder().rule(expected).rule(rule).build();
 		grammar.visit(interpreter);
 		assertEquals(expected, interpreter.getResult());
 	}
@@ -107,7 +108,7 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 		NonTerminal expected = new NonTerminal("rule", rule);
 
 		AugmentedBackusNaurInterpreter interpreter = build();
-		Node grammar = AugmentedBackusNaurTest.generateNodes(expected);
+		Node grammar = new AugmentedBackusNaurBuilder().rule(expected).build();
 		grammar.visit(interpreter);
 		assertEquals(expected, interpreter.getResult());
 	}
@@ -119,7 +120,7 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 		NonTerminal expected = new NonTerminal("rule", rule);
 
 		AugmentedBackusNaurInterpreter interpreter = build();
-		Node grammar = AugmentedBackusNaurTest.generateNodes(expected);
+		Node grammar = new AugmentedBackusNaurBuilder().rule(expected).build();
 		grammar.visit(interpreter);
 		assertEquals(expected, interpreter.getResult());
 	}
@@ -130,7 +131,7 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 		NonTerminal expected = new NonTerminal("rule", rule);
 
 		AugmentedBackusNaurInterpreter interpreter = build();
-		Node grammar = AugmentedBackusNaurTest.generateNodes(expected);
+		Node grammar = new AugmentedBackusNaurBuilder().rule(expected).build();
 		grammar.visit(interpreter);
 		assertEquals(expected, interpreter.getResult());
 	}
