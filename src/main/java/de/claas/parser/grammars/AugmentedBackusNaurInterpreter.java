@@ -366,11 +366,11 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		if (starIndex >= 0) {
 			String min = repeat.substring(0, starIndex);
 			String max = repeat.substring(starIndex + 1);
-			int minRepetitions = !min.isEmpty() ? new Integer(min).intValue() : 0;
-			int maxRepetitions = !max.isEmpty() ? new Integer(max).intValue() : Integer.MAX_VALUE;
+			int minRepetitions = !min.isEmpty() ? Integer.valueOf(min).intValue() : 0;
+			int maxRepetitions = !max.isEmpty() ? Integer.valueOf(max).intValue() : Integer.MAX_VALUE;
 			rule = new Repetition(null, minRepetitions, maxRepetitions);
 		} else if (!repeat.isEmpty()) {
-			int repetitions = new Integer(repeat).intValue();
+			int repetitions = Integer.valueOf(repeat).intValue();
 			rule = new Repetition(null, repetitions, repetitions);
 		} else {
 			throw new InterpreterException("Invalid 'repeat'-rule: " + repeat);
