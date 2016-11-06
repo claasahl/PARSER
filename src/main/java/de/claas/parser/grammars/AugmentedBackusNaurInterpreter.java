@@ -34,6 +34,16 @@ import de.claas.parser.visitors.UpdateNonTerminalReferences;
  */
 public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 
+	private static final String BRACKET_LEFT = "[";
+	private static final String BRACKET_RIGHT = "]";
+	private static final String PARENTHESES_LEFT = "(";
+	private static final String PARENTHESES_RIGHT = ")";
+	private static final String POINT = ".";
+	private static final String DASH = "-";
+	private static final String SLASH = "/";
+	private static final String PERCENT = "%";
+	private static final String CASE_SENSITIVE = "%s";
+	private static final String CASE_INSENSITIVE = "%i";
 	private final Map<String, NonTerminal> rules = new HashMap<>();
 
 	/**
@@ -104,7 +114,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		case "hexdig":
 			return new Function<NonTerminalNode, Rule>() {
 				@Override
-				public Rule apply(NonTerminalNode t) {
+				public Rule apply(NonTerminalNode node) {
 					return null;
 				}
 			};
@@ -247,9 +257,9 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			child = skipWhitespace(child, children);
 			expectTerminalNode();
 			if (child != null) {
-				String slash = concatTerminals(child);
-				if (!"/".equals(slash)) {
-					String msg = String.format("Expected forward slash '/', but got '%s'", slash);
+				String terminal = concatTerminals(child);
+				if (!SLASH.equals(terminal)) {
+					String msg = String.format("Expected forward slash '/', but got '%s'", terminal);
 					throw new InterpreterException(msg);
 				}
 				child = nextChild(true, null, children);
@@ -425,7 +435,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		expectTerminalNode();
 		if (child != null) {
 			String bracket = concatTerminals(child);
-			if (!"(".equals(bracket)) {
+			if (!PARENTHESES_LEFT.equals(bracket)) {
 				String msg = String.format("Expected opening bracket '(', but got '%s'", bracket);
 				throw new InterpreterException(msg);
 			}
@@ -444,7 +454,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		expectTerminalNode();
 		if (child != null) {
 			String bracket = concatTerminals(child);
-			if (!")".equals(bracket)) {
+			if (!PARENTHESES_RIGHT.equals(bracket)) {
 				String msg = String.format("Expected closing bracket ')', but got '%s'", bracket);
 				throw new InterpreterException(msg);
 			}
@@ -470,7 +480,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		expectTerminalNode();
 		if (child != null) {
 			String bracket = concatTerminals(child);
-			if (!"[".equals(bracket)) {
+			if (!BRACKET_LEFT.equals(bracket)) {
 				String msg = String.format("Expected opening bracket '[', but got '%s'", bracket);
 				throw new InterpreterException(msg);
 			}
@@ -489,7 +499,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		expectTerminalNode();
 		if (child != null) {
 			String bracket = concatTerminals(child);
-			if (!"]".equals(bracket)) {
+			if (!BRACKET_RIGHT.equals(bracket)) {
 				String msg = String.format("Expected closing bracket ']', but got '%s'", bracket);
 				throw new InterpreterException(msg);
 			}
@@ -537,7 +547,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		expectTerminalNode();
 		if (child != null && isExpected(child)) {
 			String marker = concatTerminals(child);
-			if (!"%i".equals(marker)) {
+			if (!CASE_INSENSITIVE.equals(marker)) {
 				String msg = String.format("Expected case insensitivity marker '%%i', but got '%s'", marker);
 				throw new InterpreterException(msg);
 			}
@@ -575,7 +585,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		expectTerminalNode();
 		if (child != null) {
 			String marker = concatTerminals(child);
-			if (!"%s".equals(marker)) {
+			if (!CASE_SENSITIVE.equals(marker)) {
 				String msg = String.format("Expected case sensitivity marker '%%s', but got '%s'", marker);
 				throw new InterpreterException(msg);
 			}
@@ -613,7 +623,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		expectTerminalNode();
 		if (child != null) {
 			String marker = concatTerminals(child);
-			if (!"%".equals(marker)) {
+			if (!PERCENT.equals(marker)) {
 				String msg = String.format("Expected number marker '%%', but got '%s'", marker);
 				throw new InterpreterException(msg);
 			}
@@ -733,7 +743,7 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 		if (child != null) {
 			String marker = concatTerminals(child);
 			child = nextChild(true, null, children);
-			if (".".equals(marker)) {
+			if (POINT.equals(marker)) {
 				rangeStart = -1;
 				do {
 					digits = new StringBuilder();
@@ -749,14 +759,14 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 					expectTerminalNode();
 					if (child != null) {
 						String point = concatTerminals(child);
-						if (!".".equals(point)) {
+						if (!POINT.equals(point)) {
 							String msg = String.format("Expected '.', but got '%s'", point);
 							throw new InterpreterException(msg);
 						}
 						child = nextChild(true, null, children);
 					}
 				} while (child != null);
-			} else if ("-".equals(marker)) {
+			} else if (DASH.equals(marker)) {
 				terminals.clear();
 				digits = new StringBuilder();
 				expectNonTerminalNode(expectedNonTerminal);
