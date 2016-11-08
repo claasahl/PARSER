@@ -257,9 +257,9 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			child = skipWhitespace(child, children);
 			expectTerminalNode();
 			if (child != null) {
-				String terminal = concatTerminals(child);
-				if (!SLASH.equals(terminal)) {
-					String msg = String.format("Expected forward slash '/', but got '%s'", terminal);
+				String slash = concatTerminals(child);
+				if (!SLASH.equals(slash)) {
+					String msg = String.format("Expected forward slash '/', but got '%s'", slash);
 					throw new InterpreterException(msg);
 				}
 				child = nextChild(true, null, children);
