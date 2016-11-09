@@ -173,12 +173,17 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 	 */
 	private Rule visitRule(NonTerminalNode node) {
 		NonTerminal rule = null;
+		String ruleName = null;
 		boolean alternative = false;
 		Iterator<Node> children = node.iterator();
 		Node child = nextChild(true, null, children);
 
-		String ruleName = handleRuleName(child, false);
-		child = nextChild(ruleName != null, child, children);
+		expectNonTerminalNode("rulename");
+		if (child != null) {
+			child.visit(this);
+			ruleName = concatTerminals(child);
+			child = nextChild(true, null, children);
+		}
 
 		expectNonTerminalNode("defined-as");
 		if (child != null) {
@@ -398,11 +403,13 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 	 */
 	private Rule visitElement(NonTerminalNode node) {
 		Rule rule = null;
+		String ruleName = null;
 		Iterator<Node> children = node.iterator();
 		Node child = nextChild(true, null, children);
 
-		String ruleName = handleRuleName(child, true);
-		if (ruleName != null) {
+		expectNonTerminalNode("rulename");
+		if (child != null && isExpected(child)) {
+			ruleName = concatTerminals(node);
 			if (!this.rules.containsKey(ruleName)) {
 				this.rules.put(ruleName, new NonTerminal(ruleName));
 			}
@@ -828,16 +835,6 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 			child = children.next();
 		}
 		return child;
-	}
-
-	private String handleRuleName(Node node, boolean optional) {
-		String ruleName = null;
-		expectNonTerminalNode("rulename");
-		if (node != null && (isExpected(node) && optional || !optional)) {
-			node.visit(this);
-			ruleName = concatTerminals(node);
-		}
-		return ruleName;
 	}
 
 }
