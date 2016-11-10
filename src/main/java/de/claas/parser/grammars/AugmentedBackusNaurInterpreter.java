@@ -743,12 +743,13 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 	 * @return the first child that is not a "c-wsp"-node
 	 */
 	private Node skipWhitespace(Node child, Iterator<Node> children) {
+		Node localChild = child;
 		expectNonTerminalNode("c-wsp");
-		while (child != null && isExpected(child) && children.hasNext()) {
-			child.visit(this);
-			child = children.next();
+		while (localChild != null && isExpected(localChild) && children.hasNext()) {
+			localChild.visit(this);
+			localChild = children.next();
 		}
-		return child;
+		return localChild;
 	}
 
 	/**
@@ -766,16 +767,17 @@ public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 	 * @return the next child
 	 */
 	private Node testTerminal(Node child, Iterator<Node> children, String expected, boolean optional) {
+		Node localChild = child;
 		expectTerminalNode();
-		if (child != null && (!optional || isExpected(child))) {
-			String actual = concatTerminals(child);
+		if (localChild != null && (!optional || isExpected(localChild))) {
+			String actual = concatTerminals(localChild);
 			if (!expected.equals(actual)) {
 				String msg = String.format("Expected '%s', but got '%s'", expected, actual);
 				throw new InterpreterException(msg);
 			}
-			child = nextChild(true, null, children);
+			localChild = nextChild(true, null, children);
 		}
-		return child;
+		return localChild;
 	}
 
 }
