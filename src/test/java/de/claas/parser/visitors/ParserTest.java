@@ -194,14 +194,10 @@ public class ParserTest extends RuleVisitorTest {
 	@Test
 	public void repetitionShouldRepeat() {
 		Rule rule = new Repetition(new CharacterValue("re"));
-		Parser parser = build("rererererererere??");
+		Parser parser = build("rererere??");
 		rule.visit(parser);
 
 		Node expected = new IntermediateNode();
-		expected.addChild(new TerminalNode("re"));
-		expected.addChild(new TerminalNode("re"));
-		expected.addChild(new TerminalNode("re"));
-		expected.addChild(new TerminalNode("re"));
 		expected.addChild(new TerminalNode("re"));
 		expected.addChild(new TerminalNode("re"));
 		expected.addChild(new TerminalNode("re"));
