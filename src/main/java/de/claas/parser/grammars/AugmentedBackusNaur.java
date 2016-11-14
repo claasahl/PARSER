@@ -68,7 +68,10 @@ import de.claas.parser.rules.Repetition;
  */
 public class AugmentedBackusNaur extends Grammar {
 
+	private static final Rule DOT = new CharacterValue(".");
 	private static final int MAX_VALUE = Integer.MAX_VALUE;
+	private static final Rule DASH = new CharacterValue("-");
+	private static final Rule COLON = new CharacterValue(";");
 
 	/**
 	 * Constructs a new {@link AugmentedBackusNaur} with default parameters.
@@ -86,20 +89,97 @@ public class AugmentedBackusNaur extends Grammar {
 		return ruleList();
 	}
 
+	/**
+	 * A support method that creates and returns the rule "rulelist" as defined
+	 * in the above grammar.
+	 * 
+	 * @return the rule "rulelist" as defined in the above grammar
+	 */
 	private static NonTerminal ruleList() {
-		// rulelist = 1*( rule / (*c-wsp c-nl) )
-		Rule rule34 = new Disjunction(rule(), new Conjunction(new Repetition(cWSP()), cNL()));
-		NonTerminal ruleList = new NonTerminal("rulelist", new Repetition(rule34, 1, MAX_VALUE));
+		Rule whitespace = new Conjunction(new Repetition(cWsp()), cNl());
+		Rule rule = new Disjunction(rule(), whitespace);
+		Rule rules = new Repetition(rule, 1, MAX_VALUE);
+		NonTerminal ruleList = new NonTerminal("rulelist", rules);
 		return ruleList;
 	}
 
+	/**
+	 * A support method that creates and returns the rule "rule" as defined in
+	 * the above grammar.
+	 * 
+	 * @return the rule "rule" as defined in the above grammar
+	 */
 	private static NonTerminal rule() {
-		// elements = alternation *c-wsp
-		NonTerminal elements = new NonTerminal("elements", new Conjunction(alternation(), new Repetition(cWSP())));
+		Rule rule = new Conjunction(rulename(), definedAs(), elements(), cNl());
+		return new NonTerminal("rule", rule);
+	}
 
-		// rule = rulename defined-as elements c-nl ; continues if next line
-		// starts with white space
-		return new NonTerminal("rule", new Conjunction(rulename(), definedAs(), elements, cNL()));
+	/**
+	 * A support method that creates and returns the rule "rulename" as defined
+	 * in the above grammar.
+	 * 
+	 * @return the rule "rulename" as defined in the above grammar
+	 */
+	private static NonTerminal rulename() {
+		Disjunction suffix = new Disjunction(alpha(), digit(), DASH);
+		Rule rulename = new Conjunction(alpha(), new Repetition(suffix));
+		return new NonTerminal("rulename", rulename);
+	}
+
+	/**
+	 * A support method that creates and returns the rule "defined-as" as
+	 * defined in the above grammar.
+	 * 
+	 * @return the rule "defined-as" as defined in the above grammar
+	 */
+	private static NonTerminal definedAs() {
+		Rule eq = CharacterValue.alternatives(false, "=", "=/");
+		Rule definedAs = new Conjunction(new Repetition(cWsp()), eq, new Repetition(cWsp()));
+		return new NonTerminal("defined-as", definedAs);
+	}
+
+	/**
+	 * A support method that creates and returns the rule "elements" as defined
+	 * in the above grammar.
+	 * 
+	 * @return the rule "elements" as defined in the above grammar
+	 */
+	private static NonTerminal elements() {
+		Rule elements = new Conjunction(alternation(), new Repetition(cWsp()));
+		return new NonTerminal("elements", elements);
+	}
+
+	/**
+	 * A support method that creates and returns the rule "c-wsp" as defined in
+	 * the above grammar.
+	 * 
+	 * @return the rule "c-wsp" as defined in the above grammar
+	 */
+	private static NonTerminal cWsp() {
+		Rule whitespace = new Disjunction(wsp(), new Conjunction(cNl(), wsp()));
+		return new NonTerminal("c-wsp", whitespace);
+	}
+
+	/**
+	 * A support method that creates and returns the rule "c-nl" as defined in
+	 * the above grammar.
+	 * 
+	 * @return the rule "c-nl" as defined in the above grammar
+	 */
+	private static NonTerminal cNl() {
+		Rule cNl = new Disjunction(comment(), crlf());
+		return new NonTerminal("c-nl", cNl);
+	}
+
+	/**
+	 * A support method that creates and returns the rule "comment" as defined
+	 * in the above grammar.
+	 * 
+	 * @return the rule "comment" as defined in the above grammar
+	 */
+	private static NonTerminal comment() {
+		Rule comment = new Conjunction(COLON, new Repetition(new Disjunction(wsp(), vchar())), crlf());
+		return new NonTerminal("comment", comment);
 	}
 
 	private static NonTerminal alternation() {
@@ -113,11 +193,11 @@ public class AugmentedBackusNaur extends Grammar {
 
 		// option = "[" *c-wsp alternation *c-wsp "]"
 		NonTerminal option = new NonTerminal("option",
-				new Conjunction(ll, new Repetition(cWSP()), tmpAlternation, new Repetition(cWSP()), rr));
+				new Conjunction(ll, new Repetition(cWsp()), tmpAlternation, new Repetition(cWsp()), rr));
 
 		// group = "(" *c-wsp alternation *c-wsp ")"
 		NonTerminal group = new NonTerminal("group",
-				new Conjunction(l, new Repetition(cWSP()), tmpAlternation, new Repetition(cWSP()), r));
+				new Conjunction(l, new Repetition(cWsp()), tmpAlternation, new Repetition(cWsp()), r));
 
 		// element = rulename / group / option / char-val / num-val / prose-val
 		NonTerminal element = new NonTerminal("element",
@@ -133,153 +213,230 @@ public class AugmentedBackusNaur extends Grammar {
 
 		// concatenation = repetition *(1*c-wsp repetition)
 		NonTerminal concatenation = new NonTerminal("concatenation", new Conjunction(repetition,
-				new Repetition(new Conjunction(new Repetition(cWSP(), 1, MAX_VALUE), repetition))));
+				new Repetition(new Conjunction(new Repetition(cWsp(), 1, MAX_VALUE), repetition))));
 
 		// alternation = concatenation *(*c-wsp "/" *c-wsp concatenation)
 		NonTerminal alternation = new NonTerminal("alternation", new Conjunction(concatenation,
-				new Repetition(new Conjunction(new Repetition(cWSP()), slash, new Repetition(cWSP()), concatenation))));
+				new Repetition(new Conjunction(new Repetition(cWsp()), slash, new Repetition(cWsp()), concatenation))));
 		tmpAlternation.addChild(alternation);
 
 		return alternation;
 	}
 
-	private static NonTerminal definedAs() {
-		Rule eq = CharacterValue.alternatives(false, "=", "=/");
-
-		// defined-as = *c-wsp ("=" / "=/") *c-wsp ; basic rules definition and
-		// incremental alternatives
-		return new NonTerminal("defined-as", new Conjunction(new Repetition(cWSP()), eq, new Repetition(cWSP())));
-	}
-
-	private static NonTerminal rulename() {
-		// rulename = ALPHA *(ALPHA / DIGIT / "-")
-		return new NonTerminal("rulename",
-				new Conjunction(alpha(), new Repetition(new Disjunction(alpha(), digit(), new CharacterValue("-")))));
-	}
-
+	/**
+	 * A support method that creates and returns the rule "char-val" as defined
+	 * in the above grammar.
+	 * 
+	 * @return the rule "char-val" as defined in the above grammar
+	 */
 	private static NonTerminal charVal() {
-		// quoted-string = DQUOTE *(%x20-21 / %x23-7E) DQUOTE ; quoted string of
-		// SP and VCHAR without DQUOTE
-		NonTerminal quotedString = new NonTerminal("quoted-string",
-				new Conjunction(dQuote(),
-						new Repetition(
-								new Disjunction(new NumberValue(16, 0x20, 0x21), new NumberValue(16, 0x23, 0x7e))),
-						dQuote()));
-
-		// case-insensitive-string = [ "%i" ] quoted-string
-		NonTerminal caseInsensitiveString = new NonTerminal("case-insensitive-string",
-				new Conjunction(new Optional(new CharacterValue("%i")), quotedString));
-
-		// case-sensitive-string = "%s" quoted-string
-		NonTerminal caseSensitiveString = new NonTerminal("case-sensitive-string",
-				new Conjunction(new CharacterValue("%s"), quotedString));
-
-		// char-val = case-insensitive-string / case-sensitive-string
-		return new NonTerminal("char-val", new Disjunction(caseInsensitiveString, caseSensitiveString));
+		Rule charVal = new Disjunction(caseInsensitiveString(), caseSensitiveString());
+		return new NonTerminal("char-val", charVal);
 	}
 
-	private static NonTerminal proseVal() {
-		Rule lll = new CharacterValue("<");
-		Rule rrr = new CharacterValue(">");
-
-		// prose-val = "<" *(%x20-3D / %x3F-7E) ">" ; bracketed string of SP and
-		// VCHAR without angles prose description, to be used as last resort
-		return new NonTerminal("prose-val",
-				new Conjunction(lll,
-						new Repetition(
-								new Disjunction(new NumberValue(16, 0x20, 0x3d), new NumberValue(16, 0x3f, 0x7e))),
-						rrr));
+	/**
+	 * A support method that creates and returns the rule
+	 * "case-insensitive-string" as defined in the above grammar.
+	 * 
+	 * @return the rule "case-insensitive-string" as defined in the above
+	 *         grammar
+	 */
+	private static NonTerminal caseInsensitiveString() {
+		Rule insensitive = new Optional(new CharacterValue("%i"));
+		Rule caseInsensitiveString = new Conjunction(insensitive, quotedString());
+		return new NonTerminal("case-insensitive-string", caseInsensitiveString);
 	}
 
+	/**
+	 * A support method that creates and returns the rule
+	 * "case-sensitive-string" as defined in the above grammar.
+	 * 
+	 * @return the rule "case-sensitive-string" as defined in the above grammar
+	 */
+	private static NonTerminal caseSensitiveString() {
+		Rule sensitive = new CharacterValue("%s");
+		Rule caseSensitiveString = new Conjunction(sensitive, quotedString());
+		return new NonTerminal("case-sensitive-string", caseSensitiveString);
+	}
+
+	/**
+	 * A support method that creates and returns the rule "quotedString" as
+	 * defined in the above grammar.
+	 * 
+	 * @return the rule "quotedString" as defined in the above grammar
+	 */
+	private static NonTerminal quotedString() {
+		Rule lowerRange = new NumberValue(16, 0x20, 0x21);
+		Rule upperRange = new NumberValue(16, 0x23, 0x7e);
+		Rule content = new Repetition(new Disjunction(lowerRange, upperRange));
+		Rule quotedString = new Conjunction(dQuote(), content, dQuote());
+		return new NonTerminal("quoted-string", quotedString);
+	}
+
+	/**
+	 * A support method that creates and returns the rule "num-val" as defined
+	 * in the above grammar.
+	 * 
+	 * @return the rule "num-val" as defined in the above grammar
+	 */
 	private static NonTerminal numVal() {
-		Rule dash = new CharacterValue("-");
-		Rule dot = new CharacterValue(".");
-		Rule bNum = new CharacterValue("b");
-		Rule dNum = new CharacterValue("d");
-		Rule xNum = new CharacterValue("x");
-
-		// hex-val = "x" 1*HEXDIG [ 1*("." 1*HEXDIG) / ("-" 1*HEXDIG) ]
-		Rule rule31 = new Repetition(hexdig(), 1, MAX_VALUE);
-		NonTerminal hexVal = new NonTerminal("hex-val", new Conjunction(xNum, rule31,
-				new Optional(new Disjunction(
-						new Conjunction(new Conjunction(dot, rule31), new Repetition(new Conjunction(dot, rule31))),
-						new Conjunction(dash, rule31)))));
-
-		// dec-val = "d" 1*DIGIT [ 1*("." 1*DIGIT) / ("-" 1*DIGIT) ]
-		Rule rule32 = new Repetition(digit(), 1, MAX_VALUE);
-		NonTerminal decVal = new NonTerminal("dec-val", new Conjunction(dNum, rule32,
-				new Optional(new Disjunction(
-						new Conjunction(new Conjunction(dot, rule32), new Repetition(new Conjunction(dot, rule32))),
-						new Conjunction(dash, rule32)))));
-
-		// bin-val = "b" 1*BIT [ 1*("." 1*BIT) / ("-" 1*BIT) ] ; series of
-		// concatenated bit values or single ONEOF range
-		Rule rule33 = new Repetition(bit(), 1, MAX_VALUE);
-		NonTerminal binVal = new NonTerminal("bin-val", new Conjunction(bNum, rule33,
-				new Optional(new Disjunction(
-						new Conjunction(new Conjunction(dot, rule33), new Repetition(new Conjunction(dot, rule33))),
-						new Conjunction(dash, rule33)))));
-
-		// num-val = "%" (bin-val / dec-val / hex-val)
-		return new NonTerminal("num-val",
-				new Conjunction(new CharacterValue("%"), new Disjunction(binVal, decVal, hexVal)));
+		Rule value = new Disjunction(binVal(), decVal(), hexVal());
+		Rule numVal = new Conjunction(new CharacterValue("%"), value);
+		return new NonTerminal("num-val", numVal);
 	}
 
-	private static NonTerminal cWSP() {
-		// c-wsp = WSP / (c-nl WSP)
-		return new NonTerminal("c-wsp", new Disjunction(wsp(), new Conjunction(cNL(), wsp())));
+	/**
+	 * A support method that creates and returns the rule "bin-val" as defined
+	 * in the above grammar.
+	 * 
+	 * @return the rule "bin-val" as defined in the above grammar
+	 */
+	private static NonTerminal binVal() {
+		return numericValue(marker(2), "bin-val", bit());
 	}
 
-	private static NonTerminal cNL() {
-		// c-nl = comment / CRLF ; comment or newline
-		return new NonTerminal("c-nl", new Disjunction(comment(), crlf()));
+	/**
+	 * A support method that creates and returns the rule "dec-val" as defined
+	 * in the above grammar.
+	 * 
+	 * @return the rule "dec-val" as defined in the above grammar
+	 */
+	private static NonTerminal decVal() {
+		return numericValue(marker(10), "dec-val", digit());
 	}
 
-	private static NonTerminal comment() {
-		// comment = ";" *(WSP / VCHAR) CRLF
-		return new NonTerminal("comment",
-				new Conjunction(new CharacterValue(";"), new Repetition(new Disjunction(wsp(), vchar())), crlf()));
+	/**
+	 * A support method that creates and returns the rule "hex-val" as defined
+	 * in the above grammar.
+	 * 
+	 * @return the rule "hex-val" as defined in the above grammar
+	 */
+	private static NonTerminal hexVal() {
+		return numericValue(marker(16), "hex-val", hexdig());
 	}
 
+	/**
+	 * A support method that creates and returns the rule "prose-val" as defined
+	 * in the above grammar.
+	 * 
+	 * @return the rule "prose-val" as defined in the above grammar
+	 */
+	private static NonTerminal proseVal() {
+		Rule left = new CharacterValue("<");
+		Rule right = new CharacterValue(">");
+		Rule lowerRange = new NumberValue(16, 0x20, 0x3d);
+		Rule upperRange = new NumberValue(16, 0x3f, 0x7e);
+		Rule value = new Disjunction(lowerRange, upperRange);
+		Rule proseVal = new Conjunction(left, new Repetition(value), right);
+		return new NonTerminal("prose-val", proseVal);
+	}
+
+	/**
+	 * A support method that creates and returns the rule "alpha" as defined in
+	 * the above grammar.
+	 * 
+	 * @return the rule "alpha" as defined in the above grammar
+	 */
 	private static NonTerminal alpha() {
-		// ALPHA = %x41-5A / %x61-7A ; A-Z / a-z
-		return new NonTerminal("alpha", new Disjunction(new NumberValue(16, 'A', 'Z'), new NumberValue(16, 'a', 'z')));
+		NumberValue upperCase = new NumberValue(16, 'A', 'Z');
+		NumberValue lowerCase = new NumberValue(16, 'a', 'z');
+		Rule alpha = new Disjunction(upperCase, lowerCase);
+		return new NonTerminal("alpha", alpha);
 	}
 
+	/**
+	 * A support method that creates and returns the rule "bit" as defined in
+	 * the above grammar.
+	 * 
+	 * @return the rule "bit" as defined in the above grammar
+	 */
 	private static NonTerminal bit() {
-		// BIT = "0" / "1"
-		return new NonTerminal("bit", CharacterValue.alternatives(false, "0", "1"));
+		Rule bit = CharacterValue.alternatives(false, "0", "1");
+		return new NonTerminal("bit", bit);
 	}
 
-	private static NonTerminal digit() {
-		// DIGIT = %x30-39 ; 0-9
-		return new NonTerminal("digit", new NumberValue(16, '0', '9'));
-	}
-
-	private static NonTerminal hexdig() {
-		// HEXDIG = DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
-		return new NonTerminal("hexdig", CharacterValue.alternatives(false, "0", "1", "2", "3", "4", "5", "6", "7", "8",
-				"9", "A", "B", "C", "D", "E", "F"));
-	}
-
-	private static NonTerminal dQuote() {
-		// DQUOTE = %x22 ; " (Double Quote)
-		return new NonTerminal("dQuote", new CharacterValue("\""));
-	}
-
+	/**
+	 * A support method that creates and returns the rule "crlf" as defined in
+	 * the above grammar.
+	 * 
+	 * @return the rule "crlf" as defined in the above grammar
+	 */
 	private static NonTerminal crlf() {
-		// CRLF = CR LF ; Internet standard newline
-		return new NonTerminal("crlf", new CharacterValue("\r\n"));
+		Rule crlf = new CharacterValue("\r\n");
+		return new NonTerminal("crlf", crlf);
 	}
 
+	/**
+	 * A support method that creates and returns the rule "digit" as defined in
+	 * the above grammar.
+	 * 
+	 * @return the rule "digit" as defined in the above grammar
+	 */
+	private static NonTerminal digit() {
+		Rule digit = new NumberValue(16, '0', '9');
+		return new NonTerminal("digit", digit);
+	}
+
+	/**
+	 * A support method that creates and returns the rule "dQuote" as defined in
+	 * the above grammar.
+	 * 
+	 * @return the rule "dQuote" as defined in the above grammar
+	 */
+	private static NonTerminal dQuote() {
+		Rule dQuote = new CharacterValue("\"");
+		return new NonTerminal("dQuote", dQuote);
+	}
+
+	/**
+	 * A support method that creates and returns the rule "hexdig" as defined in
+	 * the above grammar.
+	 * 
+	 * @return the rule "hexdig" as defined in the above grammar
+	 */
+	private static Rule hexdig() {
+		Rule hexdig = CharacterValue.alternatives(false, "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B",
+				"C", "D", "E", "F");
+		return new NonTerminal("hexdig", hexdig);
+	}
+
+	/**
+	 * A support method that creates and returns the rule "vchar" as defined in
+	 * the above grammar.
+	 * 
+	 * @return the rule "vchar" as defined in the above grammar
+	 */
 	private static NonTerminal vchar() {
-		// VCHAR = %x21-7E ; visible (printing) characters
-		return new NonTerminal("vchar", new NumberValue(16, 0x21, 0x7e));
+		Rule vchar = new NumberValue(16, 0x21, 0x7e);
+		return new NonTerminal("vchar", vchar);
 	}
 
+	/**
+	 * A support method that creates and returns the rule "wsp" as defined in
+	 * the above grammar.
+	 * 
+	 * @return the rule "wsp" as defined in the above grammar
+	 */
 	private static NonTerminal wsp() {
-		// WSP = SP / HTAB ; white space
-		return new NonTerminal("wsp", CharacterValue.alternatives(false, "" + (char) 0x20, "" + (char) 0x09));
+		Rule wsp = CharacterValue.alternatives(false, "" + (char) 0x20, "" + (char) 0x09);
+		return new NonTerminal("wsp", wsp);
+	}
+
+	/**
+	 * A support function that returns ...
+	 * 
+	 * @param identifier
+	 * @param ruleName
+	 * @param digit
+	 * @return
+	 */
+	private static NonTerminal numericValue(String identifier, String ruleName, Rule digit) {
+		Rule marker = new CharacterValue(identifier);
+		Rule value = new Repetition(digit, 1, MAX_VALUE);
+		Rule series = new Repetition(new Conjunction(DOT, value), 1, MAX_VALUE);
+		Rule range = new Conjunction(DASH, value);
+		Rule numericVal = new Conjunction(marker, value, new Optional(new Disjunction(series, range)));
+		return new NonTerminal(ruleName, numericVal);
 	}
 
 	/**
