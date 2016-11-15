@@ -178,49 +178,101 @@ public class AugmentedBackusNaur extends Grammar {
 	 * @return the rule "comment" as defined in the above grammar
 	 */
 	private static NonTerminal comment() {
-		Rule comment = new Conjunction(COLON, new Repetition(new Disjunction(wsp(), vchar())), crlf());
+		Rule content = new Repetition(new Disjunction(wsp(), vchar()));
+		Rule comment = new Conjunction(COLON, content, crlf());
 		return new NonTerminal("comment", comment);
 	}
 
+	/**
+	 * A support method that creates and returns the rule "alternation" as
+	 * defined in the above grammar.
+	 * 
+	 * @return the rule "alternation" as defined in the above grammar
+	 */
 	private static NonTerminal alternation() {
 		Rule slash = new CharacterValue("/");
-		Rule s = new CharacterValue("*");
-		Rule l = new CharacterValue("(");
-		Rule r = new CharacterValue(")");
-		Rule ll = new CharacterValue("[");
-		Rule rr = new CharacterValue("]");
-		Rule tmpAlternation = new Conjunction();
+		Rule whitespace = new Repetition(cWsp());
+		Rule wspConcatenation = new Conjunction(whitespace, slash, whitespace, concatenation());
+		Rule alternation = new Conjunction(concatenation(), new Repetition(wspConcatenation));
+		return new NonTerminal("alternation", alternation);
+	}
 
-		// option = "[" *c-wsp alternation *c-wsp "]"
-		NonTerminal option = new NonTerminal("option",
-				new Conjunction(ll, new Repetition(cWsp()), tmpAlternation, new Repetition(cWsp()), rr));
+	/**
+	 * A support method that creates and returns the rule "concatenation" as
+	 * defined in the above grammar.
+	 * 
+	 * @return the rule "concatenation" as defined in the above grammar
+	 */
+	private static NonTerminal concatenation() {
+		Rule whitespace = new Repetition(cWsp(), 1, MAX_VALUE);
+		Rule wspRepetition = new Conjunction(whitespace, repetition());
+		Rule concatenation = new Conjunction(repetition(), new Repetition(wspRepetition));
+		return new NonTerminal("concatenation", concatenation);
+	}
 
-		// group = "(" *c-wsp alternation *c-wsp ")"
-		NonTerminal group = new NonTerminal("group",
-				new Conjunction(l, new Repetition(cWsp()), tmpAlternation, new Repetition(cWsp()), r));
+	/**
+	 * A support method that creates and returns the rule "repetition" as
+	 * defined in the above grammar.
+	 * 
+	 * @return the rule "repetition" as defined in the above grammar
+	 */
+	private static NonTerminal repetition() {
+		Rule repetition = new Conjunction(new Optional(repeat()), element());
+		return new NonTerminal("repetition", repetition);
+	}
 
-		// element = rulename / group / option / char-val / num-val / prose-val
-		NonTerminal element = new NonTerminal("element",
-				new Disjunction(rulename(), group, option, charVal(), numVal(), proseVal()));
+	/**
+	 * A support method that creates and returns the rule "repeat" as defined in
+	 * the above grammar.
+	 * 
+	 * @return the rule "repeat" as defined in the above grammar
+	 */
+	private static NonTerminal repeat() {
+		Rule asterix = new CharacterValue("*");
+		Rule digits = new Repetition(digit());
+		Rule range = new Conjunction(digits, asterix, digits);
+		Rule fixed = new Repetition(digit(), 1, MAX_VALUE);
+		Rule repeat = new Disjunction(range, fixed);
+		return new NonTerminal("repeat", repeat);
+	}
 
-		// repeat = 1*DIGIT / (*DIGIT "*" *DIGIT)
-		NonTerminal repeat = new NonTerminal("repeat",
-				new Disjunction(new Conjunction(new Repetition(digit()), s, new Repetition(digit())),
-						new Repetition(digit(), 1, MAX_VALUE)));
+	/**
+	 * A support method that creates and returns the rule "element" as defined
+	 * in the above grammar.
+	 * 
+	 * @return the rule "element" as defined in the above grammar
+	 */
+	private static NonTerminal element() {
+		Rule element = new Disjunction(rulename(), group(), option(), charVal(), numVal(), proseVal());
+		return new NonTerminal("element", element);
+	}
 
-		// repetition = [repeat] element
-		NonTerminal repetition = new NonTerminal("repetition", new Conjunction(new Optional(repeat), element));
+	/**
+	 * A support method that creates and returns the rule "group" as defined in
+	 * the above grammar.
+	 * 
+	 * @return the rule "group" as defined in the above grammar
+	 */
+	private static NonTerminal group() {
+		Rule left = new CharacterValue("(");
+		Rule right = new CharacterValue(")");
+		Rule whitespace = new Repetition(cWsp());
+		Rule group = new Conjunction(left, whitespace, alternation(), whitespace, right);
+		return new NonTerminal("group", group);
+	}
 
-		// concatenation = repetition *(1*c-wsp repetition)
-		NonTerminal concatenation = new NonTerminal("concatenation", new Conjunction(repetition,
-				new Repetition(new Conjunction(new Repetition(cWsp(), 1, MAX_VALUE), repetition))));
-
-		// alternation = concatenation *(*c-wsp "/" *c-wsp concatenation)
-		NonTerminal alternation = new NonTerminal("alternation", new Conjunction(concatenation,
-				new Repetition(new Conjunction(new Repetition(cWsp()), slash, new Repetition(cWsp()), concatenation))));
-		tmpAlternation.addChild(alternation);
-
-		return alternation;
+	/**
+	 * A support method that creates and returns the rule "option" as defined in
+	 * the above grammar.
+	 * 
+	 * @return the rule "option" as defined in the above grammar
+	 */
+	private static NonTerminal option() {
+		Rule left = new CharacterValue("[");
+		Rule right = new CharacterValue("]");
+		Rule whitespace = new Repetition(cWsp());
+		Rule option = new Conjunction(left, whitespace, alternation(), whitespace, right);
+		return new NonTerminal("option", option);
 	}
 
 	/**
