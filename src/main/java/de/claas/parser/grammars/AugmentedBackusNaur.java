@@ -68,10 +68,8 @@ import de.claas.parser.rules.Repetition;
  */
 public class AugmentedBackusNaur extends Grammar {
 
-	private static final Rule DOT = new CharacterValue(".");
 	private static final int MAX_VALUE = Integer.MAX_VALUE;
 	private static final Rule DASH = new CharacterValue("-");
-	private static final Rule COLON = new CharacterValue(";");
 
 	/**
 	 * Constructs a new {@link AugmentedBackusNaur} with default parameters.
@@ -178,8 +176,9 @@ public class AugmentedBackusNaur extends Grammar {
 	 * @return the rule "comment" as defined in the above grammar
 	 */
 	private static NonTerminal comment() {
+		Rule colon = new CharacterValue(";");
 		Rule content = new Repetition(new Disjunction(wsp(), vchar()));
-		Rule comment = new Conjunction(COLON, content, crlf());
+		Rule comment = new Conjunction(colon, content, crlf());
 		return new NonTerminal("comment", comment);
 	}
 
@@ -483,9 +482,10 @@ public class AugmentedBackusNaur extends Grammar {
 	 * @return
 	 */
 	private static NonTerminal numericValue(String identifier, String ruleName, Rule digit) {
+		Rule dot = new CharacterValue(".");
 		Rule marker = new CharacterValue(identifier);
 		Rule value = new Repetition(digit, 1, MAX_VALUE);
-		Rule series = new Repetition(new Conjunction(DOT, value), 1, MAX_VALUE);
+		Rule series = new Repetition(new Conjunction(dot, value), 1, MAX_VALUE);
 		Rule range = new Conjunction(DASH, value);
 		Rule numericVal = new Conjunction(marker, value, new Optional(new Disjunction(series, range)));
 		return new NonTerminal(ruleName, numericVal);
