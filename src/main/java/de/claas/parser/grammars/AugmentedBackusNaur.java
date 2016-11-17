@@ -1,5 +1,7 @@
 package de.claas.parser.grammars;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import de.claas.parser.Grammar;
 import de.claas.parser.Node;
 import de.claas.parser.Rule;
@@ -70,6 +72,8 @@ public class AugmentedBackusNaur extends Grammar {
 
 	private static final int MAX_VALUE = Integer.MAX_VALUE;
 	private static final Rule DASH = new CharacterValue("-");
+	private static final NonTerminal ALTERNATION = new NonTerminal("alternation");
+	private static final AtomicBoolean CREATED_ALTERNATION = new AtomicBoolean();
 
 	/**
 	 * Constructs a new {@link AugmentedBackusNaur} with default parameters.
@@ -189,11 +193,15 @@ public class AugmentedBackusNaur extends Grammar {
 	 * @return the rule "alternation" as defined in the above grammar
 	 */
 	private static NonTerminal alternation() {
-		Rule slash = new CharacterValue("/");
-		Rule whitespace = new Repetition(cWsp());
-		Rule wspConcatenation = new Conjunction(whitespace, slash, whitespace, concatenation());
-		Rule alternation = new Conjunction(concatenation(), new Repetition(wspConcatenation));
-		return new NonTerminal("alternation", alternation);
+		if (!CREATED_ALTERNATION.get()) {
+			CREATED_ALTERNATION.set(true);
+			Rule slash = new CharacterValue("/");
+			Rule whitespace = new Repetition(cWsp());
+			Rule wspConcatenation = new Conjunction(whitespace, slash, whitespace, concatenation());
+			Rule alternation = new Conjunction(concatenation(), new Repetition(wspConcatenation));
+			ALTERNATION.setRule(alternation);
+		}
+		return ALTERNATION;
 	}
 
 	/**
