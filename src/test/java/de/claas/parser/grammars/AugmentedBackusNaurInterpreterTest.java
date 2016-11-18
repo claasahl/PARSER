@@ -40,14 +40,10 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 
 	@Override
 	public void shouldHandleNodes() {
-		NonTerminal de = new NonTerminal("de",
-				new Conjunction(new CharacterValue("hallo"), new CharacterValue(" "), new CharacterValue("welt")));
-		NonTerminal en = new NonTerminal("en",
-				new Conjunction(new CharacterValue("hello"), new CharacterValue(" "), new CharacterValue("world")));
-		NonTerminal se = new NonTerminal("se",
-				new Conjunction(new CharacterValue("hallå"), new CharacterValue(" "), new CharacterValue("värld")));
-		NonTerminal es = new NonTerminal("es",
-				new Conjunction(new CharacterValue("hola"), new CharacterValue(" "), new CharacterValue("mundo")));
+		NonTerminal de = helloWorld("de", "hallo", "welt");
+		NonTerminal en = helloWorld("en", "hello", "world");
+		NonTerminal se = helloWorld("se", "hallå", "värld");
+		NonTerminal es = helloWorld("es", "hola", "mundo");
 		NonTerminal expected = new NonTerminal("hello-world", new Disjunction(de, en, se, es));
 
 		AugmentedBackusNaurInterpreter interpreter = build();
@@ -134,6 +130,26 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 		Node grammar = new AugmentedBackusNaurBuilder().rule(expected).build();
 		grammar.visit(interpreter);
 		assertEquals(expected, interpreter.getResult());
+	}
+
+	/**
+	 * A support function that returns a "hello world"-rule for the specified
+	 * language.
+	 * 
+	 * @param language
+	 *            the language
+	 * @param hello
+	 *            the word "hello" in the specified language
+	 * @param world
+	 *            the word "world" in the specified language
+	 * @return a "hello world"-rule for the specified language
+	 */
+	private static NonTerminal helloWorld(String language, String hello, String world) {
+		Rule part1 = new CharacterValue(hello);
+		Rule space = new CharacterValue(" ");
+		Rule part2 = new CharacterValue(world);
+		Rule rule = new Conjunction(part1, space, part2);
+		return new NonTerminal(language, rule);
 	}
 
 }
