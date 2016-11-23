@@ -21,7 +21,7 @@ public class NodeHashCodeTest extends NodeVisitorTest {
 	/**
 	 * Returns an instantiated {@link NodeHashCode} class with default values.
 	 * 
-	 * @return an instantiated {@link NodeHashCode} class with default values
+	 * @return an instantiated {@link NodeHashCode} class
 	 */
 	@SuppressWarnings("static-method")
 	private NodeHashCode build() {

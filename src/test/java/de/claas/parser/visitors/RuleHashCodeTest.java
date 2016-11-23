@@ -30,7 +30,7 @@ public class RuleHashCodeTest extends RuleVisitorTest {
 	/**
 	 * Returns an instantiated {@link RuleHashCode} class with default values.
 	 * 
-	 * @return an instantiated {@link RuleHashCode} class with default values
+	 * @return an instantiated {@link RuleHashCode} class
 	 */
 	@SuppressWarnings("static-method")
 	private RuleHashCode build() {

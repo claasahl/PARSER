@@ -21,7 +21,7 @@ public class StateTest {
 	 * 
 	 * @param pattern
 	 *            the pattern
-	 * @return an instantiated {@link State} class with the specified pattern
+	 * @return an instantiated {@link State} class
 	 */
 	@SuppressWarnings("static-method")
 	protected State buildState(String pattern) {

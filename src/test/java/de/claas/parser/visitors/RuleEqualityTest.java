@@ -37,8 +37,7 @@ public class RuleEqualityTest extends RuleVisitorTest {
 	 *            the reference object with which the visited {@link Rule}s are
 	 *            compared
 	 * 
-	 * @return an instantiated {@link RuleEquality} class with the specified
-	 *         parameter
+	 * @return an instantiated {@link RuleEquality} class with
 	 */
 	@SuppressWarnings("static-method")
 	private RuleEquality build(Object obj) {

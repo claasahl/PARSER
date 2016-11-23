@@ -29,8 +29,7 @@ public class NodeEqualityTest extends NodeVisitorTest {
 	 *            the reference object with which the visited {@link Node}s are
 	 *            compared
 	 * 
-	 * @return an instantiated {@link NodeEquality} class with the specified
-	 *         parameter
+	 * @return an instantiated {@link NodeEquality} class
 	 */
 	@SuppressWarnings("static-method")
 	private NodeEquality build(Object obj) {

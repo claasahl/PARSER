@@ -34,7 +34,7 @@ public abstract class RuleTest {
 	 *
 	 * @param children
 	 *            the children
-	 * @return an instantiated {@link Rule} class with the given children
+	 * @return an instantiated {@link Rule} class
 	 */
 	protected abstract Rule build(Rule... children);
 
@@ -78,7 +78,7 @@ public abstract class RuleTest {
 	 * 
 	 * @param tokens
 	 *            the (unprocessed) tokens
-	 * @return an instantiated {@link State} class with the specified tokens
+	 * @return an instantiated {@link State} class
 	 */
 	protected static State buildState(String pattern) {
 		return new State(pattern);

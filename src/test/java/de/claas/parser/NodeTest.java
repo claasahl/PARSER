@@ -30,7 +30,7 @@ public abstract class NodeTest {
 	 *
 	 * @param children
 	 *            the children
-	 * @return an instantiated {@link Node} class with the given children
+	 * @return an instantiated {@link Node} class
 	 */
 	protected abstract Node build(Node... children);
 
