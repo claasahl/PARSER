@@ -253,7 +253,7 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 				String terminal = rule.getTerminal();
 				IntFunction<? extends String> mapper = (c) -> Integer.toString(c, radix);
 				String value = terminal.chars().mapToObj(mapper).collect(Collectors.joining("."));
-				
+
 				this.stringBuilder.append("%");
 				this.stringBuilder.append(marker);
 				this.stringBuilder.append(value);

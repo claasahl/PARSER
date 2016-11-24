@@ -189,9 +189,10 @@ public class NumberInterpreter extends Interpreter<java.lang.Number> {
 	}
 
 	/**
-	 * A support function that tries to simplify the process of moving to the next
-	 * child. Returns the next child if the condition is fulfilled and there is
-	 * a next child. Otherwise, the current / most recent child is returned.
+	 * A support function that tries to simplify the process of moving to the
+	 * next child. Returns the next child if the condition is fulfilled and
+	 * there is a next child. Otherwise, the current / most recent child is
+	 * returned.
 	 * 
 	 * @param condition
 	 *            whether the next child should be attempted to be retrieved
