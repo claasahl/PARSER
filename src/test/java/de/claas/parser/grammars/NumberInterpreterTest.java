@@ -10,13 +10,11 @@ import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.visitors.InterpreterTest;
 
 /**
- *
  * The JUnit test for class {@link NumberInterpreter}. It is intended to collect
  * and document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
  *
  * @author Claas Ahlrichs
- *
  */
 public class NumberInterpreterTest extends InterpreterTest<java.lang.Number> {
 

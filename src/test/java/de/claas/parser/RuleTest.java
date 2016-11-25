@@ -14,7 +14,6 @@ import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.visitors.Parser;
 
 /**
- * 
  * The JUnit test for class {@link Rule}. It is intended to collect and document
  * a set of test cases for the tested class. Please refer to the individual
  * tests for more detailed information.
@@ -24,7 +23,6 @@ import de.claas.parser.visitors.Parser;
  * the tested class.
  *
  * @author Claas Ahlrichs
- *
  */
 public abstract class RuleTest {
 

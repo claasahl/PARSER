@@ -14,7 +14,6 @@ import de.claas.parser.Rule;
 import de.claas.parser.RuleTest;
 
 /**
- * 
  * The JUnit test for class {@link Decorator}. It is intended to collect and
  * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
@@ -24,7 +23,6 @@ import de.claas.parser.RuleTest;
  * the tested class.
  * 
  * @author Claas Ahlrichs
- *
  */
 public abstract class DecoratorTest extends RuleTest {
 

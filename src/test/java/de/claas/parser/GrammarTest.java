@@ -1,7 +1,6 @@
 package de.claas.parser;
 
 /**
- * 
  * The JUnit test for class {@link Grammar}. It is intended to collect and
  * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
@@ -11,7 +10,6 @@ package de.claas.parser;
  * the tested class.
  *
  * @author Claas Ahlrichs
- *
  */
 public abstract class GrammarTest<R extends Grammar> {
 

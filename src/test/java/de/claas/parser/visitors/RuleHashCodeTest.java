@@ -14,13 +14,11 @@ import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 
 /**
- * 
  * The JUnit test for class {@link RuleHashCode}. It is intended to collect and
  * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
  *
  * @author Claas Ahlrichs
- *
  */
 public class RuleHashCodeTest extends RuleVisitorTest {
 

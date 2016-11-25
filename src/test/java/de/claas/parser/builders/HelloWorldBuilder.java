@@ -6,7 +6,6 @@ import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 
 /**
- * 
  * The class {@link HelloWorldBuilder}. It is a support class for building
  * node-structures the encapsulate the ubiquitous phrase "hello world" as
  * understood by {@link HelloWorld}.
@@ -14,7 +13,6 @@ import de.claas.parser.results.TerminalNode;
  * By default, the encapsulated phrase is in English and thus "hello world".
  *
  * @author Claas Ahlrichs
- *
  */
 public class HelloWorldBuilder {
 

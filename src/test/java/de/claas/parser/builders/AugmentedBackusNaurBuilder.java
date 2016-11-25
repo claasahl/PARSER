@@ -21,7 +21,6 @@ import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 
 /**
- * 
  * The class {@link AugmentedBackusNaurBuilder}. It is a support class for
  * building node-structures that encapsulate an ABNF-grammar as understood by
  * {@link AugmentedBackusNaur} and {@link AugmentedBackusNaurInterpreter}.
@@ -30,7 +29,6 @@ import de.claas.parser.rules.Repetition;
  * rules).
  *
  * @author Claas Ahlrichs
- *
  */
 public class AugmentedBackusNaurBuilder {
 

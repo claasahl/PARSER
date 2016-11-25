@@ -17,13 +17,11 @@ import de.claas.parser.rules.Repetition;
 import de.claas.parser.rules.Terminal;
 
 /**
- *
  * The JUnit test for class {@link RuleEquality}. It is intended to collect and
  * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
  *
  * @author Claas Ahlrichs
- *
  */
 public class RuleEqualityTest extends RuleVisitorTest {
 
