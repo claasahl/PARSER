@@ -10,7 +10,6 @@ import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 
 /**
- * 
  * Superclass of all rule-based visitors. This class is intended to model a
  * visitor for {@link Rule} instances and their children. Implementations of
  * this class will most likely extract details (e.g. terminal symbols or
@@ -20,7 +19,6 @@ import de.claas.parser.rules.Repetition;
  * visit-method for all implementations of the {@link Rule} class.
  * 
  * @author Claas Ahlrichs
- *
  */
 public interface RuleVisitor {
 

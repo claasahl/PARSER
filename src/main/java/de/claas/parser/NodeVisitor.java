@@ -6,7 +6,6 @@ import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 
 /**
- * 
  * Superclass of all node-based visitors. This class is intended to model a
  * visitor for {@link Node} instances and their children. Implementations of
  * this class will most likely process or interpret node-hierarchies.
@@ -15,7 +14,6 @@ import de.claas.parser.results.TerminalNode;
  * visit-method for all implementations of the {@link Node} class.
  * 
  * @author Claas Ahlrichs
- *
  */
 public interface NodeVisitor {
 

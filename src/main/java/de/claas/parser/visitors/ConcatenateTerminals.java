@@ -11,7 +11,6 @@ import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 
 /**
- * 
  * The class {@link ConcatenateTerminals}. It is an implementation of the
  * interface {@link NodeVisitor}. It is intended to collect and concatenate
  * terminal symbols of the {@link Node} tree, that are being visited.
@@ -20,7 +19,6 @@ import de.claas.parser.results.TerminalNode;
  * to visualize multiple trees.
  *
  * @author Claas Ahlrichs
- *
  */
 public class ConcatenateTerminals implements NodeVisitor {
 

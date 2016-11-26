@@ -12,7 +12,6 @@ import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 
 /**
- * 
  * The class {@link NodeEquality}. It is an implementation of the interface
  * {@link NodeVisitor}. It is intended to compare a {@link Node}-hierarchy with
  * a reference object.
@@ -21,7 +20,6 @@ import de.claas.parser.results.TerminalNode;
  * to compare multiple {@link Rule}s.
  * 
  * @author Claas Ahlrichs
- *
  */
 public class NodeEquality implements NodeVisitor {
 

@@ -14,7 +14,6 @@ import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 
 /**
- * 
  * The class {@link RemoveIntermediateNodes}. It is an implementation of the
  * interface {@link NodeVisitor}. It is intended to simplify the node structure
  * that is returned by {@link Grammar#parse(String, boolean)}. This is
@@ -24,7 +23,6 @@ import de.claas.parser.results.TerminalNode;
  * to simplify the node structure of multiple trees.
  * 
  * @author Claas Ahlrichs
- *
  */
 public class RemoveIntermediateNodes implements NodeVisitor {
 

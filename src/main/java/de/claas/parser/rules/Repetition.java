@@ -4,7 +4,6 @@ import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
 
 /**
- * 
  * The class {@link Repetition}. It is an implementation of the
  * {@link Decorator} class. It is intended to represent a repeatable rule within
  * a grammar. The minimum and maximum number of repetitions can be limited to
@@ -12,7 +11,6 @@ import de.claas.parser.RuleVisitor;
  * values (i.e. {@link Integer#MAX_VALUE}).
  * 
  * @author Claas Ahlrichs
- *
  */
 public class Repetition extends Decorator {
 
@@ -20,7 +18,6 @@ public class Repetition extends Decorator {
 	private final int maxRepetitions;
 
 	/**
-	 * 
 	 * Constructs a new {@link Repetition} with default parameters. Calling this
 	 * constructor is equivalent to calling
 	 * <code>{@link Repetition#Repetition(Rule, int, int)}</code> with at least
@@ -34,7 +31,6 @@ public class Repetition extends Decorator {
 	}
 
 	/**
-	 * 
 	 * Constructs a new {@link Repetition} with the specified parameters.
 	 * 
 	 * @param rule

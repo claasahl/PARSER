@@ -7,21 +7,18 @@ import de.claas.parser.visitors.Parser;
 import de.claas.parser.visitors.RemoveIntermediateNodes;
 
 /**
- * 
  * The class {@link Grammar}. It is intended to parse sentences of a given
  * grammar. This class takes a {@link NonTerminal} as initial rule (i.e. named
  * rule) and uses it to parse sentences. The result is returned as a tree of
  * {@link Node} instances.
  * 
  * @author Claas Ahlrichs
- *
  */
 public class Grammar {
 
 	private final NonTerminal start;
 
 	/**
-	 * 
 	 * Constructs a new {@link Grammar} with the specified parameter.
 	 * 
 	 * @param grammar

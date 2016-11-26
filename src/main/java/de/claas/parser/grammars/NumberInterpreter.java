@@ -11,13 +11,11 @@ import de.claas.parser.results.TerminalNode;
 import de.claas.parser.visitors.Interpreter;
 
 /**
- * 
  * The class {@link NumberInterpreter}. It is an implementation of the interface
  * {@link Interpreter}. It is intended to interpret {@link Node}-trees that
  * correspond to the {@link Number} grammar.
  *
  * @author Claas Ahlrichs
- *
  */
 public class NumberInterpreter extends Interpreter<java.lang.Number> {
 

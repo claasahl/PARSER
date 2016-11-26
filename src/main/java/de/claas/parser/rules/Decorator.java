@@ -5,7 +5,6 @@ import java.util.Iterator;
 import de.claas.parser.Rule;
 
 /**
- * 
  * The class {@link Decorator}. It is an implementation of the {@link Rule}
  * class. It is intended to decorate (or wrap) an existing rule. In doing so,
  * new functionality can be dynamically added to existing rules.
@@ -13,7 +12,6 @@ import de.claas.parser.Rule;
  * This implementation resembles the <i>decorator</i> design pattern.
  *
  * @author Claas Ahlrichs
- *
  */
 public abstract class Decorator extends Rule {
 

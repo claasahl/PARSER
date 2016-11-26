@@ -66,7 +66,6 @@ import de.claas.parser.rules.Repetition;
  * updated by <a href="https://www.ietf.org/rfc/rfc7405.txt">RFC 7405</a>.
  * 
  * @author Claas Ahlrichs
- *
  */
 public class AugmentedBackusNaur extends Grammar {
 

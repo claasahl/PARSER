@@ -3,14 +3,12 @@ package de.claas.parser;
 import java.util.Stack;
 
 /**
- * 
  * The class {@link State}. It is intended to be used by {@link Grammar}
  * instances during processing / parsing. The state is fed with data, that is
  * presumed to fulfill the grammar in question, and provides methods for
  * processing the given data as well as methods for querying its internal state.
  * 
  * @author Claas Ahlrichs
- *
  */
 public class State {
 

@@ -20,7 +20,6 @@ import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 
 /**
- * 
  * The class {@link Parser}. It is an implementation of the interface
  * {@link RuleVisitor}. It is intended to parse data into a tree of
  * {@link Node}s.
@@ -61,7 +60,6 @@ import de.claas.parser.rules.Repetition;
  * to parse trees more than once.
  *
  * @author Claas Ahlrichs
- *
  */
 public class Parser implements RuleVisitor {
 

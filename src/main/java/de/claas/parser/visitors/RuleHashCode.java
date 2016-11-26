@@ -14,7 +14,6 @@ import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 
 /**
- * 
  * The class {@link RuleHashCode}. It is an implementation of the interface
  * {@link RuleVisitor}. It is intended to determine a combined hash code for all
  * visited {@link Rule}s.
@@ -23,7 +22,6 @@ import de.claas.parser.rules.Repetition;
  * to determine multiple hash codes.
  *
  * @author Claas Ahlrichs
- *
  */
 public class RuleHashCode implements RuleVisitor {
 

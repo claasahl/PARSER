@@ -4,14 +4,12 @@ import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
 
 /**
- * 
  * The class {@link NonTerminal}. It is an implementation of the
  * {@link Decorator} class. It is intended to represent a non-terminal rule
  * within a grammar. Non-terminal rules are named rules which largely make up a
  * grammar.
  * 
  * @author Claas Ahlrichs
- *
  */
 public class NonTerminal extends Decorator {
 
@@ -19,7 +17,6 @@ public class NonTerminal extends Decorator {
 	private final String comment;
 
 	/**
-	 * 
 	 * Constructs a new {@link NonTerminal} with the specified parameters.
 	 * Calling this constructor is equivalent to calling
 	 * <code>{@link NonTerminal#NonTerminal(String, String, Rule)}</code> with
@@ -33,7 +30,6 @@ public class NonTerminal extends Decorator {
 	}
 
 	/**
-	 * 
 	 * Constructs a new {@link NonTerminal} with the specified parameters.
 	 * Calling this constructor is equivalent to calling
 	 * <code>{@link NonTerminal#NonTerminal(String, String, Rule)}</code> with
@@ -49,7 +45,6 @@ public class NonTerminal extends Decorator {
 	}
 
 	/**
-	 * 
 	 * Constructs a new {@link NonTerminal} with the specified parameters.
 	 * 
 	 * @param name

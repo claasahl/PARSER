@@ -21,7 +21,6 @@ import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 
 /**
- * 
  * The class {@link AugmentedBackusNaurPrinter}. It is an implementation of the
  * interface {@link RuleVisitor}. It is intended to "visualize" a
  * {@link Grammar} by turning it into a human readable string. The resulting
@@ -32,7 +31,6 @@ import de.claas.parser.rules.Repetition;
  * to visualize multiple grammars.
  *
  * @author Claas Ahlrichs
- *
  */
 public class AugmentedBackusNaurPrinter implements RuleVisitor {
 
@@ -43,7 +41,6 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 	private final String lineSeparator;
 
 	/**
-	 * 
 	 * Constructs a new {@link AugmentedBackusNaurPrinter} with default
 	 * parameters. Calling this constructor is equivalent to calling
 	 * <code>{@link #AugmentedBackusNaurPrinter(String)}</code> with the
@@ -135,7 +132,6 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 	}
 
 	/**
-	 * 
 	 * The class {@link NonTerminalPrinter}. It is an implementation of the
 	 * interface {@link RuleVisitor}. It is intended to "visualize" a single
 	 * {@link NonTerminal} rule by turning it into a human readable string. The
@@ -144,7 +140,6 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 	 * <a href="https://www.ietf.org/rfc/rfc2234.txt">RFC 2234</a>.
 	 *
 	 * @author Claas Ahlrichs
-	 *
 	 */
 	private static class NonTerminalPrinter implements RuleVisitor {
 

@@ -10,7 +10,6 @@ import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 
 /**
- * 
  * The class {@link NodeHashCode}. It is an implementation of the interface
  * {@link NodeVisitor}. It is intended to determine a combined hash code for all
  * visited {@link Node}s.
@@ -19,7 +18,6 @@ import de.claas.parser.results.TerminalNode;
  * to determine multiple hash codes.
  *
  * @author Claas Ahlrichs
- *
  */
 public class NodeHashCode implements NodeVisitor {
 

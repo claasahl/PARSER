@@ -15,7 +15,6 @@ import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 
 /**
- * 
  * The class {@link Interpreter}. It is an implementation of the interface
  * {@link NodeVisitor}. It is intended to basic tools and convenience functions
  * for interpreting {@link Node}-trees (i.e. the output of {@link Parser}).
@@ -24,7 +23,6 @@ import de.claas.parser.results.TerminalNode;
  * to visualize multiple trees.
  *
  * @author Claas Ahlrichs
- *
  */
 public abstract class Interpreter<R> implements NodeVisitor {
 

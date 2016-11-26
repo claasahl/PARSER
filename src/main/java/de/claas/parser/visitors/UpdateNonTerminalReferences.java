@@ -17,7 +17,6 @@ import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 
 /**
- * 
  * The class {@link UpdateNonTerminalReferences}. It is an implementation of the
  * interface {@link RuleVisitor}. It is intended to updated "broken" references
  * to {@link NonTerminal}s (i.e. {@link NonTerminal}s that do not have an
@@ -26,7 +25,6 @@ import de.claas.parser.rules.Repetition;
  * associated rule, which is determined by a pool of known {@link NonTerminal}s.
  *
  * @author Claas Ahlrichs
- *
  */
 public class UpdateNonTerminalReferences implements RuleVisitor {
 

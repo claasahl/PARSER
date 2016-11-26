@@ -4,12 +4,10 @@ import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
 
 /**
- * 
  * The class {@link Disjunction}. It is an implementation of the {@link Rule}
  * class. It is intended to represent a disjunction of rules within a grammar.
  * 
  * @author Claas Ahlrichs
- *
  */
 public class Disjunction extends Rule {
 

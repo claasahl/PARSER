@@ -16,7 +16,6 @@ import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 
 /**
- * 
  * The class {@link RuleEquality}. It is an implementation of the interface
  * {@link RuleVisitor}. It is intended to compare a {@link Rule}-hierarchy with
  * a reference object.
@@ -25,7 +24,6 @@ import de.claas.parser.rules.Repetition;
  * to compare multiple {@link Rule}s.
  *
  * @author Claas Ahlrichs
- *
  */
 public class RuleEquality implements RuleVisitor {
 

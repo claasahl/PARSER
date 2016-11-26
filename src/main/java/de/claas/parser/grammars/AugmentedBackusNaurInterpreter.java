@@ -23,14 +23,12 @@ import de.claas.parser.visitors.Interpreter;
 import de.claas.parser.visitors.UpdateNonTerminalReferences;
 
 /**
- * 
  * The class {@link AugmentedBackusNaurInterpreter}. It is an implementation of
  * the interface {@link Interpreter}. It is intended to interpret
  * {@link Node}-trees that correspond to the {@link AugmentedBackusNaur}
  * grammar.
  *
  * @author Claas Ahlrichs
- *
  */
 public class AugmentedBackusNaurInterpreter extends Interpreter<Rule> {
 

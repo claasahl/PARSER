@@ -3,14 +3,12 @@ package de.claas.parser.exceptions;
 import de.claas.parser.visitors.Parser;
 
 /**
- * 
  * The class {@link ParserException}. It is thrown to indicate that a
  * {@link Parser} cannot (fully) interpret the data that was passed into it. The
  * data is considered invalid, e.g. it contains illegal tokens or the data is
  * otherwise not in accordance with the grammar.
  * 
  * @author Claas Ahlrichs
- *
  */
 public class ParserException extends RuntimeException {
 
