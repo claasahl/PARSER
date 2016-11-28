@@ -31,9 +31,8 @@ public class Grammar {
 	/**
 	 * Parses and returns the tree of terminals and non-terminals that
 	 * represents the specified data. Any intermediate nodes (and thus
-	 * non-essential nodes) are removed. Any preceding and trailing whitespace
-	 * are removed as well. If the given data is in any way invalid, then
-	 * <code>null</code> is returned.
+	 * non-essential nodes) are removed. If the given data is in any way
+	 * invalid, then <code>null</code> is returned.
 	 * <p>
 	 * Calling this method is equivalent <code>tryParse(data, false)</code> (see
 	 * {@link #tryParse(String, boolean)}).
@@ -50,9 +49,8 @@ public class Grammar {
 	/**
 	 * Parses and returns the tree of terminals and non-terminals that
 	 * represents the specified data. Any intermediate nodes (and thus
-	 * non-essential nodes) are removed. Any preceding and trailing whitespace
-	 * are removed as well. If the given data is in any way invalid, then a
-	 * {@link ParserException} is thrown.
+	 * non-essential nodes) are removed. If the given data is in any way
+	 * invalid, then a {@link ParserException} is thrown.
 	 * <p>
 	 * Calling this method is equivalent <code>parse(data, false)</code> (see
 	 * {@link #parse(String, boolean)}).
@@ -73,8 +71,7 @@ public class Grammar {
 	/**
 	 * Parses and returns the tree of terminals and non-terminals that
 	 * represents the specified data. Optionally intermediate nodes (and thus
-	 * non-essential nodes) can be removed. Also optionally, preceding and
-	 * trailing whitespace can be removed. If the given data is in any way
+	 * non-essential nodes) can be removed. If the given data is in any way
 	 * invalid, then <code>null</code> is returned.
 	 * 
 	 * @param data
@@ -100,8 +97,7 @@ public class Grammar {
 	/**
 	 * Parses and returns the tree of terminals and non-terminals that
 	 * represents the specified data. Optionally intermediate nodes (and thus
-	 * non-essential nodes) can be removed. Also optionally, preceding and
-	 * trailing whitespace can be removed. If the given data is in any way
+	 * non-essential nodes) can be removed. If the given data is in any way
 	 * invalid, then a {@link ParserException} is thrown.
 	 * 
 	 * @param data
