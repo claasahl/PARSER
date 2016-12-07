@@ -8,10 +8,10 @@ import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
 
 /**
- * The class {@link HelloWorld}. It is mainly intended for educational purposes.
- * It represents a grammar for parsing "hello world" in several languages.
- * Instances of this class parse sentences of the below grammar and return the
- * result as a tree of {@link Node} instances.
+ * The class {@link HelloWorld}. It represents a grammar for parsing "hello
+ * world" in several languages, which is mainly intended for educational
+ * purposes. Instances of this class parse sentences of the below grammar and
+ * return the result as a tree of {@link Node} instances.
  * <ul>
  * <li>hello-world = de / en / se / es</li>
  * <li>de = "hallo" " " "welt"</li>
@@ -28,7 +28,7 @@ import de.claas.parser.rules.NonTerminal;
 public class HelloWorld extends Grammar {
 
 	/**
-	 * Constructs a new {@link HelloWorld} with default parameters.
+	 * Constructs a new {@link HelloWorld} grammar with default parameters.
 	 */
 	public HelloWorld() {
 		super(grammar());
