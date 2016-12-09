@@ -25,7 +25,8 @@ import de.claas.parser.rules.Repetition;
  * interface {@link RuleVisitor}. It is intended to "visualize" a
  * {@link Grammar} by turning it into a human readable string. The resulting
  * string is in augmented Backus Naur form. Details on syntax and grammar can be
- * found in <a href="https://www.ietf.org/rfc/rfc2234.txt">RFC 2234</a>.
+ * found in <a href="https://www.ietf.org/rfc/rfc5234.txt">RFC 5234</a> and
+ * <a href="https://www.ietf.org/rfc/rfc7405.txt">RFC 7405</a>.
  * <p>
  * This visitor is meant for one-time use, only. As such, it should not be used
  * to visualize multiple grammars.
@@ -137,7 +138,8 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 	 * {@link NonTerminal} rule by turning it into a human readable string. The
 	 * resulting string is in augmented Backus Naur form. Details on syntax and
 	 * grammar can be found in
-	 * <a href="https://www.ietf.org/rfc/rfc2234.txt">RFC 2234</a>.
+	 * <a href="https://www.ietf.org/rfc/rfc5234.txt">RFC 5234</a> and
+	 * <a href="https://www.ietf.org/rfc/rfc7405.txt">RFC 7405</a>.
 	 *
 	 * @author Claas Ahlrichs
 	 */
