@@ -27,7 +27,7 @@ public abstract class Decorator extends Rule {
 	}
 
 	/**
-	 * Creates an instance with the given parameter.
+	 * Constructs a new {@link Decorator} with the specified parameter.
 	 * 
 	 * @param rule
 	 *            the decorated rule
