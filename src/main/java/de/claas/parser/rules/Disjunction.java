@@ -12,7 +12,7 @@ import de.claas.parser.RuleVisitor;
 public class Disjunction extends Rule {
 
 	/**
-	 * Constructs a new {@link Disjunction} with the specified parameters.
+	 * Constructs a new {@link Disjunction} with the specified parameter.
 	 * 
 	 * @param children
 	 *            the children
