@@ -19,8 +19,9 @@ import de.claas.parser.results.TerminalNode;
  * {@link NodeVisitor}. It is intended to basic tools and convenience functions
  * for interpreting {@link Node}-trees (i.e. the output of {@link Parser}).
  * <p>
- * This visitor is meant for one-time use, only. As such, it should not be used
- * to visualize multiple trees.
+ * This visitor is meant for one-time use, only. As such, every tree needs to be
+ * interpreted with a separate instance of this visitor. An instance of this
+ * visitor should not be used to interpret multiple trees.
  *
  * @author Claas Ahlrichs
  */
@@ -153,7 +154,7 @@ public abstract class Interpreter<R> implements NodeVisitor {
 	/**
 	 * Called by this interpreter with the intention of interpreting
 	 * {@link TerminalNode}-nodes. The returned function is assumed to adhere to
-	 * the following contract: If successful (i.e. node can be interpreted),
+	 * the following contract: if successful (i.e. node can be interpreted),
 	 * then a result (that represents the node) is returned. If unsuccessful
 	 * (i.e. node cannot be interpreted), then either <code>null</code> is
 	 * returned or an {@link InterpreterException} is thrown.
@@ -171,7 +172,7 @@ public abstract class Interpreter<R> implements NodeVisitor {
 	/**
 	 * Called by this interpreter with the intention of interpreting
 	 * {@link IntermediateNode}-nodes. The returned function is assumed to
-	 * adhere to the following contract: If successful (i.e. node and its
+	 * adhere to the following contract: if successful (i.e. node and its
 	 * descendants can be interpreted), then a result (that represents the node
 	 * and its descendants) is returned. If unsuccessful (i.e. node cannot be
 	 * interpreted), then either <code>null</code> is returned or an
@@ -191,7 +192,7 @@ public abstract class Interpreter<R> implements NodeVisitor {
 	/**
 	 * Called by this interpreter with the intention of interpreting
 	 * {@link NonTerminalNode}-nodes. The returned function is assumed to adhere
-	 * to the following contract: If successful (i.e. node and its descendants
+	 * to the following contract: if successful (i.e. node and its descendants
 	 * can be interpreted), then a result (that represents the node and its
 	 * descendants) is returned. If unsuccessful (i.e. node cannot be
 	 * interpreted), then either <code>null</code> is returned or an
