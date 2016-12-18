@@ -196,7 +196,7 @@ public class AugmentedBackusNaurBuilder {
 
 	/**
 	 * A support function for determining the ABNF number type for the specified
-	 * radix.
+	 * radix (e.g. 10 for decimal number or 2 for binary numbers).
 	 * 
 	 * @param radix
 	 *            the radix
@@ -212,7 +212,7 @@ public class AugmentedBackusNaurBuilder {
 
 	/**
 	 * A support function for determining the ABNF-marker for the specified
-	 * radix.
+	 * radix (e.g. 10 for decimal number or 2 for binary numbers).
 	 * 
 	 * @param radix
 	 *            the radix
@@ -228,7 +228,7 @@ public class AugmentedBackusNaurBuilder {
 
 	/**
 	 * A support function for determining the ABNF rule name for the specified
-	 * radix.
+	 * radix (e.g. 10 for decimal number or 2 for binary numbers).
 	 * 
 	 * @param radix
 	 *            the radix
@@ -253,7 +253,7 @@ public class AugmentedBackusNaurBuilder {
 	 * @param childName
 	 *            the name of the {@link NonTerminalNode}
 	 * @param content
-	 *            then content
+	 *            the content
 	 */
 	private static void append(Node parent, String childName, String content) {
 		appendChildren(parent, (terminal) -> {
@@ -271,7 +271,7 @@ public class AugmentedBackusNaurBuilder {
 	 * @param parent
 	 *            the parent
 	 * @param content
-	 *            then content
+	 *            the content
 	 */
 	private static void appendChildren(Node parent, String content) {
 		appendChildren(parent, (terminal) -> new TerminalNode(terminal), content);
@@ -288,7 +288,7 @@ public class AugmentedBackusNaurBuilder {
 	 *            the function that maps characters from the content to
 	 *            {@link Node}
 	 * @param content
-	 *            then content
+	 *            the content
 	 */
 	private static void appendChildren(Node parent, Function<String, Node> mapper, String content) {
 		for (int index = 0; index < content.length(); index++) {
