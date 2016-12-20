@@ -17,7 +17,7 @@ public class NonTerminal extends Decorator {
 	private final String comment;
 
 	/**
-	 * Constructs a new {@link NonTerminal} with the specified parameters.
+	 * Constructs a new {@link NonTerminal} with the specified parameter.
 	 * Calling this constructor is equivalent to calling
 	 * <code>{@link NonTerminal#NonTerminal(String, String, Rule)}</code> with
 	 * <code>null</code> as comment as and <code>null</code> as rule.
