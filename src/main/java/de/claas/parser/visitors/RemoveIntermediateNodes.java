@@ -19,8 +19,9 @@ import de.claas.parser.results.TerminalNode;
  * that is returned by {@link Grammar#parse(String, boolean)}. This is
  * accomplished by removing {@link IntermediateNode} instances.
  * <p>
- * This visitor is meant for one-time use, only. As such, it should not be used
- * to simplify the node structure of multiple trees.
+ * This visitor is meant for one-time use, only. As such, every tree needs to be
+ * simplified with a separate instance of this visitor. An instance of this
+ * visitor should not be used to simplify the node structure of multiple trees.
  * 
  * @author Claas Ahlrichs
  */
