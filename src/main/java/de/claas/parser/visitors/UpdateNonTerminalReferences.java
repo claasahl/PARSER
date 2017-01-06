@@ -19,10 +19,11 @@ import de.claas.parser.rules.Repetition;
 /**
  * The class {@link UpdateNonTerminalReferences}. It is an implementation of the
  * interface {@link RuleVisitor}. It is intended to updated "broken" references
- * to {@link NonTerminal}s (i.e. {@link NonTerminal}s that do not have an
+ * of {@link NonTerminal}s (i.e. {@link NonTerminal}s that do not have an
  * associated rule; {@link NonTerminal#getRule()} returns <code>null</code>).
- * This visitor will look for "broken" {@link NonTerminal}s and update their
- * associated rule, which is determined by a pool of known {@link NonTerminal}s.
+ * This visitor will look for such "broken" {@link NonTerminal}s and update
+ * their associated rule, which is determined by a pool of known
+ * {@link NonTerminal}s.
  *
  * @author Claas Ahlrichs
  */
@@ -33,7 +34,7 @@ public class UpdateNonTerminalReferences implements RuleVisitor {
 
 	/**
 	 * Constructs a new {@link UpdateNonTerminalReferences} with the specified
-	 * parameters.
+	 * parameter.
 	 * 
 	 * @param rules
 	 *            the pool of known {@link NonTerminal}s
