@@ -11,16 +11,15 @@ import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 
 /**
- * 
  * The class {@link ConcatenateTerminals}. It is an implementation of the
  * interface {@link NodeVisitor}. It is intended to collect and concatenate
  * terminal symbols of the {@link Node} tree, that are being visited.
  * <p>
- * This visitor is meant for one-time use, only. As such, it should not be used
- * to visualize multiple trees.
+ * This visitor is meant for one-time use, only. As such, every tree needs to be
+ * concatenated with a separate instance of this visitor. An instance of this
+ * visitor should not be used to concatenate multiple trees.
  *
  * @author Claas Ahlrichs
- *
  */
 public class ConcatenateTerminals implements NodeVisitor {
 

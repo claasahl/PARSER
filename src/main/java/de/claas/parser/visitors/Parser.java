@@ -20,16 +20,16 @@ import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 
 /**
- * 
  * The class {@link Parser}. It is an implementation of the interface
  * {@link RuleVisitor}. It is intended to parse data into a tree of
  * {@link Node}s.
  * <p>
- * Each rule tests if the current {@link State} object fulfills it criteria. If
- * successful (i.e. state fulfills the rule), then the state is processed and a
- * {@link Node} (that represents the processed state) is returned. If
- * unsuccessful (i.e. state does not fulfills this rule), then the state remains
- * unchanged and <code>null</code> is returned.
+ * Each rule tests if the current {@link State} object fulfills its criteria. If
+ * successful (i.e. state fulfills the rule's criteria), then the state is
+ * processed and a {@link Node} (that represents the processed state) is
+ * returned. If unsuccessful (i.e. state does not fulfills this rule's
+ * criteria), then the state remains unchanged and <code>null</code> is
+ * returned.
  * <ul>
  * <li>{@link Conjunction}: This rule will only successfully process a given
  * state if all children have successfully been processed.</li>
@@ -41,7 +41,7 @@ import de.claas.parser.rules.Repetition;
  * <li>{@link Optional}: This rule will successfully process a given state
  * regardless of whether the decorated rule can be successfully processed (or
  * not). Making the decorated rule optional.</li>
- * <li>{@link Repetition}: This rules default settings are such that it will
+ * <li>{@link Repetition}: This rule's default settings are such that it will
  * successfully process a given state regardless of how often the decorated rule
  * can be processed (i.e. minimum number of repetitions is zero (0) and maximum
  * number of repetitions is {@link Integer#MAX_VALUE}). Making the decorated
@@ -50,18 +50,18 @@ import de.claas.parser.rules.Repetition;
  * if the next token equals the terminal symbol that this rule represents (see
  * {@link CharacterValue#getTerminal()}).</li>
  * <li>{@link NumberValue}: This rule will successfully process a given state if
- * the next token either equals the terminal symbols that this rule represents
+ * the next token either equals the terminal symbol that this rule represents
  * (see {@link NumberValue#getTerminal()}) or if the next token falls within the
  * specified range that this rule represent (see
  * {@link NumberValue#getRangeStart()} and
  * {@link NumberValue#getRangeEnd()}).</li>
  * </ul>
  * <p>
- * This visitor is meant for one-time use, only. As such, it should not be used
- * to parse trees more than once.
+ * This visitor is meant for one-time use, only. As such, every tree needs to be
+ * parsed with a separate instance of this visitor. An instance of this visitor
+ * it should not be used to parse trees more than once.
  *
  * @author Claas Ahlrichs
- *
  */
 public class Parser implements RuleVisitor {
 

@@ -3,14 +3,12 @@ package de.claas.parser;
 import java.util.Stack;
 
 /**
- * 
  * The class {@link State}. It is intended to be used by {@link Grammar}
  * instances during processing / parsing. The state is fed with data, that is
  * presumed to fulfill the grammar in question, and provides methods for
  * processing the given data as well as methods for querying its internal state.
  * 
  * @author Claas Ahlrichs
- *
  */
 public class State {
 
@@ -46,18 +44,17 @@ public class State {
 	}
 
 	/**
-	 * Returns the actually processed token if the specified token was
-	 * successfully processed. The specified token and actually processed token
-	 * may be different depending on the case sensitivity. Otherwise,
-	 * <code>null</code> is returned.
+	 * Returns the processed token if the specified token was successfully
+	 * processed. The specified token and processed token may differ in terms of
+	 * case sensitivity. Otherwise, <code>null</code> is returned.
 	 * 
 	 * @param caseSensitive
 	 *            whether the token is case sensitive (or not)
 	 * @param token
 	 *            the token
 	 * 
-	 * @return the actually processed token if the specified token was
-	 *         successfully processed, otherwise <code>null</code>
+	 * @return the processed token if the specified token was successfully
+	 *         processed, otherwise <code>null</code>
 	 */
 	public String process(boolean caseSensitive, String token) {
 		String localData = caseSensitive ? this.data : this.dataUpperCase;
@@ -104,10 +101,10 @@ public class State {
 
 	/**
 	 * Returns the unprocessed data of this state. An empty string is returned
-	 * if all data were processed. Equals {@link #getData()} if no data was
-	 * processed. The returned string is the trailing part of this state's data
-	 * (i.e. this state's data ends with the unprocessed data). The length of
-	 * the returned string decreases as more data is being processed.
+	 * if all data were processed. The returned string is the trailing part of
+	 * this state's data (i.e. this state's data ends with the unprocessed
+	 * data). The length of the returned string decreases as more data is being
+	 * processed. To start with, the returned string equals {@link #getData()}.
 	 * 
 	 * @return the unprocessed data of this state
 	 */
@@ -117,10 +114,11 @@ public class State {
 
 	/**
 	 * Returns the processed data of this state. An empty string is returned if
-	 * no data was processed. Equals {@link #getData()} if all data were
-	 * processed. The returned string is the leading part of this state's data
-	 * (i.e. this state's data starts with the processed data). The length of
-	 * the returned string increases as more data is being processed.
+	 * no data was processed. The returned string is the leading part of this
+	 * state's data (i.e. this state's data starts with the processed data). The
+	 * length of the returned string increases as more data is being processed.
+	 * After successful processing, the returned string equals
+	 * {@link #getData()} if all data were processed.
 	 * 
 	 * @return the processed data of this state
 	 */
@@ -154,8 +152,8 @@ public class State {
 	/**
 	 * Signals the end of a processing group. This will effectively merge the
 	 * current processing group with the previous one. Thus calling
-	 * {@link #revert()} will not only revert the processing that was just
-	 * closed, but the previous one as well.
+	 * {@link #revert()} (i.e. after closing a processing group) will not only
+	 * revert the processing that was just closed, but the previous one as well.
 	 */
 	public void endGroup() {
 		if (this.steps.size() >= 2) {

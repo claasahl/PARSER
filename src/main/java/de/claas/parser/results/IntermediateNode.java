@@ -5,7 +5,6 @@ import de.claas.parser.Node;
 import de.claas.parser.NodeVisitor;
 
 /**
- * 
  * The class {@link IntermediateNode}. It is an implementation of the
  * {@link Node} class. It is intended to represent intermediate symbols of
  * parsed sentences. Instances of this class provide additional contextual
@@ -15,7 +14,6 @@ import de.claas.parser.NodeVisitor;
  * @author Claas Ahlrichs
  * 
  * @see Grammar#parse(String)
- *
  */
 public class IntermediateNode extends Node {
 

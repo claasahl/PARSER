@@ -12,16 +12,15 @@ import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 
 /**
- * 
  * The class {@link NodeEquality}. It is an implementation of the interface
  * {@link NodeVisitor}. It is intended to compare a {@link Node}-hierarchy with
  * a reference object.
  * <p>
- * This visitor is meant for one-time use, only. As such, it should not be used
- * to compare multiple {@link Rule}s.
+ * This visitor is meant for one-time use, only. As such, every comparison needs
+ * to be done with a separate instance of this visitor. An instance of this
+ * visitor should not be used to compare multiple {@link Rule}s.
  * 
  * @author Claas Ahlrichs
- *
  */
 public class NodeEquality implements NodeVisitor {
 
@@ -90,8 +89,8 @@ public class NodeEquality implements NodeVisitor {
 	}
 
 	/**
-	 * Marks this visitor as visited. Be default it is assumed that two nodes
-	 * are equal, unless proven otherwise. However, this assumption required the
+	 * Marks this visitor as visited. By default it is assumed that two nodes
+	 * are equal, unless proven otherwise. However, this assumption requires the
 	 * visitor to be visited (otherwise any two nodes would be assumed to be
 	 * equal).
 	 */

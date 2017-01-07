@@ -13,7 +13,6 @@ import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 
 /**
- * 
  * The JUnit test for class {@link ConcatenateTerminals}. It is intended to
  * collect and document a set of test cases for the tested class. Please refer
  * to the individual tests for more detailed information.
@@ -23,7 +22,6 @@ import de.claas.parser.results.TerminalNode;
  * the tested class.
  *
  * @author Claas Ahlrichs
- *
  */
 public class ConcatenateTerminalsTest extends NodeVisitorTest {
 

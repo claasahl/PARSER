@@ -4,14 +4,12 @@ import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
 
 /**
- * 
- * The class {@link NumberValue}. It is an implementation of the {@link Rule}
- * class. It is intended to represent a range of numeric terminal symbols or a
- * collection of numeric terminal symbols (e.g. 'letter' of the grammar's
- * alphabet) within a grammar.
+ * The class {@link NumberValue}. It is a concrete implementation of the
+ * {@link Terminal} class. It is intended to represent a range of numeric
+ * terminal symbols or a collection of numeric terminal symbols (e.g. 'letter'
+ * of the grammar's alphabet) within a grammar.
  * 
  * @author Claas Ahlrichs
- *
  */
 public class NumberValue extends Terminal {
 
@@ -36,7 +34,7 @@ public class NumberValue extends Terminal {
 	}
 
 	/**
-	 * Constructs a new {@link NumberValue} with default parameters.
+	 * Constructs a new {@link NumberValue} with the specified parameter.
 	 * 
 	 * @param radix
 	 *            the radix (i.e. 2, 10 or 16)

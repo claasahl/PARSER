@@ -10,7 +10,6 @@ import java.util.Iterator;
 import org.junit.Test;
 
 /**
- * 
  * The JUnit test for class {@link Node}. It is intended to collect and document
  * a set of test cases for the tested class. Please refer to the individual
  * tests for more detailed information.
@@ -20,7 +19,6 @@ import org.junit.Test;
  * the tested class.
  *
  * @author Claas Ahlrichs
- *
  */
 public abstract class NodeTest {
 
@@ -30,7 +28,7 @@ public abstract class NodeTest {
 	 *
 	 * @param children
 	 *            the children
-	 * @return an instantiated {@link Node} class with the given children
+	 * @return an instantiated {@link Node} class
 	 */
 	protected abstract Node build(Node... children);
 

@@ -5,7 +5,6 @@ import de.claas.parser.Node;
 import de.claas.parser.NodeVisitor;
 
 /**
- * 
  * The class {@link NonTerminalNode}. It is an implementation of the
  * {@link Node} class. It is intended to represent non-terminal symbols of
  * parsed sentences. Instances of this class capture the context in which its

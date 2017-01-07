@@ -7,7 +7,6 @@ import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 
 /**
- * 
  * The class {@link NumberBuilder}. It is a support class for building
  * node-structures that encapsulate a number as understood by {@link Number} and
  * {@link NumberInterpreter}.
@@ -16,7 +15,6 @@ import de.claas.parser.results.TerminalNode;
  * fractional-part and does not have an exponent-part.
  *
  * @author Claas Ahlrichs
- *
  */
 public class NumberBuilder {
 

@@ -17,16 +17,15 @@ import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 
 /**
- * 
  * The class {@link RuleToString}. It is an implementation of the interface
  * {@link RuleVisitor}. It is intended to "visualize" a tree of {@link Rule}
  * objects. The tree is turned into a human readable (if not "pretty") string.
  * <p>
- * This visitor is meant for one-time use, only. As such, it should not be used
- * to visualize multiple trees.
+ * This visitor is meant for one-time use, only. As such, every tree needs to be
+ * visualized with a separate instance of this visitor. An instance of this
+ * visitor should not be used to visualize multiple trees.
  * 
  * @author Claas Ahlrichs
- *
  */
 public class RuleToString implements RuleVisitor {
 

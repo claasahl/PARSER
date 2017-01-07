@@ -5,7 +5,6 @@ import org.junit.Test;
 import de.claas.parser.NodeVisitor;
 
 /**
- * 
  * The JUnit test for class {@link NodeVisitor}. It is intended to collect and
  * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
@@ -15,7 +14,6 @@ import de.claas.parser.NodeVisitor;
  * the tested class.
  * 
  * @author Claas Ahlrichs
- *
  */
 public abstract class NodeVisitorTest {
 

@@ -8,9 +8,10 @@ import de.claas.parser.Node;
 import de.claas.parser.rules.NonTerminal;
 
 /**
- * The class {@link Number}. It is mainly intended for educational purposes. It
- * represents a grammar for numbers. Instances of this class parse sentences of
- * the below grammar and return the result as a tree of {@link Node} instances.
+ * The class {@link Number}. It represents a grammar for numbers, which is
+ * mainly intended for educational purposes. Instances of this class parse
+ * sentences of the below grammar and return the result as a tree of
+ * {@link Node} instances.
  * <ul>
  * <li>number = [ minus ] integer [ frac ] [ exp ]</li>
  * <li>decimal-point = %x2E ; .</li>
@@ -29,12 +30,11 @@ import de.claas.parser.rules.NonTerminal;
  * updated by <a href="https://www.ietf.org/rfc/rfc7405.txt">RFC 7405</a>.
  * 
  * @author Claas Ahlrichs
- *
  */
 public class Number extends Grammar {
 
 	/**
-	 * Constructs a new {@link Number} with default parameters.
+	 * Constructs a new {@link Number} grammar with default parameters.
 	 */
 	public Number() {
 		super(grammar());

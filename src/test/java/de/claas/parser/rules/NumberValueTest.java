@@ -9,13 +9,11 @@ import de.claas.parser.Rule;
 import de.claas.parser.State;
 
 /**
- * 
  * The JUnit test for class {@link NumberValue}. It is intended to collect and
  * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
  *
  * @author Claas Ahlrichs
- *
  */
 public class NumberValueTest extends TerminalTest {
 

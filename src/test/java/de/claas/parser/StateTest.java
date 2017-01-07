@@ -6,13 +6,11 @@ import static org.junit.Assert.assertNull;
 import org.junit.Test;
 
 /**
- * 
  * The JUnit test for class {@link State}. It is intended to collect and
  * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
  *
  * @author Claas Ahlrichs
- *
  */
 public class StateTest {
 
@@ -21,7 +19,7 @@ public class StateTest {
 	 * 
 	 * @param pattern
 	 *            the pattern
-	 * @return an instantiated {@link State} class with the specified pattern
+	 * @return an instantiated {@link State} class
 	 */
 	@SuppressWarnings("static-method")
 	protected State buildState(String pattern) {

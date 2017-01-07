@@ -14,10 +14,10 @@ import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 
 /**
- * The class {@link AugmentedBackusNaur}. It is mainly intended for educational
- * purposes. It represents a grammar for grammars in augmented Backus Naur form.
- * Instances of this class parse sentences of the below grammar and return the
- * result as a tree of {@link Node} instances.
+ * The class {@link AugmentedBackusNaur}. It represents a grammar for grammars
+ * in augmented Backus Naur form, which is mainly intended for educational
+ * purposes. Instances of this class parse sentences of the below grammar and
+ * return the result as a tree of {@link Node} instances.
  * <ul>
  * <li>rulelist = 1*( rule / (*c-wsp c-nl) )</li>
  * <li>rule = rulename defined-as elements c-nl ; continues if next line starts
@@ -66,7 +66,6 @@ import de.claas.parser.rules.Repetition;
  * updated by <a href="https://www.ietf.org/rfc/rfc7405.txt">RFC 7405</a>.
  * 
  * @author Claas Ahlrichs
- *
  */
 public class AugmentedBackusNaur extends Grammar {
 
@@ -76,7 +75,8 @@ public class AugmentedBackusNaur extends Grammar {
 	private static final AtomicBoolean CREATED_ALTERNATION = new AtomicBoolean();
 
 	/**
-	 * Constructs a new {@link AugmentedBackusNaur} with default parameters.
+	 * Constructs a new {@link AugmentedBackusNaur} grammar with default
+	 * parameters.
 	 */
 	public AugmentedBackusNaur() {
 		super(grammar());
@@ -482,12 +482,17 @@ public class AugmentedBackusNaur extends Grammar {
 	}
 
 	/**
-	 * A support function that returns ...
+	 * A support function that returns an intermediate rule for numeric values
+	 * (with varying bases, such as binary or decimal).
 	 * 
 	 * @param identifier
+	 *            the marker / identifier for the numeric value (see
+	 *            {@link #marker(int)})
 	 * @param ruleName
+	 *            the name of the intermediate rule
 	 * @param digit
-	 * @return
+	 *            a rule that represents a digit that makes up the numeric value
+	 * @return an intermediate rule for numeric values
 	 */
 	private static NonTerminal numericValue(String identifier, String ruleName, Rule digit) {
 		Rule dot = new CharacterValue(".");

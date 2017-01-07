@@ -4,13 +4,11 @@ import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
 
 /**
- * 
- * The class {@link CharacterValue}. It is an implementation of the {@link Rule}
- * class. It is intended to represent a terminal symbol (e.g. 'letter' of the
- * grammar's alphabet) within a grammar.
+ * The class {@link CharacterValue}. It is a concrete implementation of the
+ * {@link Terminal} class. It is intended to represent a character-based
+ * terminal symbol (e.g. 'letter' of the grammar's alphabet) within a grammar.
  * 
  * @author Claas Ahlrichs
- *
  */
 public class CharacterValue extends Terminal {
 
@@ -18,9 +16,8 @@ public class CharacterValue extends Terminal {
 	private final String terminal;
 
 	/**
-	 * 
-	 * Constructs a new {@link CharacterValue} with default parameters. Calling
-	 * this constructor is equivalent to calling
+	 * Constructs a new {@link CharacterValue} with the specified parameter.
+	 * Calling this constructor is equivalent to calling
 	 * <code>{@link CharacterValue#CharacterValue(boolean, String)}</code>
 	 * without case sensitivity.
 	 * 

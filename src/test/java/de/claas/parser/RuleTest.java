@@ -14,7 +14,6 @@ import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.visitors.Parser;
 
 /**
- * 
  * The JUnit test for class {@link Rule}. It is intended to collect and document
  * a set of test cases for the tested class. Please refer to the individual
  * tests for more detailed information.
@@ -24,7 +23,6 @@ import de.claas.parser.visitors.Parser;
  * the tested class.
  *
  * @author Claas Ahlrichs
- *
  */
 public abstract class RuleTest {
 
@@ -34,7 +32,7 @@ public abstract class RuleTest {
 	 *
 	 * @param children
 	 *            the children
-	 * @return an instantiated {@link Rule} class with the given children
+	 * @return an instantiated {@link Rule} class
 	 */
 	protected abstract Rule build(Rule... children);
 
@@ -78,7 +76,7 @@ public abstract class RuleTest {
 	 * 
 	 * @param tokens
 	 *            the (unprocessed) tokens
-	 * @return an instantiated {@link State} class with the specified tokens
+	 * @return an instantiated {@link State} class
 	 */
 	protected static State buildState(String pattern) {
 		return new State(pattern);
