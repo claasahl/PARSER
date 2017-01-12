@@ -57,6 +57,22 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${version-javadoc-plugin}</version>
+				<configuration>
+					<!-- TODO preliminary exclude sources due to invalid javadoc -->
+					<excludePackageNames>de.claas.parser</excludePackageNames>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -65,6 +81,7 @@
 		<version-java>1.8</version-java>
 		<version-compiler-plugin>3.6.0</version-compiler-plugin>
 		<version-source-plugin>3.0.1</version-source-plugin>
+		<version-javadoc-plugin>2.10.4</version-javadoc-plugin>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
