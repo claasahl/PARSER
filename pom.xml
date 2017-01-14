@@ -23,8 +23,15 @@
 			<id>claasahl</id>
 			<name>Claas Ahlrichs</name>
 			<email>claasahl__AT_gmail.com</email>
+			<url>https://github.com/claasahl</url>
 		</developer>
 	</developers>
+	<licenses>
+		<license>
+			<name>GNU Lesser General Public License (LGPL) - Version 3.0</name>
+			<url>http://www.gnu.org/licenses/lgpl-3.0.html</url>
+		</license>
+	</licenses>
 
 	<dependencies>
 		<dependency>
