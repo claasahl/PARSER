@@ -68,8 +68,8 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>${version-javadoc-plugin}</version>
 				<configuration>
-					<!-- TODO preliminary exclude sources due to invalid javadoc -->
-					<excludePackageNames>de.claas.parser</excludePackageNames>
+					<!-- TODO preliminary ignore invalid javadoc -->
+					<failOnError>false</failOnError>
 				</configuration>
 				<executions>
 					<execution>
