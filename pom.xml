@@ -32,6 +32,11 @@
 			<url>http://www.gnu.org/licenses/lgpl-3.0.html</url>
 		</license>
 	</licenses>
+	<scm>
+		<connection>scm:git:git://github.com/claasahl/PARSER.git</connection>
+		<developerConnection>scm:git:ssh://github.com:claasahl/PARSER.git</developerConnection>
+		<url>http://github.com/claasahl/PARSER/tree/master</url>
+	</scm>
 
 	<dependencies>
 		<dependency>
