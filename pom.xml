@@ -96,6 +96,19 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>${version-gpg-plugin}</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -105,6 +118,7 @@
 		<version-compiler-plugin>3.6.0</version-compiler-plugin>
 		<version-source-plugin>3.0.1</version-source-plugin>
 		<version-javadoc-plugin>2.10.4</version-javadoc-plugin>
+		<version-gpg-plugin>1.5</version-gpg-plugin>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
