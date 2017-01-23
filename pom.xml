@@ -5,7 +5,7 @@
 
 	<groupId>com.github.claasahl</groupId>
 	<artifactId>parser</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.1</version>
 	<packaging>jar</packaging>
 
 
