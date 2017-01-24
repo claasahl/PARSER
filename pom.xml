@@ -83,10 +83,6 @@
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>${version-javadoc-plugin}</version>
-				<configuration>
-					<!-- TODO preliminary ignore invalid javadoc -->
-					<failOnError>false</failOnError>
-				</configuration>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -119,18 +115,6 @@
 					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>${maven-javadoc-version}</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
