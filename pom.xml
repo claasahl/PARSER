@@ -3,9 +3,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>de.claas.parser</groupId>
-	<artifactId>PARSER</artifactId>
-	<version>1</version>
+	<groupId>com.github.claasahl</groupId>
+	<artifactId>parser</artifactId>
+	<version>1.0.1</version>
 	<packaging>jar</packaging>
 
 
@@ -23,14 +23,37 @@
 			<id>claasahl</id>
 			<name>Claas Ahlrichs</name>
 			<email>claasahl__AT_gmail.com</email>
+			<url>https://github.com/claasahl</url>
 		</developer>
 	</developers>
+	<licenses>
+		<license>
+			<name>GNU Lesser General Public License (LGPL) - Version 3.0</name>
+			<url>http://www.gnu.org/licenses/lgpl-3.0.html</url>
+		</license>
+	</licenses>
+	<scm>
+		<connection>scm:git:git://github.com/claasahl/PARSER.git</connection>
+		<developerConnection>scm:git:ssh://github.com:claasahl/PARSER.git</developerConnection>
+		<url>http://github.com/claasahl/PARSER/tree/master</url>
+	</scm>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit-version}</version>
+			<version>${version-junit}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -39,10 +62,62 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${maven-compiler-version}</version>
+				<version>${version-compiler-plugin}</version>
 				<configuration>
-					<source>${java-version}</source>
-					<target>${java-version}</target>
+					<source>${version-java}</source>
+					<target>${version-java}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>${version-source-plugin}</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${version-javadoc-plugin}</version>
+				<configuration>
+					<!-- TODO preliminary ignore invalid javadoc -->
+					<failOnError>false</failOnError>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>${version-gpg-plugin}</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>${version-nexus-staging-plugin}</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -61,10 +136,13 @@
 	</build>
 
 	<properties>
-		<java-version>1.8</java-version>
-		<junit-version>4.12</junit-version>
-		<maven-compiler-version>3.6.0</maven-compiler-version>
-		<maven-javadoc-version>2.10.4</maven-javadoc-version>
+		<version-junit>4.12</version-junit>
+		<version-java>1.8</version-java>
+		<version-compiler-plugin>3.6.0</version-compiler-plugin>
+		<version-source-plugin>3.0.1</version-source-plugin>
+		<version-javadoc-plugin>2.10.4</version-javadoc-plugin>
+		<version-gpg-plugin>1.5</version-gpg-plugin>
+		<version-nexus-staging-plugin>1.6.7</version-nexus-staging-plugin>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
