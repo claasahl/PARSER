@@ -35,6 +35,9 @@
 - Fixed issue [#45 The method visitCaseSensitiveString() has an NPath complexity of 220](https://github.com/claasahl/PARSER/issues/45)
 - Fixed issue [#46 Avoid really long methods.](https://github.com/claasahl/PARSER/issues/46)
 
+# Version 1.0.1
+- Initial release on maven central (code base is identical to version 1)
+
 # Version 1 - Unicorn
 - Fixed issue [#1 Fix documentation errors while building](https://github.com/claasahl/PARSER/issues/1)
 - Fixed issue [#2 Review and update documentation](https://github.com/claasahl/PARSER/issues/2)
