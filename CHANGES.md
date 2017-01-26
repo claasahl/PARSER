@@ -1,5 +1,6 @@
 # Version 2
 - Fixed issue [#4 Fix Javadoc warnings](https://github.com/claasahl/PARSER/issues/4)
+- Fixed issue [#11 Review: Documentation](https://github.com/claasahl/PARSER/issues/11)
 - Fixed issue [#12 Review: Code](https://github.com/claasahl/PARSER/issues/12)
 - Fixed issue [#13 Avoid unnecessary return statements](https://github.com/claasahl/PARSER/issues/13)
 - Fixed issue [#14 Avoid unused imports](https://github.com/claasahl/PARSER/issues/14)
@@ -35,8 +36,11 @@
 - Fixed issue [#45 The method visitCaseSensitiveString() has an NPath complexity of 220](https://github.com/claasahl/PARSER/issues/45)
 - Fixed issue [#46 Avoid really long methods.](https://github.com/claasahl/PARSER/issues/46)
 
+# Version 1.0.2
+- Fixed integration with travis-ci (code base is identical to previous release)
+
 # Version 1.0.1
-- Initial release on maven central (code base is identical to version 1)
+- Initial release on maven central (code base is identical to previous release)
 
 # Version 1 - Unicorn
 - Fixed issue [#1 Fix documentation errors while building](https://github.com/claasahl/PARSER/issues/1)

@@ -4,6 +4,7 @@ This is an open source library for parsing text-based inputs. PARSER makes use o
 
 ## Build Status and Code Quality
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/22eff15195f64ea2b3c9375f5dea82a0)](https://www.codacy.com/app/PARSER-Team/PARSER?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=claasahl/PARSER&amp;utm_campaign=Badge_Grade)
+[![Dependency Status](https://www.versioneye.com/user/projects/5870bd61405438003fcc8db2/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/5870bd61405438003fcc8db2)
 ### develop-branch
 [![Build Status](https://travis-ci.org/claasahl/PARSER.svg?branch=develop)](https://travis-ci.org/claasahl/PARSER)
 ### master-branch
