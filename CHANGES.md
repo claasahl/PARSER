@@ -1,4 +1,5 @@
-# Version 2
+# Version 2 - Monkey
+- Fixed issue [#3 Add examples to repository](https://github.com/claasahl/PARSER/issues/3)
 - Fixed issue [#4 Fix Javadoc warnings](https://github.com/claasahl/PARSER/issues/4)
 - Fixed issue [#11 Review: Documentation](https://github.com/claasahl/PARSER/issues/11)
 - Fixed issue [#12 Review: Code](https://github.com/claasahl/PARSER/issues/12)
