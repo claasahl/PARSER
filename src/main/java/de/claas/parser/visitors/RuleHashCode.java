@@ -14,16 +14,15 @@ import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 
 /**
- * 
  * The class {@link RuleHashCode}. It is an implementation of the interface
  * {@link RuleVisitor}. It is intended to determine a combined hash code for all
  * visited {@link Rule}s.
  * <p>
- * This visitor is meant for one-time use, only. As such, it should not be used
- * to determine multiple hash codes.
+ * This visitor is meant for one-time use, only. As such, every hash-code needs
+ * to be determined with a separate instance of this visitor. An instance of
+ * this visitor should not be used to determine multiple hash codes.
  *
  * @author Claas Ahlrichs
- *
  */
 public class RuleHashCode implements RuleVisitor {
 
@@ -102,7 +101,7 @@ public class RuleHashCode implements RuleVisitor {
 		if (rule.getTerminal() != null)
 			this.hashCode += rule.getTerminal().hashCode();
 	}
-	
+
 	@Override
 	public void visitTerminal(NumberValue rule) {
 		this.hashCode += rule.getClass().hashCode();

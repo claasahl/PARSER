@@ -21,13 +21,11 @@ import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 
 /**
- *
  * The JUnit test for class {@link Parser}. It is intended to collect and
  * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
  *
  * @author Claas Ahlrichs
- *
  */
 public class ParserTest extends RuleVisitorTest {
 
@@ -41,7 +39,7 @@ public class ParserTest extends RuleVisitorTest {
 	 * 
 	 * @param data
 	 *            the data
-	 * @return an instantiated {@link Parser} class with the specified data
+	 * @return an instantiated {@link Parser} class
 	 */
 	@SuppressWarnings("static-method")
 	private Parser build(String data) {
@@ -194,14 +192,10 @@ public class ParserTest extends RuleVisitorTest {
 	@Test
 	public void repetitionShouldRepeat() {
 		Rule rule = new Repetition(new CharacterValue("re"));
-		Parser parser = build("rererererererere??");
+		Parser parser = build("rererere??");
 		rule.visit(parser);
 
 		Node expected = new IntermediateNode();
-		expected.addChild(new TerminalNode("re"));
-		expected.addChild(new TerminalNode("re"));
-		expected.addChild(new TerminalNode("re"));
-		expected.addChild(new TerminalNode("re"));
 		expected.addChild(new TerminalNode("re"));
 		expected.addChild(new TerminalNode("re"));
 		expected.addChild(new TerminalNode("re"));

@@ -1,27 +1,24 @@
 package de.claas.parser;
 
-import de.claas.parser.exceptions.ParsingException;
+import de.claas.parser.exceptions.ParserException;
 import de.claas.parser.results.IntermediateNode;
 import de.claas.parser.rules.NonTerminal;
 import de.claas.parser.visitors.Parser;
 import de.claas.parser.visitors.RemoveIntermediateNodes;
 
 /**
- * 
  * The class {@link Grammar}. It is intended to parse sentences of a given
  * grammar. This class takes a {@link NonTerminal} as initial rule (i.e. named
  * rule) and uses it to parse sentences. The result is returned as a tree of
  * {@link Node} instances.
  * 
  * @author Claas Ahlrichs
- *
  */
 public class Grammar {
 
 	private final NonTerminal start;
 
 	/**
-	 * 
 	 * Constructs a new {@link Grammar} with the specified parameter.
 	 * 
 	 * @param grammar
@@ -34,9 +31,8 @@ public class Grammar {
 	/**
 	 * Parses and returns the tree of terminals and non-terminals that
 	 * represents the specified data. Any intermediate nodes (and thus
-	 * non-essential nodes) are removed. Any preceding and trailing whitespace
-	 * are removed as well. If the given data is in any way invalid, then
-	 * <code>null</code> is returned.
+	 * non-essential nodes) are removed. If the given data is in any way
+	 * invalid, then <code>null</code> is returned.
 	 * <p>
 	 * Calling this method is equivalent <code>tryParse(data, false)</code> (see
 	 * {@link #tryParse(String, boolean)}).
@@ -53,9 +49,8 @@ public class Grammar {
 	/**
 	 * Parses and returns the tree of terminals and non-terminals that
 	 * represents the specified data. Any intermediate nodes (and thus
-	 * non-essential nodes) are removed. Any preceding and trailing whitespace
-	 * are removed as well. If the given data is in any way invalid, then a
-	 * {@link ParsingException} is thrown.
+	 * non-essential nodes) are removed. If the given data is in any way
+	 * invalid, then a {@link ParserException} is thrown.
 	 * <p>
 	 * Calling this method is equivalent <code>parse(data, false)</code> (see
 	 * {@link #parse(String, boolean)}).
@@ -64,7 +59,7 @@ public class Grammar {
 	 *            the data that is being parsed
 	 * @return the tree of terminals and non-terminals that represents the
 	 *         specified data
-	 * @throws ParsingException
+	 * @throws ParserException
 	 *             if the data is invalid (e.g. contains illegal tokens or the
 	 *             data is otherwise not in accordance with the grammar that was
 	 *             passed into the constructor)
@@ -76,8 +71,7 @@ public class Grammar {
 	/**
 	 * Parses and returns the tree of terminals and non-terminals that
 	 * represents the specified data. Optionally intermediate nodes (and thus
-	 * non-essential nodes) can be removed. Also optionally, preceding and
-	 * trailing whitespace can be removed. If the given data is in any way
+	 * non-essential nodes) can be removed. If the given data is in any way
 	 * invalid, then <code>null</code> is returned.
 	 * 
 	 * @param data
@@ -93,7 +87,7 @@ public class Grammar {
 		State state = new State(data);
 		Parser parser = new Parser(state);
 		this.start.visit(parser);
-		
+
 		Node result = parser.getResult();
 		if (result != null && !retainIntermediateNodes)
 			result.visit(new RemoveIntermediateNodes());
@@ -103,9 +97,8 @@ public class Grammar {
 	/**
 	 * Parses and returns the tree of terminals and non-terminals that
 	 * represents the specified data. Optionally intermediate nodes (and thus
-	 * non-essential nodes) can be removed. Also optionally, preceding and
-	 * trailing whitespace can be removed. If the given data is in any way
-	 * invalid, then a {@link ParsingException} is thrown.
+	 * non-essential nodes) can be removed. If the given data is in any way
+	 * invalid, then a {@link ParserException} is thrown.
 	 * 
 	 * @param data
 	 *            the data that is being parsed
@@ -115,7 +108,7 @@ public class Grammar {
 	 *            nodes are desired
 	 * @return the tree of terminals and non-terminals that represents the
 	 *         specified data
-	 * @throws ParsingException
+	 * @throws ParserException
 	 *             if the data is invalid (e.g. contains illegal tokens or the
 	 *             data is otherwise not in accordance with the grammar that was
 	 *             passed into the constructor)
@@ -124,10 +117,10 @@ public class Grammar {
 		State state = new State(data);
 		Parser parser = new Parser(state);
 		this.start.visit(parser);
-		
+
 		Node result = parser.getResult();
 		if (result == null || !state.getUnprocessedData().isEmpty())
-			throw new ParsingException("Could not process all tokens.");
+			throw new ParserException("Could not process all tokens.");
 		if (!retainIntermediateNodes)
 			result.visit(new RemoveIntermediateNodes());
 		return result;

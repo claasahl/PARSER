@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.IntFunction;
+import java.util.stream.Collectors;
 
 import de.claas.parser.Grammar;
 import de.claas.parser.Rule;
@@ -19,18 +21,17 @@ import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 
 /**
- * 
  * The class {@link AugmentedBackusNaurPrinter}. It is an implementation of the
  * interface {@link RuleVisitor}. It is intended to "visualize" a
  * {@link Grammar} by turning it into a human readable string. The resulting
  * string is in augmented Backus Naur form. Details on syntax and grammar can be
- * found in <a href="https://www.ietf.org/rfc/rfc2234.txt">RFC 2234</a>.
+ * found in <a href="https://www.ietf.org/rfc/rfc5234.txt">RFC 5234</a> and
+ * <a href="https://www.ietf.org/rfc/rfc7405.txt">RFC 7405</a>.
  * <p>
  * This visitor is meant for one-time use, only. As such, it should not be used
  * to visualize multiple grammars.
  *
  * @author Claas Ahlrichs
- *
  */
 public class AugmentedBackusNaurPrinter implements RuleVisitor {
 
@@ -41,7 +42,6 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 	private final String lineSeparator;
 
 	/**
-	 * 
 	 * Constructs a new {@link AugmentedBackusNaurPrinter} with default
 	 * parameters. Calling this constructor is equivalent to calling
 	 * <code>{@link #AugmentedBackusNaurPrinter(String)}</code> with the
@@ -94,8 +94,6 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 				rule.getRule().visit(this);
 			}
 			this.visitedPath.remove(rule);
-		} else {
-			// non terminal rule has already been printed
 		}
 	}
 
@@ -135,16 +133,15 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 	}
 
 	/**
-	 * 
 	 * The class {@link NonTerminalPrinter}. It is an implementation of the
 	 * interface {@link RuleVisitor}. It is intended to "visualize" a single
 	 * {@link NonTerminal} rule by turning it into a human readable string. The
 	 * resulting string is in augmented Backus Naur form. Details on syntax and
 	 * grammar can be found in
-	 * <a href="https://www.ietf.org/rfc/rfc2234.txt">RFC 2234</a>.
+	 * <a href="https://www.ietf.org/rfc/rfc5234.txt">RFC 5234</a> and
+	 * <a href="https://www.ietf.org/rfc/rfc7405.txt">RFC 7405</a>.
 	 *
 	 * @author Claas Ahlrichs
-	 *
 	 */
 	private static class NonTerminalPrinter implements RuleVisitor {
 
@@ -248,20 +245,15 @@ public class AugmentedBackusNaurPrinter implements RuleVisitor {
 		@Override
 		public void visitTerminal(NumberValue rule) {
 			int radix = rule.getRadix();
-			String marker = "";
-			marker = radix == 16 ? "x" : marker;
-			marker = radix == 10 ? "d" : marker;
-			marker = radix == 2 ? "b" : marker;
+			String marker = AugmentedBackusNaur.marker(radix);
 			if (rule.getTerminal() != null) {
 				String terminal = rule.getTerminal();
+				IntFunction<? extends String> mapper = (c) -> Integer.toString(c, radix);
+				String value = terminal.chars().mapToObj(mapper).collect(Collectors.joining("."));
+
 				this.stringBuilder.append("%");
 				this.stringBuilder.append(marker);
-				for (int index = 0; index < terminal.length(); index++) {
-					String number = Integer.toString(terminal.charAt(index), radix);
-					this.stringBuilder.append(number);
-					if (index + 1 < terminal.length())
-						this.stringBuilder.append(".");
-				}
+				this.stringBuilder.append(value);
 			} else {
 				String start = Integer.toString(rule.getRangeStart().charValue(), radix);
 				String end = Integer.toString(rule.getRangeEnd().charValue(), radix);

@@ -12,7 +12,6 @@ import de.claas.parser.visitors.NodeEquality;
 import de.claas.parser.visitors.NodeHashCode;
 
 /**
- * 
  * Superclass of all nodes within this package. This class is intended to model
  * nodes that represent parsed entities. In contrast to implementations of the
  * {@link Rule} class, implementations of this class do not describe abstract
@@ -33,7 +32,6 @@ import de.claas.parser.visitors.NodeHashCode;
  * @author Claas Ahlrichs
  * 
  * @see Grammar#parse(String)
- *
  */
 public abstract class Node implements Iterable<Node> {
 

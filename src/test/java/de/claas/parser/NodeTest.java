@@ -2,6 +2,7 @@ package de.claas.parser;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
@@ -9,7 +10,6 @@ import java.util.Iterator;
 import org.junit.Test;
 
 /**
- * 
  * The JUnit test for class {@link Node}. It is intended to collect and document
  * a set of test cases for the tested class. Please refer to the individual
  * tests for more detailed information.
@@ -19,7 +19,6 @@ import org.junit.Test;
  * the tested class.
  *
  * @author Claas Ahlrichs
- *
  */
 public abstract class NodeTest {
 
@@ -29,7 +28,7 @@ public abstract class NodeTest {
 	 *
 	 * @param children
 	 *            the children
-	 * @return an instantiated {@link Node} class with the given children
+	 * @return an instantiated {@link Node} class
 	 */
 	protected abstract Node build(Node... children);
 
@@ -120,7 +119,7 @@ public abstract class NodeTest {
 	@Test
 	public void implementationOfEqualsShouldHandleNull() {
 		Node node = build();
-		assertFalse(node.equals(null));
+		assertNotNull(node);
 	}
 
 	@Test
@@ -146,7 +145,7 @@ public abstract class NodeTest {
 		assertTrue(nodeB.equals(nodeC));
 		assertTrue(nodeA.equals(nodeC));
 	}
-	
+
 	@Test
 	public void implementationOfHashCodeShouldBeReproducible() {
 		Node node = build();
@@ -154,7 +153,7 @@ public abstract class NodeTest {
 		int hashCode2 = node.hashCode();
 		assertEquals(hashCode1, hashCode2);
 	}
-	
+
 	@Test
 	public void implementationOfHashCodeShouldBeConsistent() {
 		Node nodeA = build();

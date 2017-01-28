@@ -5,7 +5,6 @@ import org.junit.Test;
 import de.claas.parser.RuleVisitor;
 
 /**
- * 
  * The JUnit test for class {@link RuleVisitor}. It is intended to collect and
  * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
@@ -15,7 +14,6 @@ import de.claas.parser.RuleVisitor;
  * the tested class.
  *
  * @author Claas Ahlrichs
- *
  */
 public abstract class RuleVisitorTest {
 

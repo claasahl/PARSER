@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import de.claas.parser.Node;
 import de.claas.parser.Rule;
+import de.claas.parser.builders.AugmentedBackusNaurBuilder;
 import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.rules.CharacterValue;
 import de.claas.parser.rules.Conjunction;
@@ -13,18 +14,15 @@ import de.claas.parser.rules.Disjunction;
 import de.claas.parser.rules.NonTerminal;
 import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
-import de.claas.parser.rules.Terminal;
 import de.claas.parser.visitors.InterpreterTest;
 import de.claas.parser.visitors.RuleToString;
 
 /**
- *
  * The JUnit test for class {@link AugmentedBackusNaurInterpreter}. It is
  * intended to collect and document a set of test cases for the tested class.
  * Please refer to the individual tests for more detailed information.
  *
  * @author Claas Ahlrichs
- *
  */
 public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 
@@ -40,18 +38,14 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 
 	@Override
 	public void shouldHandleNodes() {
-		NonTerminal de = new NonTerminal("de",
-				new Conjunction(new CharacterValue("hallo"), new CharacterValue(" "), new CharacterValue("welt")));
-		NonTerminal en = new NonTerminal("en",
-				new Conjunction(new CharacterValue("hello"), new CharacterValue(" "), new CharacterValue("world")));
-		NonTerminal se = new NonTerminal("se",
-				new Conjunction(new CharacterValue("hallå"), new CharacterValue(" "), new CharacterValue("värld")));
-		NonTerminal es = new NonTerminal("es",
-				new Conjunction(new CharacterValue("hola"), new CharacterValue(" "), new CharacterValue("mundo")));
+		NonTerminal de = helloWorld("de", "hallo", "welt");
+		NonTerminal en = helloWorld("en", "hello", "world");
+		NonTerminal se = helloWorld("se", "hallå", "värld");
+		NonTerminal es = helloWorld("es", "hola", "mundo");
 		NonTerminal expected = new NonTerminal("hello-world", new Disjunction(de, en, se, es));
 
 		AugmentedBackusNaurInterpreter interpreter = build();
-		Node grammar = AugmentedBackusNaurTest.generateNodes(expected, es, se, en, de);
+		Node grammar = new AugmentedBackusNaurBuilder().rule(expected).rule(es).rule(se).rule(en).rule(de).build();
 		grammar.visit(interpreter);
 		assertEquals(expected, interpreter.getResult());
 	}
@@ -64,7 +58,7 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 		NonTerminal expected = new NonTerminal("rule", rule);
 
 		AugmentedBackusNaurInterpreter interpreter = build();
-		Node grammar = AugmentedBackusNaurTest.generateNodes(expected);
+		Node grammar = new AugmentedBackusNaurBuilder().rule(expected).build();
 		grammar.visit(interpreter);
 
 		RuleToString r1 = new RuleToString();
@@ -84,7 +78,7 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 		NonTerminal expected = new NonTerminal("rule", rule);
 
 		AugmentedBackusNaurInterpreter interpreter = build();
-		Node grammar = AugmentedBackusNaurTest.generateNodes(expected);
+		Node grammar = new AugmentedBackusNaurBuilder().rule(expected).build();
 		grammar.visit(interpreter);
 		assertEquals(expected, interpreter.getResult());
 	}
@@ -96,7 +90,7 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 		NonTerminal expected = new NonTerminal("rule", rule);
 
 		AugmentedBackusNaurInterpreter interpreter = build();
-		Node grammar = AugmentedBackusNaurTest.generateNodes(expected, rule);
+		Node grammar = new AugmentedBackusNaurBuilder().rule(expected).rule(rule).build();
 		grammar.visit(interpreter);
 		assertEquals(expected, interpreter.getResult());
 	}
@@ -108,7 +102,7 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 		NonTerminal expected = new NonTerminal("rule", rule);
 
 		AugmentedBackusNaurInterpreter interpreter = build();
-		Node grammar = AugmentedBackusNaurTest.generateNodes(expected);
+		Node grammar = new AugmentedBackusNaurBuilder().rule(expected).build();
 		grammar.visit(interpreter);
 		assertEquals(expected, interpreter.getResult());
 	}
@@ -120,7 +114,7 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 		NonTerminal expected = new NonTerminal("rule", rule);
 
 		AugmentedBackusNaurInterpreter interpreter = build();
-		Node grammar = AugmentedBackusNaurTest.generateNodes(expected);
+		Node grammar = new AugmentedBackusNaurBuilder().rule(expected).build();
 		grammar.visit(interpreter);
 		assertEquals(expected, interpreter.getResult());
 	}
@@ -131,9 +125,29 @@ public class AugmentedBackusNaurInterpreterTest extends InterpreterTest<Rule> {
 		NonTerminal expected = new NonTerminal("rule", rule);
 
 		AugmentedBackusNaurInterpreter interpreter = build();
-		Node grammar = AugmentedBackusNaurTest.generateNodes(expected);
+		Node grammar = new AugmentedBackusNaurBuilder().rule(expected).build();
 		grammar.visit(interpreter);
 		assertEquals(expected, interpreter.getResult());
+	}
+
+	/**
+	 * A support function that returns a "hello world"-rule for the specified
+	 * language.
+	 * 
+	 * @param language
+	 *            the language
+	 * @param hello
+	 *            the word "hello" in the specified language
+	 * @param world
+	 *            the word "world" in the specified language
+	 * @return a "hello world"-rule for the specified language
+	 */
+	private static NonTerminal helloWorld(String language, String hello, String world) {
+		Rule part1 = new CharacterValue(hello);
+		Rule space = new CharacterValue(" ");
+		Rule part2 = new CharacterValue(world);
+		Rule rule = new Conjunction(part1, space, part2);
+		return new NonTerminal(language, rule);
 	}
 
 }

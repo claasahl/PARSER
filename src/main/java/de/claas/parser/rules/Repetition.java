@@ -4,15 +4,12 @@ import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
 
 /**
- * 
  * The class {@link Repetition}. It is an implementation of the
  * {@link Decorator} class. It is intended to represent a repeatable rule within
  * a grammar. The minimum and maximum number of repetitions can be limited to
- * any positive integer. The only constraint is the upper limit of integer
- * values (i.e. {@value Integer#MAX_VALUE}).
+ * any positive integer (i.e. 0 to {@link Integer#MAX_VALUE}).
  * 
  * @author Claas Ahlrichs
- *
  */
 public class Repetition extends Decorator {
 
@@ -20,11 +17,10 @@ public class Repetition extends Decorator {
 	private final int maxRepetitions;
 
 	/**
-	 * 
-	 * Constructs a new {@link Repetition} with default parameters. Calling this
+	 * Constructs a new {@link Repetition} with default parameter. Calling this
 	 * constructor is equivalent to calling
 	 * <code>{@link Repetition#Repetition(Rule, int, int)}</code> with at least
-	 * {@value 0} repetitions and at most {@value Integer#MAX_VALUE}.
+	 * zero (0) repetitions and at most {@link Integer#MAX_VALUE}.
 	 * 
 	 * @param rule
 	 *            the repeatable rule
@@ -34,7 +30,6 @@ public class Repetition extends Decorator {
 	}
 
 	/**
-	 * 
 	 * Constructs a new {@link Repetition} with the specified parameters.
 	 * 
 	 * @param rule
@@ -52,7 +47,7 @@ public class Repetition extends Decorator {
 
 	/**
 	 * Returns the minimum number of repetitions. By default, this is set to
-	 * {@value 0}.
+	 * zero (0).
 	 * 
 	 * @return the minimum number of repetitions
 	 */
@@ -62,7 +57,7 @@ public class Repetition extends Decorator {
 
 	/**
 	 * Returns the maximum number of repetitions. By default, this is set to
-	 * {@value Integer#MAX_VALUE}.
+	 * {@link Integer#MAX_VALUE}.
 	 * 
 	 * @return the maximum number of repetitions
 	 */

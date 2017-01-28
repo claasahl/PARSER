@@ -1,6 +1,7 @@
 package de.claas.parser.visitors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -10,13 +11,11 @@ import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 
 /**
- *
- * The JUnit test for class {@link NodeEquality}. It is intended to collect
- * and document a set of test cases for the tested class. Please refer to the
+ * The JUnit test for class {@link NodeEquality}. It is intended to collect and
+ * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
  *
  * @author Claas Ahlrichs
- *
  */
 public class NodeEqualityTest extends NodeVisitorTest {
 
@@ -25,10 +24,10 @@ public class NodeEqualityTest extends NodeVisitorTest {
 	 * parameter.
 	 * 
 	 * @param obj
-	 *            the reference object with which the visited {@link Node}s are compared
+	 *            the reference object with which the visited {@link Node}s are
+	 *            compared
 	 * 
-	 * @return an instantiated {@link NodeEquality} class with the specified
-	 *         parameter
+	 * @return an instantiated {@link NodeEquality} class
 	 */
 	@SuppressWarnings("static-method")
 	private NodeEquality build(Object obj) {
@@ -153,7 +152,7 @@ public class NodeEqualityTest extends NodeVisitorTest {
 		NodeEquality visitor = build(nodeA);
 		nodeB.visit(visitor);
 		assertTrue(visitor.isEquality());
-		
+
 		visitor = build(nodeB);
 		nodeA.visit(visitor);
 		assertTrue(visitor.isEquality());
@@ -168,11 +167,11 @@ public class NodeEqualityTest extends NodeVisitorTest {
 		NodeEquality visitor = build(nodeB);
 		nodeA.visit(visitor);
 		assertTrue(visitor.isEquality());
-		
+
 		visitor = build(nodeC);
 		nodeB.visit(visitor);
 		assertTrue(visitor.isEquality());
-		
+
 		visitor = build(nodeC);
 		nodeA.visit(visitor);
 		assertTrue(visitor.isEquality());

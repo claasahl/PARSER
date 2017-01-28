@@ -20,13 +20,11 @@ import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 
 /**
- *
  * The JUnit test for class {@link UpdateNonTerminalReferences}. It is intended
  * to collect and document a set of test cases for the tested class. Please
  * refer to the individual tests for more detailed information.
  *
  * @author Claas Ahlrichs
- *
  */
 public class UpdateNonTerminalReferencesTest extends RuleVisitorTest {
 
@@ -39,13 +37,13 @@ public class UpdateNonTerminalReferencesTest extends RuleVisitorTest {
 	 * Returns an instantiated {@link UpdateNonTerminalReferences} class with
 	 * the given {@link NonTerminal}s.
 	 *
-	 * @param rules1
+	 * @param rules
 	 *            the {@link NonTerminal}s
 	 * @return an instantiated {@link UpdateNonTerminalReferences} class
 	 */
 	@SuppressWarnings("static-method")
-	private RuleVisitor build(Collection<NonTerminal> rules1) {
-		return new UpdateNonTerminalReferences(rules1);
+	private RuleVisitor build(Collection<NonTerminal> rules) {
+		return new UpdateNonTerminalReferences(rules);
 	}
 
 	@Before
@@ -246,7 +244,7 @@ public class UpdateNonTerminalReferencesTest extends RuleVisitorTest {
 		Rule rule = new NonTerminal(this.NON_TERMINAL);
 		NonTerminal incomplete = new NonTerminal("incomplete", rule);
 		this.rules.put("incomplete", incomplete);
-		
+
 		Rule actual = new Conjunction();
 		actual.addChild(incomplete);
 		RuleVisitor visitor = build(this.rules.values());

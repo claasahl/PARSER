@@ -13,7 +13,6 @@ import de.claas.parser.results.NonTerminalNode;
 import de.claas.parser.results.TerminalNode;
 
 /**
- * 
  * The JUnit test for class {@link ConcatenateTerminals}. It is intended to
  * collect and document a set of test cases for the tested class. Please refer
  * to the individual tests for more detailed information.
@@ -23,7 +22,6 @@ import de.claas.parser.results.TerminalNode;
  * the tested class.
  *
  * @author Claas Ahlrichs
- *
  */
 public class ConcatenateTerminalsTest extends NodeVisitorTest {
 
@@ -68,9 +66,9 @@ public class ConcatenateTerminalsTest extends NodeVisitorTest {
 
 	@Override
 	public void shouldHandleNodes() {
-		Node t1 = new TerminalNode("t1");
-		Node t2 = new TerminalNode("t2");
-		Node t3 = new TerminalNode("t3");
+		Node t1 = new TerminalNode("Hello ");
+		Node t2 = new TerminalNode("World");
+		Node t3 = new TerminalNode("!");
 		Node i1 = new IntermediateNode();
 		i1.addChild(t1);
 		i1.addChild(t2);
@@ -80,7 +78,7 @@ public class ConcatenateTerminalsTest extends NodeVisitorTest {
 		n1.addChild(i1);
 		n1.addChild(i2);
 		n1.visit(this.visitor);
-		assertEquals("t1t2t3", this.visitor.toString());
+		assertEquals("Hello World!", this.visitor.toString());
 	}
 
 	@Override

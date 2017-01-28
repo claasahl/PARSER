@@ -8,13 +8,11 @@ import de.claas.parser.Node;
 import de.claas.parser.NodeTest;
 
 /**
- * 
  * The JUnit test for class {@link TerminalNode}. It is intended to collect and
  * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
  *
  * @author Claas Ahlrichs
- *
  */
 public class TerminalNodeTest extends NodeTest {
 

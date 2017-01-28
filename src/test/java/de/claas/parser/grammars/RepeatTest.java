@@ -6,16 +6,14 @@ import org.junit.Test;
 
 import de.claas.parser.Grammar;
 import de.claas.parser.GrammarTest;
-import de.claas.parser.exceptions.ParsingException;
+import de.claas.parser.exceptions.ParserException;
 
 /**
- * 
  * The JUnit test for class {@link Repeat}. It is intended to collect and
  * document a set of test cases for the tested class. Please refer to the
  * individual tests for more detailed information.
  *
  * @author Claas Ahlrichs
- *
  */
 public class RepeatTest extends GrammarTest<Repeat> {
 
@@ -54,7 +52,7 @@ public class RepeatTest extends GrammarTest<Repeat> {
 		assertNotNull(grammar.parse("1"));
 	}
 
-	@Test(expected = ParsingException.class)
+	@Test(expected = ParserException.class)
 	public void shouldNotHandle() {
 		Grammar grammar = build();
 		grammar.parse("**");

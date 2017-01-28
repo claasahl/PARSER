@@ -8,7 +8,6 @@ import de.claas.parser.visitors.RuleEquality;
 import de.claas.parser.visitors.RuleHashCode;
 
 /**
- * 
  * Superclass of all (grammar) rules within this package. This class is intended
  * to model rules that describe grammars. Implementations of this class are
  * utilized by {@link Grammar} instances to describe abstract concepts such as
@@ -21,7 +20,6 @@ import de.claas.parser.visitors.RuleHashCode;
  * @author Claas Ahlrichs
  * 
  * @see Grammar
- * 
  */
 public abstract class Rule implements Iterable<Rule> {
 
@@ -72,7 +70,7 @@ public abstract class Rule implements Iterable<Rule> {
 	 */
 	public boolean addChild(Rule rule) {
 		invalidateHashCode();
-		return rule != null ? this.children.add(rule) : false;
+		return rule != null && this.children.add(rule);
 	}
 
 	/**

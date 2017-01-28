@@ -5,7 +5,6 @@ import de.claas.parser.Node;
 import de.claas.parser.NodeVisitor;
 
 /**
- * 
  * The class {@link TerminalNode}. It is an implementation of the {@link Node}
  * class. It is intended to represent terminal symbols of parsed sentences.
  * Instances of this class hold a token (or part) of a concrete sentence after

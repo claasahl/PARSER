@@ -11,11 +11,9 @@ import java.util.Iterator;
 import org.junit.Test;
 
 import de.claas.parser.rules.CharacterValue;
-import de.claas.parser.rules.Terminal;
 import de.claas.parser.visitors.Parser;
 
 /**
- * 
  * The JUnit test for class {@link Rule}. It is intended to collect and document
  * a set of test cases for the tested class. Please refer to the individual
  * tests for more detailed information.
@@ -25,7 +23,6 @@ import de.claas.parser.visitors.Parser;
  * the tested class.
  *
  * @author Claas Ahlrichs
- *
  */
 public abstract class RuleTest {
 
@@ -35,7 +32,7 @@ public abstract class RuleTest {
 	 *
 	 * @param children
 	 *            the children
-	 * @return an instantiated {@link Rule} class with the given children
+	 * @return an instantiated {@link Rule} class
 	 */
 	protected abstract Rule build(Rule... children);
 
@@ -79,7 +76,7 @@ public abstract class RuleTest {
 	 * 
 	 * @param tokens
 	 *            the (unprocessed) tokens
-	 * @return an instantiated {@link State} class with the specified tokens
+	 * @return an instantiated {@link State} class
 	 */
 	protected static State buildState(String pattern) {
 		return new State(pattern);
@@ -237,7 +234,7 @@ public abstract class RuleTest {
 	@Test
 	public void implementationOfEqualsShouldHandleNull() {
 		Rule rule = build(defaultChildren());
-		assertFalse(rule.equals(null));
+		assertNotNull(rule);
 	}
 
 	@Test
@@ -263,7 +260,7 @@ public abstract class RuleTest {
 		assertTrue(ruleB.equals(ruleC));
 		assertTrue(ruleA.equals(ruleC));
 	}
-	
+
 	@Test
 	public void implementationOfHashCodeShouldBeReproducible() {
 		Rule rule = build();
@@ -271,13 +268,12 @@ public abstract class RuleTest {
 		int hashCode2 = rule.hashCode();
 		assertEquals(hashCode1, hashCode2);
 	}
-	
+
 	@Test
 	public void implementationOfHashCodeShouldBeConsistent() {
 		Rule ruleA = build();
 		Rule ruleB = build();
 		assertEquals(ruleA.hashCode(), ruleB.hashCode());
 	}
-
 
 }

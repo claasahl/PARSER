@@ -3,6 +3,8 @@ package de.claas.parser.visitors;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.IntFunction;
+import java.util.stream.Collectors;
 
 import de.claas.parser.Rule;
 import de.claas.parser.RuleVisitor;
@@ -15,16 +17,15 @@ import de.claas.parser.rules.Optional;
 import de.claas.parser.rules.Repetition;
 
 /**
- * 
  * The class {@link RuleToString}. It is an implementation of the interface
  * {@link RuleVisitor}. It is intended to "visualize" a tree of {@link Rule}
  * objects. The tree is turned into a human readable (if not "pretty") string.
  * <p>
- * This visitor is meant for one-time use, only. As such, it should not be used
- * to visualize multiple trees.
+ * This visitor is meant for one-time use, only. As such, every tree needs to be
+ * visualized with a separate instance of this visitor. An instance of this
+ * visitor should not be used to visualize multiple trees.
  * 
  * @author Claas Ahlrichs
- *
  */
 public class RuleToString implements RuleVisitor {
 
@@ -39,9 +40,9 @@ public class RuleToString implements RuleVisitor {
 	/**
 	 * Constructs a new {@link RuleToString} with default parameters. Calling
 	 * this constructor is equivalent to calling
-	 * <code>{@link #RuleToString(String, String)}</code> with {@value #DEFAULT_
-	 * LEVEL_SEPARATOR} as default level separator and the system's line
-	 * separator (property {@literal line.separator}).
+	 * <code>{@link #RuleToString(String, String)}</code> with
+	 * {@link #DEFAULT_LEVEL_SEPARATOR} as default level separator and the
+	 * system's line separator (property {@literal line.separator}).
 	 */
 	public RuleToString() {
 		this(DEFAULT_LEVEL_SEPARATOR, System.getProperty("line.separator", DEFAULT_LINE_NEWLINE));
@@ -127,30 +128,61 @@ public class RuleToString implements RuleVisitor {
 	public void visitTerminal(CharacterValue rule) {
 		appendRule(rule, rule.getTerminal());
 	}
-	
+
 	@Override
 	public void visitTerminal(NumberValue rule) {
 		int radix = rule.getRadix();
-		String marker = "";
-		marker = radix == 16 ? "x" : marker;
-		marker = radix == 10 ? "d" : marker;
-		marker = radix == 2 ? "b" : marker;
 		if (rule.getTerminal() != null) {
 			String terminal = rule.getTerminal();
-			StringBuilder stringBuilder = new StringBuilder();
-			stringBuilder.append("%");
-			stringBuilder.append(marker);
-			for (int index = 0; index < terminal.length(); index++) {
-				String number = Integer.toString(terminal.charAt(index), radix);
-				stringBuilder.append(number);
-				if (index + 1 < terminal.length())
-					stringBuilder.append(".");
-			}
-			appendRule(rule, stringBuilder.toString());
+			appendRule(rule, stringifyTerminal(radix, terminal));
 		} else {
 			String start = Integer.toString(rule.getRangeStart().charValue(), radix);
 			String end = Integer.toString(rule.getRangeEnd().charValue(), radix);
-			appendRule(rule, String.format("%%%s%s-%s", marker, start, end));
+			appendRule(rule, String.format("%%%s%s-%s", marker(radix), start, end));
+		}
+	}
+
+	/**
+	 * A support function that returns a textual representation of the specified
+	 * terminal symbol.
+	 * 
+	 * @param radix
+	 *            the radix
+	 * @param terminal
+	 *            the terminal symbol
+	 * @return a textual representation of the specified terminal symbol
+	 */
+	private static String stringifyTerminal(int radix, String terminal) {
+		IntFunction<? extends String> mapper = (c) -> Integer.toString(c, radix);
+		String value = terminal.chars().mapToObj(mapper).collect(Collectors.joining("."));
+
+		StringBuilder builder = new StringBuilder();
+		builder.append("%");
+		builder.append(marker(radix));
+		builder.append(value);
+		return builder.toString();
+	}
+
+	/**
+	 * A support function that returns the ABFN marker for the specified radix.
+	 * Only radix 16, 10 and 2 are supported! Any other radix will return an
+	 * empty string.
+	 * 
+	 * @param radix
+	 *            the radix
+	 * @return the ABFN marker for the specified radix, an empty string if the
+	 *         radix is not valid / supported
+	 */
+	private static String marker(int radix) {
+		switch (radix) {
+		case 16:
+			return "x";
+		case 10:
+			return "d";
+		case 2:
+			return "b";
+		default:
+			return "";
 		}
 	}
 
