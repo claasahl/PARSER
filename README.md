@@ -13,6 +13,6 @@ This is an open source library for parsing text-based inputs. PARSER makes use o
 See [license](https://github.com/claasahl/PARSER/blob/develop/LICENSE)
 
 ## Further Resources
-* **Releases** can be found [here](https://github.com/claasahl/PARSER/blob/develop/CHANGES.md) and [here](https://github.com/claasahl/PARSER/releases).
+* **Releases** can be found [here](https://maven-badges.herokuapp.com/maven-central/com.github.claasahl/parser), [here](https://github.com/claasahl/PARSER/blob/develop/CHANGES.md) and [here](https://github.com/claasahl/PARSER/releases).
 * **Documentation** can be found in the [sources](https://github.com/claasahl/PARSER/tree/master/src), as part of [maven releases](https://maven-badges.herokuapp.com/maven-central/com.github.claasahl/parser) or in the [example section](https://github.com/claasahl/PARSER/tree/master/src/main/java/de/claas/parser/grammars).
 * For any **issues or questions**, please refer to [link](https://github.com/claasahl/PARSER/issues).
