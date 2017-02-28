@@ -1,3 +1,6 @@
+# Version 2.0.1
+- Updated maven dependencies (code base is identical to previous release)
+
 # Version 2 - Monkey
 - Fixed issue [#3 Add examples to repository](https://github.com/claasahl/PARSER/issues/3)
 - Fixed issue [#4 Fix Javadoc warnings](https://github.com/claasahl/PARSER/issues/4)
